@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.longmarch.sys.dao.RoleDao">
+
+    <select id="selectRolePermissionById" resultType="top.longmarch.sys.entity.vo.PermissionTree">
+        SELECT
+            t1.id,
+            t1.parent_id AS pid,
+            t1.permission_name AS permissionName,
+            t1.permission_string AS permissionString,
+            t1.type,
+            t1.create_time AS createTime,
+            CASE WHEN t2.permission_id IS NULL THEN FALSE ELSE TRUE END AS checked
+        FROM sys_permission t1 LEFT JOIN sys_role_permission_rel t2
+        ON t2.permission_id = t1.id AND t2.role_id = #{roleId}
+        WHERE t1.status = 0
+    </select>
+</mapper>
