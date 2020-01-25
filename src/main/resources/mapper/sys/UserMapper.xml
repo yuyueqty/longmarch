@@ -21,7 +21,7 @@
             </if>
         </where>
         GROUP BY u.id
-        ORDER BY u.id, u.login_count DESC
+        ORDER BY u.id DESC
     </select>
 
 </mapper>

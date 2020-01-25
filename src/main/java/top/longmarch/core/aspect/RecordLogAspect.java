@@ -3,13 +3,7 @@ package top.longmarch.core.aspect;
 import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
-import org.apache.catalina.util.RequestUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import top.longmarch.core.annotation.Log;
-import top.longmarch.core.config.ApplicationContextManager;
-import top.longmarch.core.utils.UserUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -21,9 +15,13 @@ import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.common.TemplateParserContext;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+import top.longmarch.core.annotation.Log;
+import top.longmarch.core.utils.UserUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -107,7 +105,7 @@ public class RecordLogAspect implements AspectApi {
                 log.put("userId", UserUtil.loginUser().getId());
                 log.put("userName", UserUtil.loginUser().getUsername());
                 log.put("userAgent", request.getHeader("User-Agent"));
-                log.put("ip", getIPAddress(request));
+                log.put("ip", getIpAddr(request));
                 logService.saveLoginLog(log);
                 logger.debug("登陆日志：" + log);
             }
@@ -121,6 +119,44 @@ public class RecordLogAspect implements AspectApi {
 
     public void setLogService(LogService logService) {
         this.logService = logService;
+    }
+
+    public static String getIpAddr(HttpServletRequest request) {
+        String ipAddress = null;
+        try {
+            ipAddress = request.getHeader("x-forwarded-for");
+            if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+                ipAddress = request.getHeader("Proxy-Client-IP");
+            }
+            if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+                ipAddress = request.getHeader("WL-Proxy-Client-IP");
+            }
+            if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+                ipAddress = request.getRemoteAddr();
+                if (ipAddress.equals("127.0.0.1") || ipAddress.equals("0:0:0:0:0:0:0:1")) {
+                    // 根据网卡取本机配置的IP
+                    InetAddress inet = null;
+                    try {
+                        inet = InetAddress.getLocalHost();
+                    } catch (UnknownHostException e) {
+                        e.printStackTrace();
+                    }
+                    ipAddress = inet.getHostAddress();
+                }
+            }
+            // 对于通过多个代理的情况，第一个IP为客户端真实IP,多个IP按照','分割
+            if (ipAddress != null && ipAddress.length() > 15) { // "***.***.***.***".length()
+                // = 15
+                if (ipAddress.indexOf(",") > 0) {
+                    ipAddress = ipAddress.substring(0, ipAddress.indexOf(","));
+                }
+            }
+        } catch (Exception e) {
+            ipAddress = "";
+        }
+        // ipAddress = this.getRequest().getRemoteAddr();
+
+        return ipAddress;
     }
 
     public static String getIPAddress(HttpServletRequest request) {

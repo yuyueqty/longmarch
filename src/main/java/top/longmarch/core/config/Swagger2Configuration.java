@@ -55,6 +55,7 @@ public class Swagger2Configuration {
                 .title("长征系统")
                 .contact(new Contact("晴天雨", "www.longmarch.top", "yuyue_qty@163.com"))
                 .description("长征CMS系统")
+                .termsOfServiceUrl("http://www.longmarch.top")
                 .version("1.0")
                 .build();
     }
