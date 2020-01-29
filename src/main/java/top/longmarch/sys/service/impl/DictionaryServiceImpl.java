@@ -42,7 +42,7 @@ public class DictionaryServiceImpl extends ServiceImpl<DictionaryDao, Dictionary
                 Map<String, Object> map = new HashMap<>();
                 map.put("label", d.getLabel());
                 map.put("value", d.getValue());
-                return new DictionaryVO(d.getLabel(), Integer.valueOf(d.getValue()));
+                return new DictionaryVO(d.getLabel(), d.getValue());
             }).collect(Collectors.toList());
             dictMap.put(k, v);
         });

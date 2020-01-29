@@ -44,8 +44,6 @@ public class RegisterController {
 
     private User RegisterUser2UserInfo(RegisterUser registerUser) {
         User user = new User();
-        SysParams sysParams = JSONUtil.toBean(parameterService.getParameterByName(Constant.SYS_PARAMS).getParamValue(), SysParams.class);
-        user.setHeadImgUrl(sysParams.getHeadImgUrl());
         String paramValue = parameterService.getParameterByName(Constant.DEFAULT_USER_ROLE).getParamValue();
         user.setRoleIds(JSONUtil.parseObj(paramValue).getStr("roleId"));
         user.setCreateBy(0L);

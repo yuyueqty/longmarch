@@ -1,6 +1,7 @@
 package top.longmarch.sys.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -13,14 +14,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.longmarch.core.common.Constant;
 import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.exception.LongmarchException;
 import top.longmarch.core.shiro.realm.CustomRealm;
 import top.longmarch.core.utils.PasswordUtil;
 import top.longmarch.enums.StatusEnum;
 import top.longmarch.sys.dao.UserDao;
+import top.longmarch.sys.entity.SysParams;
 import top.longmarch.sys.entity.User;
 import top.longmarch.sys.entity.UserRoleRel;
+import top.longmarch.sys.service.IParameterService;
 import top.longmarch.sys.service.IUserRoleRelService;
 import top.longmarch.sys.service.IUserService;
 
@@ -52,6 +56,8 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
     private IUserRoleRelService userRoleRelService;
     @Autowired
     private CustomRealm customRealm;
+    @Autowired
+    private IParameterService parameterService;
 
     @Override
     public IPage<User> search(Map<String, Object> params) {
@@ -72,6 +78,8 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
         } else {
             user.setPassword(PasswordUtil.password(user.getPassword()));
         }
+        SysParams sysParams = JSONUtil.toBean(parameterService.getParameterByName(Constant.SYS_PARAMS).getParamValue(), SysParams.class);
+        user.setHeadImgUrl(sysParams.getHeadImgUrl());
         this.save(user);
         this.createUserRolesRel(user.getId(), this.str2List(user.getRoleIds()));
     }
