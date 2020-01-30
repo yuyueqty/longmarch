@@ -1,4 +1,4 @@
-package top.longmarch.enums;
+package top.longmarch.core.enums;
 
 import java.util.Objects;
 

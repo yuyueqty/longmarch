@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import top.longmarch.core.config.ApplicationContextManager;
-import top.longmarch.enums.StatusEnum;
+import top.longmarch.core.enums.StatusEnum;
 import top.longmarch.job.entity.ScheduleJob;
 import top.longmarch.job.entity.ScheduleJobLog;
 import top.longmarch.job.service.impl.ScheduleJobLogServiceImpl;

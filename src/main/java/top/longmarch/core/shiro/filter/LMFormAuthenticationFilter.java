@@ -17,13 +17,11 @@
  */
 package top.longmarch.core.shiro.filter;
 
-import top.longmarch.core.utils.ResponseUtil;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.longmarch.core.utils.ResponseUtil;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -59,9 +57,4 @@ public class LMFormAuthenticationFilter extends FormAuthenticationFilter {
         }
     }
 
-    @Override
-    protected boolean onLoginSuccess(AuthenticationToken token, Subject subject, ServletRequest request, ServletResponse response) throws Exception {
-        System.out.println("用户登陆成功：username=" + subject);
-        return super.onLoginSuccess(token, subject, request, response);
-    }
 }

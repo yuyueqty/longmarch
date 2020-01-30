@@ -18,4 +18,7 @@ import java.util.Map;
 public interface UserDao extends BaseMapper<User> {
 
     IPage<User> search(Page<User> page, Map<String, Object> params);
+
+    void updateUserLoginInfo(Long userId);
+
 }

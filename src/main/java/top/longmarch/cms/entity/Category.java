@@ -16,7 +16,7 @@ import io.swagger.annotations.ApiModelProperty;
  * </p>
  *
  * @author YuYue
- * @since 2020-01-12
+ * @since 2020-01-30
  */
 @TableName("cms_category")
 @ApiModel(value="Category对象", description="文章类目")
@@ -28,10 +28,6 @@ public class Category implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @ApiModelProperty(value = "频道ID")
-    @TableField("channel_id")
-    private Long channelId;
-
     @ApiModelProperty(value = "类目名称")
     @TableField("category_name")
     private String categoryName;
@@ -39,14 +35,6 @@ public class Category implements Serializable {
     @ApiModelProperty(value = "父分类ID")
     @TableField("parent_id")
     private Long parentId;
-
-    @ApiModelProperty(value = "父节点ID集合（多个ID以','分割）")
-    @TableField("parent_ids")
-    private String parentIds;
-
-    @ApiModelProperty(value = "树形深度")
-    @TableField("depth")
-    private Integer depth;
 
     @ApiModelProperty(value = "跳转地址")
     @TableField("redirect_url")
@@ -62,15 +50,11 @@ public class Category implements Serializable {
 
     @ApiModelProperty(value = "启用状态（0 未启用，1 已启用，默认 1）")
     @TableField("status")
-    private Boolean status;
+    private Integer status;
 
     @ApiModelProperty(value = "分类详情")
     @TableField("remark")
     private String remark;
-
-    @ApiModelProperty(value = "租户编号")
-    @TableField("tenant_id")
-    private Long tenantId;
 
     @ApiModelProperty(value = "创建者ID")
     @TableField(value = "create_by", fill = FieldFill.INSERT)
@@ -80,19 +64,20 @@ public class Category implements Serializable {
     @TableField(value = "create_time", fill = FieldFill.INSERT)
     private Date createTime;
 
+    @ApiModelProperty(value = "更新人ID")
+    @TableField(value = "update_by", fill = FieldFill.UPDATE)
+    private Long updateBy;
+
+    @ApiModelProperty(value = "更新时间")
+    @TableField(value = "update_time", fill = FieldFill.UPDATE)
+    private Date updateTime;
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-    public Long getChannelId() {
-        return channelId;
-    }
-
-    public void setChannelId(Long channelId) {
-        this.channelId = channelId;
     }
     public String getCategoryName() {
         return categoryName;
@@ -107,20 +92,6 @@ public class Category implements Serializable {
 
     public void setParentId(Long parentId) {
         this.parentId = parentId;
-    }
-    public String getParentIds() {
-        return parentIds;
-    }
-
-    public void setParentIds(String parentIds) {
-        this.parentIds = parentIds;
-    }
-    public Integer getDepth() {
-        return depth;
-    }
-
-    public void setDepth(Integer depth) {
-        this.depth = depth;
     }
     public String getRedirectUrl() {
         return redirectUrl;
@@ -143,11 +114,11 @@ public class Category implements Serializable {
     public void setSort(Integer sort) {
         this.sort = sort;
     }
-    public Boolean getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
     public String getRemark() {
@@ -156,13 +127,6 @@ public class Category implements Serializable {
 
     public void setRemark(String remark) {
         this.remark = remark;
-    }
-    public Long getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(Long tenantId) {
-        this.tenantId = tenantId;
     }
     public Long getCreateBy() {
         return createBy;
@@ -178,24 +142,36 @@ public class Category implements Serializable {
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
+    public Long getUpdateBy() {
+        return updateBy;
+    }
+
+    public void setUpdateBy(Long updateBy) {
+        this.updateBy = updateBy;
+    }
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
 
     @Override
     public String toString() {
         return "Category{" +
             "id=" + id +
-            ", channelId=" + channelId +
             ", categoryName=" + categoryName +
             ", parentId=" + parentId +
-            ", parentIds=" + parentIds +
-            ", depth=" + depth +
             ", redirectUrl=" + redirectUrl +
             ", icon=" + icon +
             ", sort=" + sort +
             ", status=" + status +
             ", remark=" + remark +
-            ", tenantId=" + tenantId +
             ", createBy=" + createBy +
             ", createTime=" + createTime +
+            ", updateBy=" + updateBy +
+            ", updateTime=" + updateTime +
         "}";
     }
 }

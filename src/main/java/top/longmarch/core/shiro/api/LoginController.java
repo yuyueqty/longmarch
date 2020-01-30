@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import top.longmarch.core.annotation.Log;
-import top.longmarch.core.annotation.Log.LogType;
 import top.longmarch.core.common.Result;
 import top.longmarch.core.shiro.model.LoginUser;
 import top.longmarch.core.shiro.service.UserIRolePermissionService;
@@ -24,7 +23,6 @@ import top.longmarch.sys.service.IDictionaryService;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 @Api(value = "用户登陆模块", tags = "用户登陆模块接口")
 @RestController
@@ -36,7 +34,8 @@ public class LoginController {
     @Autowired
     private UserIRolePermissionService userIRolePermissionService;
 
-    @Log(type = LogType.LOGIN)
+
+    @Log(type = Log.LogType.LOGIN)
     @ApiOperation(value = "用户登陆")
     @PostMapping(value = "/login")
     public Result login(@RequestBody LoginUser loginUser) {

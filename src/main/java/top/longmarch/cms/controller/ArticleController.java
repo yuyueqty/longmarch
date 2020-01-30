@@ -37,7 +37,7 @@ public class ArticleController {
 
     private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
     @Autowired
-    private IArticleService rticleService;
+    private IArticleService articleService;
 
     @ApiOperation(value="搜索文章")
     @PostMapping("/search")
@@ -45,14 +45,14 @@ public class ArticleController {
         IPage<Article> page = PageFactory.getInstance(params);
         LambdaQueryWrapper<Article> wrapper = new LambdaQueryWrapper<>();
         // 自定义查询条件
-        return Result.ok().add(rticleService.page(page, wrapper));
+        return Result.ok().add(articleService.page(page, wrapper));
     }
 
     @ApiOperation(value="查看文章")
     @RequiresPermissions("cms:article:show")
     @GetMapping("/show/{id}")
     public Result show(@PathVariable("id")Long id) {
-        Article article = rticleService.getById(id);
+        Article article = articleService.getById(id);
         return Result.ok().add(article);
     }
 
@@ -62,7 +62,7 @@ public class ArticleController {
     @PostMapping("/create")
     public Result create(@Validated @RequestBody Article article) {
         log.info("创建文章, 入参：{}", article);
-        rticleService.save(article);
+        articleService.save(article);
         return Result.ok().add(article);
     }
 
@@ -72,7 +72,7 @@ public class ArticleController {
     @PostMapping("/update")
     public Result update(@Validated @RequestBody Article article) {
         log.info("更新文章, 入参：{}", article);
-        rticleService.updateById(article);
+        articleService.updateById(article);
         return Result.ok().add(article);
     }
 
@@ -82,7 +82,7 @@ public class ArticleController {
     @PostMapping("/delete")
     public Result delete(@RequestBody Long[] ids) {
         log.info("删除文章, ids={}", ids);
-        rticleService.removeByIds(Arrays.asList(ids));
+        articleService.removeByIds(Arrays.asList(ids));
         return Result.ok();
     }
 

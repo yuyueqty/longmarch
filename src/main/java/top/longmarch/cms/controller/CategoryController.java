@@ -37,7 +37,7 @@ public class CategoryController {
 
     private static final Logger log = LoggerFactory.getLogger(CategoryController.class);
     @Autowired
-    private ICategoryService ategoryService;
+    private ICategoryService categoryService;
 
     @ApiOperation(value="搜索文章类目")
     @PostMapping("/search")
@@ -45,14 +45,14 @@ public class CategoryController {
         IPage<Category> page = PageFactory.getInstance(params);
         LambdaQueryWrapper<Category> wrapper = new LambdaQueryWrapper<>();
         // 自定义查询条件
-        return Result.ok().add(ategoryService.page(page, wrapper));
+        return Result.ok().add(categoryService.page(page, wrapper));
     }
 
     @ApiOperation(value="查看文章类目")
     @RequiresPermissions("cms:category:show")
     @GetMapping("/show/{id}")
     public Result show(@PathVariable("id")Long id) {
-        Category category = ategoryService.getById(id);
+        Category category = categoryService.getById(id);
         return Result.ok().add(category);
     }
 
@@ -62,7 +62,7 @@ public class CategoryController {
     @PostMapping("/create")
     public Result create(@Validated @RequestBody Category category) {
         log.info("创建文章类目, 入参：{}", category);
-        ategoryService.save(category);
+        categoryService.save(category);
         return Result.ok().add(category);
     }
 
@@ -72,7 +72,7 @@ public class CategoryController {
     @PostMapping("/update")
     public Result update(@Validated @RequestBody Category category) {
         log.info("更新文章类目, 入参：{}", category);
-        ategoryService.updateById(category);
+        categoryService.updateById(category);
         return Result.ok().add(category);
     }
 
@@ -82,7 +82,7 @@ public class CategoryController {
     @PostMapping("/delete")
     public Result delete(@RequestBody Long[] ids) {
         log.info("删除文章类目, ids={}", ids);
-        ategoryService.removeByIds(Arrays.asList(ids));
+        categoryService.removeByIds(Arrays.asList(ids));
         return Result.ok();
     }
 

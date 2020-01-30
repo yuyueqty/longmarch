@@ -55,7 +55,7 @@ public class ${table.controllerName} {
 
     private static final Logger log = LoggerFactory.getLogger(${table.controllerName}.class);
     @Autowired
-    private ${table.serviceName} ${table.serviceName?substring(2)?uncap_first};
+    private ${table.serviceName} ${table.serviceName?substring(1)?uncap_first};
 
     @ApiOperation(value="搜索${table.comment!}")
     @PostMapping("/search")
@@ -63,14 +63,14 @@ public class ${table.controllerName} {
         IPage<${entity}> page = PageFactory.getInstance(params);
         LambdaQueryWrapper<${entity}> wrapper = new LambdaQueryWrapper<>();
         // 自定义查询条件
-        return Result.ok().add(${table.serviceName?substring(2)?uncap_first}.page(page, wrapper));
+        return Result.ok().add(${table.serviceName?substring(1)?uncap_first}.page(page, wrapper));
     }
 
     @ApiOperation(value="查看${table.comment!}")
     @RequiresPermissions("${package.ModuleName}:${entity?uncap_first}:show")
     @GetMapping("/show/{id}")
     public Result show(@PathVariable("id")Long id) {
-        ${entity} ${entity?uncap_first} = ${table.serviceName?substring(2)?uncap_first}.getById(id);
+        ${entity} ${entity?uncap_first} = ${table.serviceName?substring(1)?uncap_first}.getById(id);
         return Result.ok().add(${entity?uncap_first});
     }
 
@@ -80,7 +80,7 @@ public class ${table.controllerName} {
     @PostMapping("/create")
     public Result create(@Validated @RequestBody ${entity} ${entity?uncap_first}) {
         log.info("创建${table.comment!}, 入参：{}", ${entity?uncap_first});
-        ${table.serviceName?substring(2)?uncap_first}.save(${entity?uncap_first});
+        ${table.serviceName?substring(1)?uncap_first}.save(${entity?uncap_first});
         return Result.ok().add(${entity?uncap_first});
     }
 
@@ -90,7 +90,7 @@ public class ${table.controllerName} {
     @PostMapping("/update")
     public Result update(@Validated @RequestBody ${entity} ${entity?uncap_first}) {
         log.info("更新${table.comment!}, 入参：{}", ${entity?uncap_first});
-        ${table.serviceName?substring(2)?uncap_first}.updateById(${entity?uncap_first});
+        ${table.serviceName?substring(1)?uncap_first}.updateById(${entity?uncap_first});
         return Result.ok().add(${entity?uncap_first});
     }
 
@@ -100,7 +100,7 @@ public class ${table.controllerName} {
     @PostMapping("/delete")
     public Result delete(@RequestBody Long[] ids) {
         log.info("删除${table.comment!}, ids={}", ids);
-        ${table.serviceName?substring(2)?uncap_first}.removeByIds(Arrays.asList(ids));
+        ${table.serviceName?substring(1)?uncap_first}.removeByIds(Arrays.asList(ids));
         return Result.ok();
     }
 

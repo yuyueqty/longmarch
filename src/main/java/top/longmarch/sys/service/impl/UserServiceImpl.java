@@ -11,7 +11,6 @@ import org.apache.commons.beanutils.ConvertUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.longmarch.core.common.Constant;
@@ -19,7 +18,7 @@ import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.exception.LongmarchException;
 import top.longmarch.core.shiro.realm.CustomRealm;
 import top.longmarch.core.utils.PasswordUtil;
-import top.longmarch.enums.StatusEnum;
+import top.longmarch.core.enums.StatusEnum;
 import top.longmarch.sys.dao.UserDao;
 import top.longmarch.sys.entity.SysParams;
 import top.longmarch.sys.entity.User;
@@ -28,7 +27,6 @@ import top.longmarch.sys.service.IParameterService;
 import top.longmarch.sys.service.IUserRoleRelService;
 import top.longmarch.sys.service.IUserService;
 
-import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -98,6 +96,11 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
     public void removeUser(List<Long> userIds) {
         this.removeByIds(userIds);
         userRoleRelService.remove(new LambdaQueryWrapper<UserRoleRel>().in(UserRoleRel::getUserId, userIds));
+    }
+
+    @Override
+    public void updateUserLoginInfo(Long userId) {
+        userDao.updateUserLoginInfo(userId);
     }
 
     public void createUserRolesRel(Long userId, List<Long> roleIdList) {

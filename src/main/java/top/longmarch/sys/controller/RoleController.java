@@ -16,7 +16,7 @@ import top.longmarch.core.annotation.Log;
 import top.longmarch.core.common.Constant;
 import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.common.Result;
-import top.longmarch.enums.StatusEnum;
+import top.longmarch.core.enums.StatusEnum;
 import top.longmarch.sys.entity.Role;
 import top.longmarch.sys.service.IRoleService;
 

@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import top.longmarch.core.shiro.service.UserIRolePermissionService;
-import top.longmarch.enums.StatusEnum;
+import top.longmarch.core.enums.StatusEnum;
 import top.longmarch.sys.entity.User;
 
 import java.util.Set;

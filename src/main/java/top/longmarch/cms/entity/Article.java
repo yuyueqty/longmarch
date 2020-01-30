@@ -16,7 +16,7 @@ import io.swagger.annotations.ApiModelProperty;
  * </p>
  *
  * @author YuYue
- * @since 2020-01-12
+ * @since 2020-01-30
  */
 @TableName("cms_article")
 @ApiModel(value="Article对象", description="文章")
@@ -76,17 +76,9 @@ public class Article implements Serializable {
     @TableField("sort")
     private Integer sort;
 
-    @ApiModelProperty(value = "是否置顶（0 否， 1 是，默认 0）")
-    @TableField("is_top")
-    private Boolean top;
-
-    @ApiModelProperty(value = "是否删除（1 已删除，0 未删除，默 0）")
-    @TableField("is_deleted")
-    private Boolean deleted;
-
-    @ApiModelProperty(value = "租户编号")
-    @TableField("tenant_id")
-    private Long tenantId;
+    @ApiModelProperty(value = "是否推荐（0 否， 1 是，默认 0）")
+    @TableField("recommend")
+    private Integer recommend;
 
     @ApiModelProperty(value = "创建者ID")
     @TableField(value = "create_by", fill = FieldFill.INSERT)
@@ -195,26 +187,12 @@ public class Article implements Serializable {
     public void setSort(Integer sort) {
         this.sort = sort;
     }
-    public Boolean getTop() {
-        return top;
+    public Integer getRecommend() {
+        return recommend;
     }
 
-    public void setTop(Boolean top) {
-        this.top = top;
-    }
-    public Boolean getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        this.deleted = deleted;
-    }
-    public Long getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(Long tenantId) {
-        this.tenantId = tenantId;
+    public void setRecommend(Integer recommend) {
+        this.recommend = recommend;
     }
     public Long getCreateBy() {
         return createBy;
@@ -261,9 +239,7 @@ public class Article implements Serializable {
             ", clicks=" + clicks +
             ", likes=" + likes +
             ", sort=" + sort +
-            ", top=" + top +
-            ", deleted=" + deleted +
-            ", tenantId=" + tenantId +
+            ", recommend=" + recommend +
             ", createBy=" + createBy +
             ", createTime=" + createTime +
             ", updateBy=" + updateBy +

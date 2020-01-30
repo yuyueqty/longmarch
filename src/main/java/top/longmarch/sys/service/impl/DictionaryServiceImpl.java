@@ -1,16 +1,17 @@
 package top.longmarch.sys.service.impl;
 
+import cn.hutool.core.util.NumberUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import top.longmarch.enums.StatusEnum;
-import top.longmarch.sys.entity.Dictionary;
+import org.springframework.stereotype.Service;
+import top.longmarch.core.enums.StatusEnum;
 import top.longmarch.sys.dao.DictionaryDao;
+import top.longmarch.sys.entity.Dictionary;
 import top.longmarch.sys.entity.vo.DictionaryVO;
 import top.longmarch.sys.service.IDictionaryService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
@@ -39,10 +40,12 @@ public class DictionaryServiceImpl extends ServiceImpl<DictionaryDao, Dictionary
         Map<String, List<DictionaryVO>> dictMap = new HashMap<>();
         dictionaryList.stream().collect(Collectors.groupingBy(Dictionary::getCode)).forEach((k, dictionaries) -> {
             List<DictionaryVO> v = dictionaries.stream().map(d -> {
-                Map<String, Object> map = new HashMap<>();
-                map.put("label", d.getLabel());
-                map.put("value", d.getValue());
-                return new DictionaryVO(d.getLabel(), d.getValue());
+                String value = d.getValue();
+                if (NumberUtil.isInteger(value)) {
+                    return new DictionaryVO(d.getLabel(), Integer.valueOf(value));
+                } else {
+                    return new DictionaryVO(d.getLabel(), 0);
+                }
             }).collect(Collectors.toList());
             dictMap.put(k, v);
         });

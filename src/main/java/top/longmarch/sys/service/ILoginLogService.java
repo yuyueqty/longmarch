@@ -1,11 +1,11 @@
 package top.longmarch.sys.service;
 
-import top.longmarch.sys.entity.LoginLog;
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.longmarch.sys.entity.LoginLog;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author YuYue

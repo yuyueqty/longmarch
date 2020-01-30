@@ -23,8 +23,8 @@ public class CodeGeneratorUtil {
 
     public static void main(String[] args) {
         CodeGeneratorUtil codeGenerator = new CodeGeneratorUtil();
-        codeGenerator.run("sys2", Arrays.asList("sys_user","sys_role","sys_permission","sys_user_role_rel","sys_role_permission_rel","sys_dictionary", "sys_login_log", "sys_operate_log", "sys_parameter"));
-//        codeGenerator.run("cms2", Arrays.asList("cms_article","cms_category","cms_channel"));
+//        codeGenerator.run("sys2", Arrays.asList("sys_user","sys_role","sys_permission","sys_user_role_rel","sys_role_permission_rel","sys_dictionary", "sys_login_log", "sys_operate_log", "sys_parameter"));
+        codeGenerator.run("cms", Arrays.asList("cms_article","cms_category"));
     }
 
     public void run(String moduleName, List<String> tableNameList) {
@@ -112,10 +112,10 @@ public class CodeGeneratorUtil {
 
     private DataSourceConfig buildDataSourceConfig() {
         DataSourceConfig dataSourceConfig = new DataSourceConfig();
-        dataSourceConfig.setUrl("jdbc:mysql://192.168.1.115:3306/long_march?useUnicode=true&characterEncoding=utf8&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true");
-        dataSourceConfig.setDriverName("com.mysql.jdbc.Driver");
-        dataSourceConfig.setUsername("root");
-        dataSourceConfig.setPassword("root");
+        dataSourceConfig.setUrl("jdbc:mysql://122.51.244.159:3306/longmarch?useUnicode=true&characterEncoding=utf8&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true");
+        dataSourceConfig.setDriverName("com.mysql.cj.jdbc.Driver");
+        dataSourceConfig.setUsername("longmarch");
+        dataSourceConfig.setPassword("pfbNKZmkcZ7CDhSf");
         return dataSourceConfig;
     }
 

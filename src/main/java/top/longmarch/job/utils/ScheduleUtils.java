@@ -1,7 +1,7 @@
 package top.longmarch.job.utils;
 
 import org.quartz.*;
-import top.longmarch.enums.StatusEnum;
+import top.longmarch.core.enums.StatusEnum;
 import top.longmarch.job.entity.ScheduleJob;
 
 /**

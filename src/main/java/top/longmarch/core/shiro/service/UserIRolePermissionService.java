@@ -3,7 +3,7 @@ package top.longmarch.core.shiro.service;//package top.longmarch.core.shiro.serv
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import top.longmarch.enums.StatusEnum;
+import top.longmarch.core.enums.StatusEnum;
 import top.longmarch.sys.entity.*;
 import top.longmarch.sys.service.*;
 

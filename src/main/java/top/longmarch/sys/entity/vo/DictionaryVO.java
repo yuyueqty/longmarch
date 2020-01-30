@@ -5,12 +5,12 @@ import java.io.Serializable;
 public class DictionaryVO implements Serializable {
 
     private String label;
-    private Object value;
+    private Integer value;
 
     public DictionaryVO() {
     }
 
-    public DictionaryVO(String label, Object value) {
+    public DictionaryVO(String label, Integer value) {
         this.label = label;
         this.value = value;
     }
@@ -23,11 +23,11 @@ public class DictionaryVO implements Serializable {
         this.label = label;
     }
 
-    public Object getValue() {
+    public Integer getValue() {
         return value;
     }
 
-    public void setValue(Object value) {
+    public void setValue(Integer value) {
         this.value = value;
     }
 }

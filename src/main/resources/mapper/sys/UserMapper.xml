@@ -24,4 +24,8 @@
         ORDER BY u.id DESC
     </select>
 
+    <update id="updateUserLoginInfo">
+        UPDATE sys_user SET login_count = login_count + 1, last_login_time = NOW() WHERE id = #{userId};
+    </update>
+
 </mapper>
