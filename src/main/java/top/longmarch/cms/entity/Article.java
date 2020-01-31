@@ -80,6 +80,10 @@ public class Article implements Serializable {
     @TableField("recommend")
     private Integer recommend;
 
+    @ApiModelProperty(value = "文章标签")
+    @TableField("label")
+    private String label;
+
     @ApiModelProperty(value = "创建者ID")
     @TableField(value = "create_by", fill = FieldFill.INSERT)
     private Long createBy;
@@ -198,6 +202,13 @@ public class Article implements Serializable {
         return createBy;
     }
 
+    public String getLabel() {
+        return label;
+    }
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
     public void setCreateBy(Long createBy) {
         this.createBy = createBy;
     }
@@ -226,24 +237,25 @@ public class Article implements Serializable {
     @Override
     public String toString() {
         return "Article{" +
-            "id=" + id +
-            ", categoryId=" + categoryId +
-            ", title=" + title +
-            ", summary=" + summary +
-            ", content=" + content +
-            ", sourceUrl=" + sourceUrl +
-            ", imageUrl=" + imageUrl +
-            ", author=" + author +
-            ", publishTime=" + publishTime +
-            ", publishStatus=" + publishStatus +
-            ", clicks=" + clicks +
-            ", likes=" + likes +
-            ", sort=" + sort +
-            ", recommend=" + recommend +
-            ", createBy=" + createBy +
-            ", createTime=" + createTime +
-            ", updateBy=" + updateBy +
-            ", updateTime=" + updateTime +
-        "}";
+                "id=" + id +
+                ", categoryId=" + categoryId +
+                ", title='" + title + '\'' +
+                ", summary='" + summary + '\'' +
+                ", content='" + content + '\'' +
+                ", sourceUrl='" + sourceUrl + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", author='" + author + '\'' +
+                ", publishTime=" + publishTime +
+                ", publishStatus=" + publishStatus +
+                ", clicks=" + clicks +
+                ", likes=" + likes +
+                ", sort=" + sort +
+                ", recommend=" + recommend +
+                ", label='" + label + '\'' +
+                ", createBy=" + createBy +
+                ", createTime=" + createTime +
+                ", updateBy=" + updateBy +
+                ", updateTime=" + updateTime +
+                '}';
     }
 }

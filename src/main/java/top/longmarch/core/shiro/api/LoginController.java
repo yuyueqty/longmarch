@@ -81,6 +81,7 @@ public class LoginController {
         User user = userIRolePermissionService.getUserByUserId(UserUtil.loginUser().getId());
         Map<String, Object> userMap = new HashMap<>();
         userMap.put("introduction", "测试系统");
+        userMap.put("username", user.getUsername());
         userMap.put("avatar", user.getHeadImgUrl());
         userMap.put("dictionary", dictionaryService.getAllDict());
         userMap.put("roles", userIRolePermissionService.getUserRoleByUserId(user.getId()));
