@@ -68,7 +68,7 @@ public class SummaryExtractorUtil {
         String str = "支持向量机广泛应用于文本挖掘，例如，基于支持向量机的文本自动分类技术研究一文中很详细的介绍支持向量机的算法细节，文本自动分类是文本挖掘技术中的一种！";
         List<String> keyphrases = null;
         try {
-            keyphrases = extractor.getKeyphrase(new StringReader(str));
+            keyphrases = extractor.getKeyphrase(new StringReader(document));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -83,7 +83,8 @@ public class SummaryExtractorUtil {
                 "一，有限的确定性算法，这类算法在有限的一段时间内终止。他们可能要花很长时间来执行指定的任务，但仍将在一定的时间内终止。这类算法得出的结果常取决于输入值。\n" +
                 "二，有限的非确定算法，这类算法在有限的时间内终止。然而，对于一个（或一些）给定的数值，算法的结果并不是唯一的或确定的。\n" +
                 "三，无限的算法，是那些由于没有定义终止定义条件，或定义的条件无法由输入的数据满足而不终止运行的算法。通常，无限算法的产生是由于未能确定的定义终止条件。";
-        List<String> sentenceList = HanLP.extractSummary(document, 3);
+        document = "演示地址：http://www.longmarch.top账号密码：admin/111111建议：为防止其他人修改密码，最好自己注册账号，默认管理员权限，所有功能都可体验。项目采用前后端分离架构前端使用Vue(vue-element-admin)后端使用SpringBoot+MyBatis-pus+ShiroShiro认证授权，系统字典，系统参数统一使用缓存（ehcache）工具包使用hutool文件存储使用七牛空间已实现功能：系统认证授权用户管理角色管理权限管理字典管理参数管理日志管理（登录日志/操作日志）任务管理内容管理 9.1 分类管理 9.2 文章管理";
+        List<String> sentenceList = HanLP.extractSummary(document, 10);
         System.out.println(sentenceList);
         System.out.println(getSummary(document));
         String content = "程序员(英文Programmer)是从事程序开发、维护的专业人员。一般将程序员分为程序设计人员和程序编码人员，但两者的界限并不非常清楚，特别是在中国。软件从业人员分为初级程序员、高级程序员、系统分析员和项目经理四大类。";
@@ -91,7 +92,7 @@ public class SummaryExtractorUtil {
         List<String> topSentenceList = TextRankSentence.getTopSentenceList(document, 3);
         System.out.println(topSentenceList);
 
-        List<String> keywordList = HanLP.extractKeyword(document, 5);
+        List<String> keywordList = HanLP.extractKeyword(document, 10);
         System.out.println(keywordList);
 
 
@@ -117,7 +118,7 @@ public class SummaryExtractorUtil {
         //3, 从一个输入reader输入流中获取短语
         String str = "支持向量机广泛应用于文本挖掘，例如，基于支持向量机的文本自动分类技术研究一文中很详细的介绍支持向量机的算法细节，文本自动分类是文本挖掘技术中的一种！";
         List<String> keyphrases = extractor.getKeyphrase(new StringReader(str));
-        System.out.println(keyphrases);
+//        System.out.println(keyphrases);
 
     }
 

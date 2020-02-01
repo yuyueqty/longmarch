@@ -1,6 +1,5 @@
 package top.longmarch.job.dao;
 
-import com.baomidou.mybatisplus.annotation.SqlParser;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import top.longmarch.job.entity.ScheduleJob;
 
@@ -17,7 +16,6 @@ import java.util.Map;
  */
 public interface ScheduleJobDao extends BaseMapper<ScheduleJob> {
 
-    @SqlParser(filter = true)
     List<ScheduleJob> selectAll();
 
     /**

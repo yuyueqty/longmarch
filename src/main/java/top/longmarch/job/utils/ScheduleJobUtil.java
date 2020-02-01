@@ -2,7 +2,6 @@ package top.longmarch.job.utils;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
@@ -27,25 +26,20 @@ public class ScheduleJobUtil extends QuartzJobBean {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
     private ExecutorService service = Executors.newSingleThreadExecutor();
+    private ScheduleJobServiceImpl scheduleJobService = ApplicationContextManager.getBean(ScheduleJobServiceImpl.class);
+    private ScheduleJobLogServiceImpl scheduleJobLogService = ApplicationContextManager.getBean(ScheduleJobLogServiceImpl.class);
 
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
         Object object = context.getMergedJobDataMap().get(ScheduleJob.JOB_PARAM_KEY);
         ScheduleJob scheduleJob = JSONUtil.toBean(JSONUtil.toJsonStr(object), ScheduleJob.class);
 
-        // 获取spring bean
-        ScheduleJobLogServiceImpl scheduleJobLogService = ApplicationContextManager.getBean(ScheduleJobLogServiceImpl.class);
-
-        int count = scheduleJobLogService.count(new QueryWrapper<ScheduleJobLog>()
-                .lambda().eq(ScheduleJobLog::getStatus, StatusEnum.NO.getValue())
-                .eq(ScheduleJobLog::getJobId, scheduleJob.getId()));
-
-        if (scheduleJob.getCount() > 0 && count >= scheduleJob.getCount()) {
-            ScheduleJobServiceImpl scheduleJobService = ApplicationContextManager.getBean(ScheduleJobServiceImpl.class);
+        ScheduleJob scheduleJobDB = scheduleJobService.getById(scheduleJob);
+        if (scheduleJobDB.getCount() >= 3) {
             Long[] jobIds = {scheduleJob.getId()};
             scheduleJobService.pause(jobIds);
-            logger.info("任务失败尝试次数已达上限({})，任务ID：{}", count, scheduleJob.getId());
-            throw new RuntimeException();
+            logger.info("任务失败尝试次数已达上限({})，任务ID：{}", 3, scheduleJob.getId());
+            return;
         }
 
         // 数据库保存执行记录

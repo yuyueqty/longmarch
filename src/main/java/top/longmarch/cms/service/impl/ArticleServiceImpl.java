@@ -1,7 +1,11 @@
 package top.longmarch.cms.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hankcs.hanlp.HanLP;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import top.longmarch.cms.dao.ArticleDao;
 import top.longmarch.cms.entity.Article;
@@ -9,6 +13,8 @@ import top.longmarch.cms.service.IArticleService;
 import top.longmarch.core.utils.SummaryExtractorUtil;
 import top.longmarch.core.utils.UserUtil;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +29,8 @@ import java.util.stream.Collectors;
 @Service
 public class ArticleServiceImpl extends ServiceImpl<ArticleDao, Article> implements IArticleService {
 
+    private static final Logger log = LoggerFactory.getLogger(ArticleServiceImpl.class);
+
     @Override
     public void saveArticle(Article article) {
         if (article.getId() == null) {
@@ -33,12 +41,35 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleDao, Article> impleme
                 article.setSummary(SummaryExtractorUtil.getSummary(article.getContent()));
             }
             if (StrUtil.isBlank(article.getLabel())) {
-                List<String> list = SummaryExtractorUtil.getDuanYu(article.getContent());
+                List<String> list = HanLP.extractKeyword(article.getContent(), 5);
                 String result = list.stream().collect(Collectors.joining(","));
                 article.setLabel(result);
             }
         }
+        // 文章发布时间大于当前时间时，系统默认为文章还未发布，将文章状态强制修改为草稿
+        if (article.getPublishTime().after(new Date())) {
+            article.setPublishStatus(1);
+        }
         this.saveOrUpdate(article);
+    }
+
+    @Override
+    public void batchPublishArticles() {
+        // 发布时间小于等于当前时间，且发布状态必须为草稿
+        List<Article> articleList = this.list(new LambdaQueryWrapper<Article>()
+                .eq(Article::getPublishStatus, 1)
+                .le(Article::getPublishTime, new Date()));
+        if (articleList != null && articleList.size() > 0) {
+            List<Article> updateArticleList = new ArrayList<>();
+            for (Article article : articleList) {
+                article.setPublishStatus(3);
+                article.setUpdateBy(article.getCreateBy());
+                article.setUpdateTime(new Date());
+                updateArticleList.add(article);
+            }
+            this.updateBatchById(updateArticleList);
+        }
+        log.info("批量更新文章状态数量：{}", articleList.size());
     }
 
 }

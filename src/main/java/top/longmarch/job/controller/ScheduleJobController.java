@@ -2,6 +2,7 @@ package top.longmarch.job.controller;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,7 +15,6 @@ import top.longmarch.core.common.Constant;
 import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.common.Result;
 import top.longmarch.job.entity.ScheduleJob;
-import top.longmarch.job.entity.ScheduleJobLog;
 import top.longmarch.job.service.IScheduleJobLogService;
 import top.longmarch.job.service.IScheduleJobService;
 
@@ -112,11 +112,11 @@ public class ScheduleJobController {
     @Log
     @ApiOperation(value = "重置任务")
     @RequiresPermissions("job:schedule:reset")
-    @PostMapping("/reset/{jobId}")
-    public Result reset(@PathVariable("jobId") Long jobId) {
-        scheduleJobLogService.remove(new QueryWrapper<ScheduleJobLog>()
-                .lambda().eq(ScheduleJobLog::getStatus, false)
-                .eq(ScheduleJobLog::getJobId, jobId));
+    @PostMapping("/reset")
+    public Result reset(@RequestBody Long[] jobIds) {
+        ScheduleJob scheduleJob = new ScheduleJob();
+        scheduleJob.setCount(0);
+        scheduleJobService.update(scheduleJob, new LambdaUpdateWrapper<ScheduleJob>().in(ScheduleJob::getId, jobIds));
         return Result.ok();
     }
 
