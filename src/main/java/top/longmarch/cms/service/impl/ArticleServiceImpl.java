@@ -2,10 +2,13 @@ package top.longmarch.cms.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hankcs.hanlp.HanLP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.longmarch.cms.dao.ArticleDao;
 import top.longmarch.cms.entity.Article;
@@ -16,6 +19,7 @@ import top.longmarch.core.utils.UserUtil;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -30,6 +34,13 @@ import java.util.stream.Collectors;
 public class ArticleServiceImpl extends ServiceImpl<ArticleDao, Article> implements IArticleService {
 
     private static final Logger log = LoggerFactory.getLogger(ArticleServiceImpl.class);
+    @Autowired
+    private ArticleDao articleDao;
+
+    @Override
+    public IPage<Article> search(Page page, Map<String, Object> params) {
+        return articleDao.search(page, params);
+    }
 
     @Override
     public void saveArticle(Article article) {

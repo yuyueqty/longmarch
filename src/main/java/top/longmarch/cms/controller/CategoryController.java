@@ -19,7 +19,6 @@ import top.longmarch.core.annotation.Log;
 import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.common.Result;
 import top.longmarch.core.utils.tree.TreeUtil;
-import top.longmarch.sys.entity.Permission;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -31,7 +30,7 @@ import java.util.stream.Collectors;
  *
  * @author YuYue
  * @since 2020-01-12
-*/
+ */
 @Api(value = "文章类目模块", tags = "文章类目模块接口")
 @RestController
 @RequestMapping("/cms/category")
@@ -55,7 +54,7 @@ public class CategoryController {
         return Result.ok().add(categoryTree);
     }
 
-    @ApiOperation(value="搜索文章类目")
+    @ApiOperation(value = "搜索文章类目")
     @PostMapping("/search")
     public Result search(@RequestBody(required = false) Map<String, Object> params) {
         IPage<Category> page = PageFactory.getInstance(params);
@@ -64,16 +63,16 @@ public class CategoryController {
         return Result.ok().add(categoryService.page(page, wrapper));
     }
 
-    @ApiOperation(value="查看文章类目")
+    @ApiOperation(value = "查看文章类目")
     @RequiresPermissions("cms:category:show")
     @GetMapping("/show/{id}")
-    public Result show(@PathVariable("id")Long id) {
+    public Result show(@PathVariable("id") Long id) {
         Category category = categoryService.getById(id);
         return Result.ok().add(category);
     }
 
     @Log
-    @ApiOperation(value="创建文章类目")
+    @ApiOperation(value = "创建文章类目")
     @RequiresPermissions("cms:category:create")
     @PostMapping("/create")
     public Result create(@Validated @RequestBody Category category) {
@@ -83,7 +82,7 @@ public class CategoryController {
     }
 
     @Log
-    @ApiOperation(value="更新文章类目")
+    @ApiOperation(value = "更新文章类目")
     @RequiresPermissions("cms:category:update")
     @PostMapping("/update")
     public Result update(@Validated @RequestBody Category category) {
@@ -93,16 +92,20 @@ public class CategoryController {
     }
 
     @Log
-    @ApiOperation(value="删除文章类目")
+    @ApiOperation(value = "删除文章类目")
     @RequiresPermissions("cms:category:delete")
     @PostMapping("/delete")
     public Result delete(@RequestBody Long[] ids) {
         log.info("删除文章类目, ids={}", ids);
+        List<Category> categoryList = categoryService.list(new LambdaQueryWrapper<Category>().eq(Category::getParentId, ids[0]));
+        if (categoryList != null && categoryList.size() > 0) {
+            return Result.fail("请先删除子分类节点");
+        }
         categoryService.removeByIds(Arrays.asList(ids));
         return Result.ok();
     }
 
-    @ApiOperation(value="获取上级分类")
+    @ApiOperation(value = "获取上级分类集")
     @GetMapping("/getPIds/{id}")
     public Result getPIds(@PathVariable Long id) {
         List<Long> pIds = new ArrayList<>();

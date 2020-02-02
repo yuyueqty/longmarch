@@ -1,21 +1,21 @@
 package top.longmarch.sys.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.longmarch.core.annotation.Log;
-import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.common.Result;
 import top.longmarch.core.utils.PasswordUtil;
 import top.longmarch.sys.entity.User;
+import top.longmarch.sys.entity.vo.ChangeVO;
 import top.longmarch.sys.service.IUserService;
 
 import java.util.Arrays;
@@ -52,6 +52,30 @@ public class UserController {
     @GetMapping("/show/{id}")
     public Result show(@PathVariable("id")Long id) {
         User user = userService.getById(id);
+        return Result.ok().add(user);
+    }
+
+    @Log
+    @ApiOperation(value="修改用户密码")
+    @RequiresPermissions("sys:user:change:password")
+    @PostMapping("/changePassword")
+    public Result changePassword(@RequestBody ChangeVO changeVO) {
+        log.info("修改用户密码, 入参：{}", changeVO);
+        User user = new User();
+        changeVO.setPassword(PasswordUtil.password(changeVO.getPassword()));
+        BeanUtils.copyProperties(changeVO, user);
+        userService.updateById(user);
+        return Result.ok().add(user);
+    }
+
+    @Log
+    @ApiOperation(value="修改用户状态")
+    @PostMapping("/changeStatus")
+    public Result changeStatus(@RequestBody ChangeVO changeVO) {
+        log.info("修改用户状态, 入参：{}", changeVO);
+        User user = new User();
+        BeanUtils.copyProperties(changeVO, user);
+        userService.updateById(user);
         return Result.ok().add(user);
     }
 

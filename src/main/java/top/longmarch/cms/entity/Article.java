@@ -100,6 +100,10 @@ public class Article implements Serializable {
     @TableField(value = "update_time", fill = FieldFill.UPDATE)
     private Date updateTime;
 
+    @ApiModelProperty(value = "分类名称")
+    @TableField(exist = false)
+    private String categoryName;
+
     public Long getId() {
         return id;
     }
@@ -234,11 +238,19 @@ public class Article implements Serializable {
         this.updateTime = updateTime;
     }
 
+    public String getCategoryName() {
+        return categoryName;
+    }
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
     @Override
     public String toString() {
         return "Article{" +
                 "id=" + id +
                 ", categoryId=" + categoryId +
+                ", categoryName=" + categoryName +
                 ", title='" + title + '\'' +
                 ", summary='" + summary + '\'' +
                 ", content='" + content + '\'' +

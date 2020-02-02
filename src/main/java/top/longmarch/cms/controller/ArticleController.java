@@ -3,6 +3,7 @@ package top.longmarch.cms.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -23,6 +24,7 @@ import top.longmarch.core.enums.StatusEnum;
 import top.longmarch.core.utils.tree.TreeUtil;
 import top.longmarch.sys.entity.Permission;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -48,13 +50,33 @@ public class ArticleController {
     @ApiOperation(value = "搜索文章")
     @PostMapping("/search")
     public Result search(@RequestBody(required = false) Map<String, Object> params) {
-        IPage<Article> page = PageFactory.getInstance(params);
-        Object id = params.get("id");
-        LambdaQueryWrapper<Article> wrapper = new LambdaQueryWrapper<>();
-        // 自定义查询条件
-        wrapper.eq(Objects.nonNull(id), Article::getId, id);
-        wrapper.orderByDesc(Article::getId);
-        return Result.ok().add(articleService.page(page, wrapper));
+        Page<Article> page = PageFactory.getInstance(params);
+        if (params != null && params.get("categoryId") != null) {
+            List<Long> categoryIds = new ArrayList<>();
+            Long categoryId = Long.valueOf(params.get("categoryId").toString());
+            categoryIds.add(categoryId);
+            List<Category> categoryList = categoryService.list(new LambdaQueryWrapper<Category>()
+                    .eq(Category::getStatus, StatusEnum.YES.getValue()).eq(Category::getParentId, categoryId));
+            if (categoryList != null && categoryList.size() > 0) {
+                for (Category category : categoryList) {
+                    categoryIds.add(category.getId());
+                    buildP(categoryIds, category);
+                }
+            }
+            params.put("categoryIds", categoryIds);
+        }
+        return Result.ok().add(articleService.search(page, params));
+    }
+
+    private void buildP(List<Long> categoryIds, Category category) {
+        List<Category> categoryList = categoryService.list(new LambdaQueryWrapper<Category>()
+                .eq(Category::getStatus, StatusEnum.YES.getValue()).eq(Category::getParentId, category.getId()));
+        if (categoryList != null && categoryList.size() > 0) {
+            for (Category c : categoryList) {
+                categoryIds.add(c.getId());
+                buildP(categoryIds, c);
+            }
+        }
     }
 
     @ApiOperation(value = "查看文章")

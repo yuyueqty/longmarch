@@ -107,11 +107,15 @@ public class PermissionController {
     @PostMapping("/delete")
     public Result delete(@RequestBody Long[] ids) {
         log.info("删除权限信息, ids={}", ids);
+        List<Permission> permissionList = permissionService.list(new LambdaQueryWrapper<Permission>().eq(Permission::getParentId, ids[0]));
+        if (permissionList != null && permissionList.size() > 0) {
+            return Result.fail("请先删除子分类节点");
+        }
         permissionService.removeByIds(Arrays.asList(ids));
         return Result.ok();
     }
 
-    @ApiOperation(value = "删除权限信息")
+    @ApiOperation(value = "获取权限父节点集")
     @GetMapping("/getPIds/{id}")
     public Result getPIds(@PathVariable Long id) {
         List<Long> pIds = new ArrayList<>();

@@ -2,4 +2,43 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="top.longmarch.cms.dao.ArticleDao">
 
+    <select id="search" resultType="top.longmarch.cms.entity.Article" parameterType="Map">
+        SELECT
+            t1.id,
+            t1.title,
+            t1.summary,
+            t1.category_id AS categoryId,
+            t2.category_name AS categoryName,
+            t1.source_url AS sourceUrl,
+            t1.author,
+            t1.publish_time AS publishTime,
+            t1.publish_status AS publishStatus,
+            t1.clicks,
+            t1.likes,
+            t1.sort,
+            t1.recommend,
+            t1.label,
+            t1.create_time AS createTime,
+            t1.update_time AS updateTime
+        FROM cms_article t1
+        LEFT JOIN cms_category t2 ON t1.category_id = t2.id
+        <where>
+            <if test="params.publishStatus != null and params.publishStatus != '' ">
+                AND t1.publish_status = #{params.publishStatus}
+            </if>
+            <if test="params.recommend != null and params.recommend != '' ">
+                AND t1.recommend = #{params.recommend}
+            </if>
+            <if test="params.categoryIds != null">
+                AND t1.category_id IN
+                <foreach item="categoryId" collection="params.categoryIds"  open="(" separator="," close=")">
+                    #{categoryId}
+                </foreach>
+            </if>
+            <if test="params.fuzzySearch != null and params.fuzzySearch != ''">
+                AND (t1.title LIKE CONCAT(CONCAT('%',#{params.fuzzySearch},'%')))
+            </if>
+        </where>
+        ORDER BY t1.id DESC
+    </select>
 </mapper>

@@ -2,6 +2,7 @@ package top.longmarch.sys.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -15,15 +16,14 @@ import top.longmarch.core.annotation.Log;
 import top.longmarch.core.common.Constant;
 import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.common.Result;
+import top.longmarch.core.enums.StatusEnum;
+import top.longmarch.core.utils.LmUtils;
 import top.longmarch.sys.entity.Dictionary;
-import top.longmarch.sys.entity.Role;
 import top.longmarch.sys.service.IDictionaryService;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author YuYue
  * @since 2020-01-12
-*/
+ */
 @Api(value = "字典信息模块", tags = "字典信息模块接口")
 @RestController
 @RequestMapping("/sys/dictionary")
@@ -42,26 +42,40 @@ public class DictionaryController {
     @Autowired
     private IDictionaryService ictionaryService;
 
-    @ApiOperation(value="搜索字典信息")
+    @ApiOperation(value = "搜索字典信息")
     @PostMapping("/search")
     public Result search(@RequestBody(required = false) Map<String, Object> params) {
         IPage<Dictionary> page = PageFactory.getInstance(params);
         LambdaQueryWrapper<Dictionary> wrapper = new LambdaQueryWrapper<>();
         // 自定义查询条件
-        wrapper.like(Objects.nonNull(params.get(Constant.FUZZY_SEARCH)), Dictionary::getCode, params.get(Constant.FUZZY_SEARCH));
+        Object code = params.get("code");
+        Object fuzzySearch = params.get(Constant.FUZZY_SEARCH);
+        wrapper.eq(LmUtils.isNotBlank(code), Dictionary::getCode, code);
+        wrapper.like(LmUtils.isNotBlank(fuzzySearch), Dictionary::getLabel, fuzzySearch);
         return Result.ok().add(ictionaryService.page(page, wrapper));
     }
 
-    @ApiOperation(value="查看字典信息")
+    @ApiOperation(value = "字典编码")
+    @GetMapping("/loadDictionaryCode")
+    public Result loadDictionaryCode() {
+        QueryWrapper<Dictionary> wrapper = new QueryWrapper<>();
+        wrapper.eq("status", StatusEnum.YES.getValue());
+        wrapper.select("description as label", "code as value");
+        wrapper.groupBy("code");
+        List<Map<String, Object>> dictionaryList = ictionaryService.listMaps(wrapper);
+        return Result.ok().add(dictionaryList);
+    }
+
+    @ApiOperation(value = "查看字典信息")
     @RequiresPermissions("sys:dictionary:show")
     @GetMapping("/show/{id}")
-    public Result show(@PathVariable("id")Long id) {
+    public Result show(@PathVariable("id") Long id) {
         Dictionary dictionary = ictionaryService.getById(id);
         return Result.ok().add(dictionary);
     }
 
     @Log
-    @ApiOperation(value="创建字典信息")
+    @ApiOperation(value = "创建字典信息")
     @RequiresPermissions("sys:dictionary:create")
     @PostMapping("/create")
     public Result create(@Validated @RequestBody Dictionary dictionary) {
@@ -72,7 +86,7 @@ public class DictionaryController {
     }
 
     @Log
-    @ApiOperation(value="更新字典信息")
+    @ApiOperation(value = "更新字典信息")
     @RequiresPermissions("sys:dictionary:update")
     @PostMapping("/update")
     public Result update(@Validated @RequestBody Dictionary dictionary) {
@@ -82,7 +96,7 @@ public class DictionaryController {
     }
 
     @Log
-    @ApiOperation(value="删除字典信息")
+    @ApiOperation(value = "删除字典信息")
     @RequiresPermissions("sys:dictionary:delete")
     @PostMapping("/delete")
     public Result delete(@RequestBody Long[] ids) {

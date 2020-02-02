@@ -1,7 +1,11 @@
 package top.longmarch.cms.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import top.longmarch.cms.entity.Article;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.Map;
 
 /**
  * <p>
@@ -12,6 +16,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2020-01-30
  */
 public interface IArticleService extends IService<Article> {
+
+    IPage<Article> search(Page page, Map<String, Object> params);
 
     void saveArticle(Article article);
 

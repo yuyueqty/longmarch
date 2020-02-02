@@ -14,6 +14,7 @@ import top.longmarch.core.annotation.Log;
 import top.longmarch.core.common.Constant;
 import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.common.Result;
+import top.longmarch.core.utils.LmUtils;
 import top.longmarch.job.entity.ScheduleJob;
 import top.longmarch.job.service.IScheduleJobLogService;
 import top.longmarch.job.service.IScheduleJobService;
@@ -41,10 +42,12 @@ public class ScheduleJobController {
         Object status = params.get(Constant.STATUS);
         Object fuzzySearch = params.get(Constant.FUZZY_SEARCH);
         Wrapper<ScheduleJob> wrapper = new QueryWrapper<ScheduleJob>().lambda()
-                .eq(Objects.nonNull(status), ScheduleJob::getStatus, status)
-                .and(Objects.nonNull(fuzzySearch), p ->
+                .eq(LmUtils.isNotBlank(status), ScheduleJob::getStatus, status)
+                .and(LmUtils.isNotBlank(fuzzySearch), p ->
                         p.like(ScheduleJob::getBeanName, fuzzySearch)
-                                .or().like(ScheduleJob::getMethodName, fuzzySearch)).orderByDesc(ScheduleJob::getId);
+                                .or().like(ScheduleJob::getMethodName, fuzzySearch)
+                                .or().like(ScheduleJob::getRemark, fuzzySearch))
+                .orderByDesc(ScheduleJob::getId);
         return Result.ok().add(scheduleJobService.page(page, wrapper));
     }
 
