@@ -2,15 +2,13 @@
 
 **长征CMS**
 
-<video id="video" controls="" preload="none" poster="http://e3f49eaa46b57.cdn.sohucs.com//sohuscs/2020/2/3/17/29/5_171047d2131g160BS56_162387770_7_1b.jpg?j=98071">
-      <source id="mp4" src="http://www.56.com/u61/v_MTYyMzg3Nzcw.html" type="video/mp4">
-      </video>
-      
 演示地址：`http://www.longmarch.top`
 
 账号密码：`admin/111111`
 
 建议：为防止其他人修改密码，最好自己注册账号，默认管理员权限，所有功能都可体验。
+
+视频操作演示：http://www.56.com/u61/v_MTYyMzg3Nzcw.html
 
 项目采用前后端分离架构
 
