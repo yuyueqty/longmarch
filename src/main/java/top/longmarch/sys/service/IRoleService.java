@@ -1,8 +1,8 @@
 package top.longmarch.sys.service;
 
-import top.longmarch.sys.entity.Role;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import top.longmarch.sys.entity.vo.PermissionTree;
+import top.longmarch.sys.entity.Role;
 
 import java.util.List;
 import java.util.Map;
@@ -16,6 +16,8 @@ import java.util.Map;
  * @since 2020-01-12
  */
 public interface IRoleService extends IService<Role> {
+
+    IPage<Role> search(Map<String, Object> params);
 
     Map<String, Object> selectRolePermissionById(Long roleId);
 

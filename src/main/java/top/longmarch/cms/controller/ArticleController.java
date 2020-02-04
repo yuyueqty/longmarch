@@ -2,7 +2,6 @@ package top.longmarch.cms.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -22,9 +21,8 @@ import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.common.Result;
 import top.longmarch.core.enums.StatusEnum;
 import top.longmarch.core.utils.tree.TreeUtil;
-import top.longmarch.sys.entity.Permission;
+import top.longmarch.sys.entity.vo.ChangeStatusDTO;
 
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -97,11 +95,23 @@ public class ArticleController {
     }
 
     private void getPidList(List<Long> pIds, Category category) {
-        if (category.getParentId() == 0) {
-            return;
+        if (category.getParentId() != null && category.getParentId() > 0) {
+            pIds.add(category.getParentId());
+            getPidList(pIds, categoryService.getById(category.getParentId()));
         }
-        pIds.add(category.getParentId());
-        getPidList(pIds, categoryService.getById(category.getParentId()));
+    }
+
+    @Log
+    @ApiOperation(value = "修改文章推荐状态")
+    @RequiresPermissions("cms:article:update")
+    @PostMapping("/changeRecommendStatus")
+    public Result changeRecommendStatus(@RequestBody ChangeStatusDTO changeStatusDTO) {
+        log.info("修改文章推荐状态, 入参：{}", changeStatusDTO);
+        Article article = new Article();
+        article.setId(changeStatusDTO.getId());
+        article.setRecommend(changeStatusDTO.getStatus());
+        articleService.updateById(article);
+        return Result.ok().add(article);
     }
 
     @Log

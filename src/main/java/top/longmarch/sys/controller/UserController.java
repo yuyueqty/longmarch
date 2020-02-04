@@ -15,7 +15,8 @@ import top.longmarch.core.annotation.Log;
 import top.longmarch.core.common.Result;
 import top.longmarch.core.utils.PasswordUtil;
 import top.longmarch.sys.entity.User;
-import top.longmarch.sys.entity.vo.ChangeVO;
+import top.longmarch.sys.entity.vo.ChangeStatusDTO;
+import top.longmarch.sys.entity.vo.ChangeUserPasswordDTO;
 import top.longmarch.sys.service.IUserService;
 
 import java.util.Arrays;
@@ -59,22 +60,23 @@ public class UserController {
     @ApiOperation(value="修改用户密码")
     @RequiresPermissions("sys:user:change:password")
     @PostMapping("/changePassword")
-    public Result changePassword(@RequestBody ChangeVO changeVO) {
-        log.info("修改用户密码, 入参：{}", changeVO);
+    public Result changePassword(@RequestBody ChangeUserPasswordDTO changeUserPasswordDTO) {
+        log.info("修改用户密码, 入参：{}", changeUserPasswordDTO);
         User user = new User();
-        changeVO.setPassword(PasswordUtil.password(changeVO.getPassword()));
-        BeanUtils.copyProperties(changeVO, user);
+        changeUserPasswordDTO.setPassword(PasswordUtil.password(changeUserPasswordDTO.getPassword()));
+        BeanUtils.copyProperties(changeUserPasswordDTO, user);
         userService.updateById(user);
         return Result.ok().add(user);
     }
 
     @Log
     @ApiOperation(value="修改用户状态")
+    @RequiresPermissions("sys:user:update")
     @PostMapping("/changeStatus")
-    public Result changeStatus(@RequestBody ChangeVO changeVO) {
-        log.info("修改用户状态, 入参：{}", changeVO);
+    public Result changeStatus(@RequestBody ChangeStatusDTO changeStatusDTO) {
+        log.info("修改用户状态, 入参：{}", changeStatusDTO);
         User user = new User();
-        BeanUtils.copyProperties(changeVO, user);
+        BeanUtils.copyProperties(changeStatusDTO, user);
         userService.updateById(user);
         return Result.ok().add(user);
     }

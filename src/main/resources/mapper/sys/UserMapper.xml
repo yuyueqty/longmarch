@@ -15,6 +15,9 @@
             <if test="params.status != null">
                 AND u.status = #{params.status}
             </if>
+            <if test="params.roleId != null">
+                AND ur.role_id = #{params.roleId}
+            </if>
             <if test="params.fuzzySearch != null and params.fuzzySearch != ''">
                 AND (u.username LIKE CONCAT(CONCAT('%',#{params.fuzzySearch},'%'))
                 OR u.phone LIKE CONCAT(CONCAT('%',#{params.fuzzySearch},'%')))

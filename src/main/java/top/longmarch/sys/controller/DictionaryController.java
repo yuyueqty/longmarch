@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,8 @@ import top.longmarch.core.common.Result;
 import top.longmarch.core.enums.StatusEnum;
 import top.longmarch.core.utils.LmUtils;
 import top.longmarch.sys.entity.Dictionary;
+import top.longmarch.sys.entity.Permission;
+import top.longmarch.sys.entity.vo.ChangeStatusDTO;
 import top.longmarch.sys.service.IDictionaryService;
 
 import java.util.Arrays;
@@ -71,6 +74,18 @@ public class DictionaryController {
     @GetMapping("/show/{id}")
     public Result show(@PathVariable("id") Long id) {
         Dictionary dictionary = ictionaryService.getById(id);
+        return Result.ok().add(dictionary);
+    }
+
+    @Log
+    @ApiOperation(value="修改字典状态")
+    @RequiresPermissions("sys:dictionary:update")
+    @PostMapping("/changeStatus")
+    public Result changeStatus(@RequestBody ChangeStatusDTO changeStatusDTO) {
+        log.info("修改字典状态, 入参：{}", changeStatusDTO);
+        Dictionary dictionary = new Dictionary();
+        BeanUtils.copyProperties(changeStatusDTO, dictionary);
+        ictionaryService.updateById(dictionary);
         return Result.ok().add(dictionary);
     }
 

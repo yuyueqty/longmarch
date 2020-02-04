@@ -1,17 +1,21 @@
 package top.longmarch.sys.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.shiro.realm.CustomRealm;
 import top.longmarch.core.utils.tree.TreeUtil;
 import top.longmarch.sys.dao.RoleDao;
 import top.longmarch.sys.entity.Role;
 import top.longmarch.sys.entity.RolePermissionRel;
+import top.longmarch.sys.entity.User;
 import top.longmarch.sys.entity.vo.PermissionTree;
 import top.longmarch.sys.service.IRolePermissionRelService;
 import top.longmarch.sys.service.IRoleService;
@@ -43,6 +47,13 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements IRole
     private IRolePermissionRelService rolePermissionRelService;
     @Autowired
     private CustomRealm customRealm;
+
+    @Override
+    public IPage<Role> search(Map<String, Object> params) {
+        params = PageFactory.buildMap(params);
+        Page<Role> page = PageFactory.getInstance(params);
+        return roleDao.search(page, params);
+    }
 
     @Override
     public Map<String, Object> selectRolePermissionById(Long roleId) {

@@ -17,6 +17,8 @@ import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.common.Result;
 import top.longmarch.core.utils.tree.TreeUtil;
 import top.longmarch.sys.entity.Permission;
+import top.longmarch.sys.entity.Role;
+import top.longmarch.sys.entity.vo.ChangeStatusDTO;
 import top.longmarch.sys.entity.vo.PermissionTree;
 import top.longmarch.sys.service.IPermissionService;
 
@@ -78,6 +80,18 @@ public class PermissionController {
     @GetMapping("/show/{id}")
     public Result show(@PathVariable("id") Long id) {
         Permission permission = permissionService.getById(id);
+        return Result.ok().add(permission);
+    }
+
+    @Log
+    @ApiOperation(value="修改权限状态")
+    @RequiresPermissions("sys:permission:update")
+    @PostMapping("/changeStatus")
+    public Result changeStatus(@RequestBody ChangeStatusDTO changeStatusDTO) {
+        log.info("修改权限状态, 入参：{}", changeStatusDTO);
+        Permission permission = new Permission();
+        BeanUtils.copyProperties(changeStatusDTO, permission);
+        permissionService.updateById(permission);
         return Result.ok().add(permission);
     }
 

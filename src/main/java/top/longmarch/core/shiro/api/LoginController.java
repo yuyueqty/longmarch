@@ -22,7 +22,9 @@ import top.longmarch.sys.entity.User;
 import top.longmarch.sys.service.IDictionaryService;
 
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 @Api(value = "用户登陆模块", tags = "用户登陆模块接口")
 @RestController
@@ -84,7 +86,12 @@ public class LoginController {
         userMap.put("username", user.getUsername());
         userMap.put("avatar", user.getHeadImgUrl());
         userMap.put("dictionary", dictionaryService.getAllDict());
-        userMap.put("roles", userIRolePermissionService.getUserRoleByUserId(user.getId()));
+        Set<String> roles = userIRolePermissionService.getUserRoleByUserId(user.getId());
+        if (roles == null || roles.size() == 0) {
+            roles = new LinkedHashSet<>();
+            roles.add("未授权组");
+        }
+        userMap.put("roles", roles);
         userMap.put("permissions", userIRolePermissionService.getUserPermissionByUserId(user.getId()));
         userMap.put("menus", userIRolePermissionService.getUserMenusByUserId(user.getId()));
         // 用户信息

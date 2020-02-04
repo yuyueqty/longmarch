@@ -11,7 +11,7 @@
 	</update>
     
     <select id="selectAll" resultType="top.longmarch.job.entity.ScheduleJob">
-        select * from schedule_job
+        select * from schedule_job where status = 1
     </select>
 
 </mapper>

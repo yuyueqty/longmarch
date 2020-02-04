@@ -61,6 +61,9 @@ public class Role implements Serializable {
     @TableField(exist = false)
     private List<Long> checkedKeys;
 
+    @TableField(exist = false)
+    private Integer userCount;
+
     public Long getId() {
         return id;
     }
@@ -126,6 +129,14 @@ public class Role implements Serializable {
         this.checkedKeys = checkedKeys;
     }
 
+    public Integer getUserCount() {
+        return userCount;
+    }
+
+    public void setUserCount(Integer userCount) {
+        this.userCount = userCount;
+    }
+
     @Override
     public String toString() {
         return "Role{" +
@@ -133,6 +144,7 @@ public class Role implements Serializable {
             ", roleName=" + roleName +
             ", description=" + description +
             ", status=" + status +
+            ", userCount=" + userCount +
             ", createBy=" + createBy +
             ", createTime=" + createTime +
             ", updateBy=" + updateBy +
