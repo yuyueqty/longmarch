@@ -38,6 +38,7 @@ public class ScheduleJobController {
     @ApiOperation(value = "任务列表")
     @PostMapping("/search")
     public Result search(@RequestBody(required = false) Map<String, Object> params) {
+        params = PageFactory.buildMap(params);
         IPage<ScheduleJob> page = PageFactory.getInstance(params);
         Object status = params.get(Constant.STATUS);
         Object fuzzySearch = params.get(Constant.FUZZY_SEARCH);

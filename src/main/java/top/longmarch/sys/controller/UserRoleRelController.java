@@ -42,6 +42,7 @@ public class UserRoleRelController {
     @ApiOperation(value="搜索用户角色关联信息")
     @PostMapping("/search")
     public Result search(@RequestBody(required = false) Map<String, Object> params) {
+        params = PageFactory.buildMap(params);
         IPage<UserRoleRel> page = PageFactory.getInstance(params);
         LambdaQueryWrapper<UserRoleRel> wrapper = new LambdaQueryWrapper<>();
         // 自定义查询条件

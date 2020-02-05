@@ -69,6 +69,7 @@ public class PermissionController {
     @ApiOperation(value = "搜索权限信息")
     @PostMapping("/search")
     public Result search(@RequestBody(required = false) Map<String, Object> params) {
+        params = PageFactory.buildMap(params);
         IPage<Permission> page = PageFactory.getInstance(params);
         LambdaQueryWrapper<Permission> wrapper = new LambdaQueryWrapper<>();
         // 自定义查询条件

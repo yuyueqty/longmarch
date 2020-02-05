@@ -42,6 +42,7 @@ public class OperateLogController {
     @ApiOperation(value = "搜索操作日志")
     @PostMapping("/search")
     public Result search(@RequestBody(required = false) Map<String, Object> params) {
+        params = PageFactory.buildMap(params);
         IPage<OperateLog> page = PageFactory.getInstance(params);
         Object fuzzySearch = params.get(Constant.FUZZY_SEARCH);
         LambdaQueryWrapper<OperateLog> wrapper = new LambdaQueryWrapper<OperateLog>()

@@ -10,20 +10,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.longmarch.core.common.PageFactory;
+import top.longmarch.core.enums.StatusEnum;
 import top.longmarch.core.shiro.realm.CustomRealm;
 import top.longmarch.core.utils.tree.TreeUtil;
 import top.longmarch.sys.dao.RoleDao;
 import top.longmarch.sys.entity.Role;
 import top.longmarch.sys.entity.RolePermissionRel;
 import top.longmarch.sys.entity.User;
+import top.longmarch.sys.entity.UserRoleRel;
 import top.longmarch.sys.entity.vo.PermissionTree;
+import top.longmarch.sys.entity.vo.RoleUserDTO;
 import top.longmarch.sys.service.IRolePermissionRelService;
 import top.longmarch.sys.service.IRoleService;
+import top.longmarch.sys.service.IUserRoleRelService;
+import top.longmarch.sys.service.IUserService;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -47,6 +49,10 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements IRole
     private IRolePermissionRelService rolePermissionRelService;
     @Autowired
     private CustomRealm customRealm;
+    @Autowired
+    private IUserRoleRelService userRoleRelService;
+    @Autowired
+    private IUserService userService;
 
     @Override
     public IPage<Role> search(Map<String, Object> params) {
@@ -88,6 +94,56 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements IRole
         rolePermissionRelService.remove(new LambdaQueryWrapper<RolePermissionRel>().in(RolePermissionRel::getRoleId, roleIds));
         // 清除所有用户权限
         customRealm.clearCache();
+    }
+
+    @Override
+    public List<RoleUserDTO> handleLoadRoleUsers(Long roleId, String username) {
+        return roleDao.handleLoadRoleUsers(roleId, username);
+    }
+
+    @Transactional
+    @Override
+    public void addRoleUsers(Role role) {
+        // 页面选择的用户ID集合
+        List<Long> selectUserIds = role.getCheckedKeys();
+        if (selectUserIds == null || selectUserIds.size() == 0) {
+            return;
+        }
+        List<UserRoleRel> userRoleRelList = userRoleRelService.list(new LambdaQueryWrapper<UserRoleRel>()
+                .eq(UserRoleRel::getRoleId, role.getId()));
+        List<Long> insertUserIds = null;
+        List<Long> deleteUserIds = null;
+        if (userRoleRelList == null || userRoleRelList.size() == 0) {
+            // 添加所有用户到该角色下面
+            insertUserIds = selectUserIds;
+        } else {
+            List<Long> dhUserIds = userRoleRelList.stream().map(UserRoleRel::getUserId).collect(Collectors.toList());
+            insertUserIds = selectUserIds.stream().filter(id -> !dhUserIds.contains(id)).collect(Collectors.toList());
+            deleteUserIds = dhUserIds.stream().filter(id -> !selectUserIds.contains(id)).collect(Collectors.toList());
+        }
+        if (insertUserIds != null && insertUserIds.size() > 0) {
+            List<UserRoleRel> insertUserRoleRelList = new ArrayList<>();
+            for (Long userId : insertUserIds) {
+                UserRoleRel userRoleRel = new UserRoleRel();
+                userRoleRel.setRoleId(role.getId());
+                userRoleRel.setUserId(userId);
+                insertUserRoleRelList.add(userRoleRel);
+            }
+            userRoleRelService.saveBatch(insertUserRoleRelList);
+        }
+        if (deleteUserIds != null && deleteUserIds.size() > 0) {
+            userRoleRelService.remove(new LambdaQueryWrapper<UserRoleRel>()
+                    .eq(UserRoleRel::getRoleId, role.getId()).in(UserRoleRel::getUserId, deleteUserIds));
+        }
+        insertUserIds.addAll(deleteUserIds);
+        if (insertUserIds != null && insertUserIds.size() > 0) {
+            List<User> clearCacheUserList = userService.list(new LambdaQueryWrapper<User>()
+                    .eq(User::getStatus, StatusEnum.YES.getValue()).in(User::getId, insertUserIds));
+            for (User user : clearCacheUserList) {
+                // 清除用户权限信息
+                customRealm.clearCache(user.getUsername());
+            }
+        }
     }
 
     public void createRolePermissionsRel(Long roleId, List<Long> permissionIdList) {

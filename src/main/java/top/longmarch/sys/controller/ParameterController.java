@@ -54,6 +54,7 @@ public class ParameterController {
     @ApiOperation(value = "搜索平台参数表")
     @PostMapping("/search")
     public Result search(@RequestBody(required = false) Map<String, Object> params) {
+        params = PageFactory.buildMap(params);
         IPage<Parameter> page = PageFactory.getInstance(params);
         LambdaQueryWrapper<Parameter> wrapper = new LambdaQueryWrapper<>();
         // 自定义查询条件

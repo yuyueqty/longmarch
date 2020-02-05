@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import top.longmarch.core.annotation.Log;
 import top.longmarch.core.common.Result;
 import top.longmarch.sys.entity.Role;
+import top.longmarch.sys.entity.User;
 import top.longmarch.sys.entity.vo.ChangeStatusDTO;
+import top.longmarch.sys.entity.vo.RoleUserDTO;
 import top.longmarch.sys.service.IRoleService;
 
 import java.util.Arrays;
@@ -37,6 +39,7 @@ public class RoleController {
     private static final Logger log = LoggerFactory.getLogger(RoleController.class);
     @Autowired
     private IRoleService roleService;
+    @Autowired
 
     @ApiOperation(value = "搜索角色信息")
     @PostMapping("/search")
@@ -50,6 +53,15 @@ public class RoleController {
     public Result show(@PathVariable("id") Long id) {
         Role role = roleService.getById(id);
         return Result.ok().add(role);
+    }
+
+    @ApiOperation(value="加载角色下用户")
+    @RequiresPermissions("sys:user:show")
+    @PostMapping("/handleLoadRoleUsers")
+    public Result handleLoadRoleUsers(@RequestBody RoleUserDTO roleUserDTO) {
+        log.info("加载角色下用户, roleId={}, username={}", roleUserDTO.getRoleId(), roleUserDTO.getUsername());
+        List<RoleUserDTO> roleUserDTOS = roleService.handleLoadRoleUsers(roleUserDTO.getRoleId(), roleUserDTO.getUsername());
+        return Result.ok().add(roleUserDTOS);
     }
 
     @Log
@@ -82,6 +94,16 @@ public class RoleController {
         log.info("更新角色信息, 入参：{}", role);
         roleService.updateRole(role);
         return Result.ok().add(role);
+    }
+
+    @Log
+    @ApiOperation(value = "添加角色用户")
+    @RequiresPermissions("sys:role:update")
+    @PostMapping("/addRoleUsers")
+    public Result addRoleUsers(@Validated @RequestBody Role role) {
+        log.info("添加角色用户, roleId={}, checkedKeys={}", role.getId(), role.getCheckedKeys());
+        roleService.addRoleUsers(role);
+        return Result.ok();
     }
 
     @Log

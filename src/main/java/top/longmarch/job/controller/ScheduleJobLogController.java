@@ -32,6 +32,7 @@ public class ScheduleJobLogController {
     @ApiOperation(value = "定时任务日志列表")
     @PostMapping("/search")
     public Result search(@RequestBody(required = false) Map<String, Object> params) {
+        params = PageFactory.buildMap(params);
         IPage<ScheduleJobLog> page = PageFactory.getInstance(params);
         Object jobId = params.get("jobId");
         Object status = params.get(Constant.STATUS);

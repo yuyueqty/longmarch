@@ -42,6 +42,7 @@ public class LoginLogController {
     @ApiOperation(value = "搜索")
     @PostMapping("/search")
     public Result search(@RequestBody(required = false) Map<String, Object> params) {
+        params = PageFactory.buildMap(params);
         IPage<LoginLog> page = PageFactory.getInstance(params);
         Object fuzzySearch = params.get(Constant.FUZZY_SEARCH);
         LambdaQueryWrapper<LoginLog> wrapper = new LambdaQueryWrapper<>();

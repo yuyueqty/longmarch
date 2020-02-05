@@ -42,6 +42,7 @@ public class RolePermissionRelController {
     @ApiOperation(value="搜索角色权限关联信息")
     @PostMapping("/search")
     public Result search(@RequestBody(required = false) Map<String, Object> params) {
+        params = PageFactory.buildMap(params);
         IPage<RolePermissionRel> page = PageFactory.getInstance(params);
         LambdaQueryWrapper<RolePermissionRel> wrapper = new LambdaQueryWrapper<>();
         // 自定义查询条件

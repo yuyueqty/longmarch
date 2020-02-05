@@ -48,9 +48,11 @@ public class DictionaryController {
     @ApiOperation(value = "搜索字典信息")
     @PostMapping("/search")
     public Result search(@RequestBody(required = false) Map<String, Object> params) {
+        params = PageFactory.buildMap(params);
         IPage<Dictionary> page = PageFactory.getInstance(params);
         LambdaQueryWrapper<Dictionary> wrapper = new LambdaQueryWrapper<>();
         // 自定义查询条件
+
         Object code = params.get("code");
         Object fuzzySearch = params.get(Constant.FUZZY_SEARCH);
         wrapper.eq(LmUtils.isNotBlank(code), Dictionary::getCode, code);

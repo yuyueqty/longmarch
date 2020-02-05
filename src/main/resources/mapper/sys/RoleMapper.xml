@@ -36,4 +36,19 @@
         ON t2.permission_id = t1.id AND t2.role_id = #{roleId}
         WHERE t1.status = 1
     </select>
+
+    <select id="handleLoadRoleUsers" resultType="top.longmarch.sys.entity.vo.RoleUserDTO">
+        SELECT
+        t1.id AS userId,
+        t1.username,
+        CASE WHEN t2.user_id IS NULL THEN FALSE ELSE TRUE END AS checked
+        FROM sys_user t1 LEFT JOIN sys_user_role_rel t2 ON t1.id = t2.user_id AND t2.role_id = #{roleId}
+        <where>
+            t1.`status` = 1
+            <if test="username != null and username != ''">
+                AND t1.username LIKE CONCAT(CONCAT('%',#{username},'%'))
+            </if>
+        </where>
+        ORDER BY t1.id DESC
+    </select>
 </mapper>
