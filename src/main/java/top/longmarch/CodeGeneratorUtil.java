@@ -24,7 +24,8 @@ public class CodeGeneratorUtil {
     public static void main(String[] args) {
         CodeGeneratorUtil codeGenerator = new CodeGeneratorUtil();
 //        codeGenerator.run("sys2", Arrays.asList("sys_user","sys_role","sys_permission","sys_user_role_rel","sys_role_permission_rel","sys_dictionary", "sys_login_log", "sys_operate_log", "sys_parameter"));
-        codeGenerator.run("cms", Arrays.asList("cms_article","cms_category"));
+//        codeGenerator.run("cms", Arrays.asList("cms_article","cms_category"));
+        codeGenerator.run("sys", Arrays.asList("sys_department_user_rel"));
     }
 
     public void run(String moduleName, List<String> tableNameList) {
