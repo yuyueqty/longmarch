@@ -2,7 +2,7 @@
 
 **长征CMS**
 
-演示地址：`http://www.longmarch.top`
+演示地址：https://www.longmarch.top
 
 账号密码：`admin/111111`
 
