@@ -33,6 +33,10 @@ public class Permission implements Serializable {
     private Long parentId;
 
     @ApiModelProperty(value = "权限名称")
+    @TableField("parent_ids")
+    private String parentIds;
+
+    @ApiModelProperty(value = "权限名称")
     @TableField("permission_name")
     private String permissionName;
 
@@ -146,11 +150,20 @@ public class Permission implements Serializable {
         this.updateTime = updateTime;
     }
 
+    public String getParentIds() {
+        return parentIds;
+    }
+
+    public void setParentIds(String parentIds) {
+        this.parentIds = parentIds;
+    }
+
     @Override
     public String toString() {
         return "Permission{" +
             "id=" + id +
             ", parentId=" + parentId +
+            ", parentIds=" + parentIds +
             ", permissionName=" + permissionName +
             ", description=" + description +
             ", permissionString=" + permissionString +

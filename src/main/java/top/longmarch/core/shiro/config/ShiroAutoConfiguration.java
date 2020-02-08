@@ -82,11 +82,11 @@ public class ShiroAutoConfiguration {
         //启用身份验证缓存，即缓存AuthenticationInfo信息，默认false
         customRealm.setAuthenticationCachingEnabled(true);
         //缓存AuthenticationInfo信息的缓存名称 在ehcache-shiro.xml中有对应缓存的配置
-        customRealm.setAuthenticationCacheName("shiro-authenticationCache");
+        customRealm.setAuthenticationCacheName("__authenticationCache__");
         //启用授权缓存，即缓存AuthorizationInfo信息，默认false
         customRealm.setAuthorizationCachingEnabled(true);
         //缓存AuthorizationInfo信息的缓存名称  在ehcache-shiro.xml中有对应缓存的配置
-        customRealm.setAuthorizationCacheName("shiro-authorizationCache");
+        customRealm.setAuthorizationCacheName("__authorizationCache__");
         return customRealm;
     }
 

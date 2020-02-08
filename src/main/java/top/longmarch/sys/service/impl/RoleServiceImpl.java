@@ -1,12 +1,17 @@
 package top.longmarch.sys.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.longmarch.core.common.PageFactory;
@@ -19,6 +24,7 @@ import top.longmarch.sys.entity.RolePermissionRel;
 import top.longmarch.sys.entity.User;
 import top.longmarch.sys.entity.UserRoleRel;
 import top.longmarch.sys.entity.vo.PermissionTree;
+import top.longmarch.sys.entity.vo.RoleDTO;
 import top.longmarch.sys.entity.vo.RoleUserDTO;
 import top.longmarch.sys.service.IRolePermissionRelService;
 import top.longmarch.sys.service.IRoleService;
@@ -36,6 +42,7 @@ import java.util.stream.Collectors;
  * @author YuYue
  * @since 2020-01-12
  */
+@CacheConfig(cacheNames = {"RoleService"})
 @Service
 public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements IRoleService {
 
@@ -71,6 +78,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements IRole
         return map;
     }
 
+    @CacheEvict(key = "'all_role'")
     @Transactional
     @Override
     public void updateRole(Role role) {
@@ -80,6 +88,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements IRole
         customRealm.clearCache();
     }
 
+    @CacheEvict(key = "'all_role'")
     @Transactional
     @Override
     public void saveRole(Role role) {
@@ -87,6 +96,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements IRole
         createRolePermissionsRel(role.getId(), role.getCheckedKeys());
     }
 
+    @CacheEvict(key = "'all_role'")
     @Transactional
     @Override
     public void removeRole(List<Long> roleIds) {
@@ -144,6 +154,18 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements IRole
                 customRealm.clearCache(user.getUsername());
             }
         }
+    }
+
+    @Cacheable(key = "'all_role'")
+    @Override
+    public List<RoleDTO> getCacheListMaps() {
+        List<RoleDTO> roleDTOList = this.list().stream().map(role -> {
+            RoleDTO roleDTO = new RoleDTO();
+            roleDTO.setValue(role.getId());
+            roleDTO.setLabel(role.getRoleName());
+            return roleDTO;
+        }).collect(Collectors.toList());
+        return roleDTOList;
     }
 
     public void createRolePermissionsRel(Long roleId, List<Long> permissionIdList) {

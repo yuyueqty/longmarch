@@ -11,8 +11,8 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import top.longmarch.core.shiro.service.UserIRolePermissionService;
 import top.longmarch.core.enums.StatusEnum;
+import top.longmarch.core.shiro.service.UserIRolePermissionService;
 import top.longmarch.sys.entity.User;
 
 import java.util.Set;
@@ -67,8 +67,7 @@ public class CustomRealm extends AuthorizingRealm {
     protected void doClearCache(PrincipalCollection principals) {
         User user = (User) principals.getPrimaryPrincipal();
         String username = user.getUsername();
-        CacheManager cacheManager = getCacheManager();
-        Cache<Object, Object> authenticationCache = cacheManager.getCache(getAuthenticationCacheName());
+        Cache<Object, Object> authenticationCache = getCache(getAuthenticationCacheName());
         if (authenticationCache != null) {
             authenticationCache.remove(username);
             logger.info("用户[{}]认证信息已被清除！", username);
@@ -77,8 +76,7 @@ public class CustomRealm extends AuthorizingRealm {
     }
 
     public void clearCache(String username) {
-        CacheManager cacheManager = getCacheManager();
-        Cache<Object, Object> authorizationCache = cacheManager.getCache(getAuthorizationCacheName());
+        Cache<Object, Object> authorizationCache = getCache(getAuthorizationCacheName());
         if (authorizationCache != null) {
             authorizationCache.remove(username);
             logger.info("用户[{}]权限信息已被清除！", username);
@@ -86,12 +84,16 @@ public class CustomRealm extends AuthorizingRealm {
     }
 
     public void clearCache() {
-        CacheManager cacheManager = getCacheManager();
-        Cache<Object, Object> authorizationCache = cacheManager.getCache(getAuthorizationCacheName());
+        Cache<Object, Object> authorizationCache = getCache(getAuthorizationCacheName());
         if (authorizationCache != null) {
             authorizationCache.clear();
             logger.info("所有用户权限信息已被清除！");
         }
+    }
+
+    public Cache<Object, Object> getCache(String cacheName) {
+        CacheManager cacheManager = getCacheManager();
+        return cacheManager.getCache(cacheName);
     }
 
 }

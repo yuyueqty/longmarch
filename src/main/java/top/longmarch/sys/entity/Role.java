@@ -38,9 +38,17 @@ public class Role implements Serializable {
     @TableField("description")
     private String description;
 
-    @ApiModelProperty(value = "状态（1 停用， 0 启用， 默认 0）")
+    @ApiModelProperty(value = "状态（0 停用， 1 启用， 默认 1）")
     @TableField("status")
     private Integer status;
+
+    @ApiModelProperty(value = "数据权限（1 用户ID， 2 部门ID， 3 全部，默认 1）")
+    @TableField("data_perm")
+    private Integer dataPerm;
+
+    @ApiModelProperty(value = "数据权限ID集合")
+    @TableField("data_perm_ids")
+    private Integer dataPermIds;
 
     @ApiModelProperty(value = "创建人ID")
     @TableField(value = "create_by", fill = FieldFill.INSERT)
@@ -92,6 +100,23 @@ public class Role implements Serializable {
     public void setStatus(Integer status) {
         this.status = status;
     }
+
+    public Integer getDataPerm() {
+        return dataPerm;
+    }
+
+    public void setDataPerm(Integer dataPerm) {
+        this.dataPerm = dataPerm;
+    }
+
+    public Integer getDataPermIds() {
+        return dataPermIds;
+    }
+
+    public void setDataPermIds(Integer dataPermIds) {
+        this.dataPermIds = dataPermIds;
+    }
+
     public Long getCreateBy() {
         return createBy;
     }
@@ -144,6 +169,8 @@ public class Role implements Serializable {
             ", roleName=" + roleName +
             ", description=" + description +
             ", status=" + status +
+            ", dataPerm=" + dataPerm +
+            ", dataPermIds=" + dataPermIds +
             ", userCount=" + userCount +
             ", createBy=" + createBy +
             ", createTime=" + createTime +

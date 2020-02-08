@@ -30,6 +30,10 @@ public class Department implements Serializable {
     @TableField("parent_id")
     private Long parentId;
 
+    @ApiModelProperty(value = "父级IDS")
+    @TableField("parent_ids")
+    private String parentIds;
+
     @ApiModelProperty(value = "部门名称")
     @TableField("dep_name")
     private String depName;
@@ -67,11 +71,20 @@ public class Department implements Serializable {
         this.userCount = userCount;
     }
 
+    public String getParentIds() {
+        return parentIds;
+    }
+
+    public void setParentIds(String parentIds) {
+        this.parentIds = parentIds;
+    }
+
     @Override
     public String toString() {
         return "Department{" +
             "id=" + id +
             ", parentId=" + parentId +
+            ", parentIds=" + parentIds +
             ", depName=" + depName +
             ", userCount=" + userCount +
         "}";

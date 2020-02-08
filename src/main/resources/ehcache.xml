@@ -42,7 +42,7 @@
             statistics="true">
     </cache>
     <!-- 认证数据缓存 ，最后一次访问后一小时失效 -->
-    <cache name="shiro-authenticationCache"
+    <cache name="__authenticationCache__"
            maxEntriesLocalHeap="2000"
            overflowToDisk="false"
            eternal="false"
@@ -50,7 +50,7 @@
            statistics="true">
     </cache>
     <!-- 授权数据缓存  ，最后一次访问后一小时失效-->
-    <cache name="shiro-authorizationCache"
+    <cache name="__authorizationCache__"
            maxEntriesLocalHeap="2000"
            overflowToDisk="false"
            eternal="false"
@@ -66,7 +66,7 @@
            statistics="true">
     </cache>
     <!-- 系统参数缓存 -->
-    <cache name="parameters"
+    <cache name="ParameterService"
            maxEntriesLocalHeap="2000"
            overflowToDisk="true"
            eternal="false"
@@ -74,7 +74,15 @@
            statistics="true">
     </cache>
     <!-- 系统字典缓存 -->
-    <cache name="dictionarys"
+    <cache name="DictionaryService"
+           maxEntriesLocalHeap="2000"
+           overflowToDisk="true"
+           eternal="false"
+           timeToLiveSeconds="3600"
+           statistics="true">
+    </cache>
+    <!-- 系统角色缓存 -->
+    <cache name="RoleService"
            maxEntriesLocalHeap="2000"
            overflowToDisk="true"
            eternal="false"

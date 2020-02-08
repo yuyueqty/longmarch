@@ -51,7 +51,7 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentDao, Department
     public void addDepartmentUsers(DepartmentUserDTO departmentUserDTO) {
         // 页面选择的用户ID集合
         List<Long> selectUserIds = departmentUserDTO.getCheckedKeys();
-        if (selectUserIds == null || selectUserIds.size() == 0) {
+        if (selectUserIds == null) {
             return;
         }
         List<DepartmentUserRel> departmentUserRelList = departmentUserRelService.list(new LambdaQueryWrapper<DepartmentUserRel>()

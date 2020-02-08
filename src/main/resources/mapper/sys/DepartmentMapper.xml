@@ -6,6 +6,7 @@
         SELECT
             t2.id,
             t2.parent_id AS pid,
+            t2.parent_ids AS pids,
             t2.sort,
             t2.dep_name AS depName,
             COUNT(t1.user_id) AS userCount

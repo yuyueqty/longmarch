@@ -52,6 +52,7 @@ public class PermissionController {
             PermissionTree permissionTree = new PermissionTree();
             BeanUtils.copyProperties(permission, permissionTree);
             permissionTree.setPid(permission.getParentId());
+            permissionTree.setPids(permission.getParentIds());
             return permissionTree;
         }).collect(Collectors.toList());
         List<PermissionTree> permissionTrees = TreeUtil.list2Tree(permissionAllTreeList);
@@ -60,6 +61,7 @@ public class PermissionController {
             PermissionTree permissionTree = new PermissionTree();
             BeanUtils.copyProperties(permission, permissionTree);
             permissionTree.setPid(permission.getParentId());
+            permissionTree.setPids(permission.getParentIds());
             return permissionTree;
         }).collect(Collectors.toList());
         List<PermissionTree> permsList = TreeUtil.list2Tree(menuAllTreeList);

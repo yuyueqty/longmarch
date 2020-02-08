@@ -1,7 +1,6 @@
 package top.longmarch.sys.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import top.longmarch.core.annotation.Log;
 import top.longmarch.core.common.Result;
 import top.longmarch.sys.entity.Role;
-import top.longmarch.sys.entity.User;
 import top.longmarch.sys.entity.vo.ChangeStatusDTO;
 import top.longmarch.sys.entity.vo.RoleUserDTO;
 import top.longmarch.sys.service.IRoleService;
@@ -39,6 +37,7 @@ public class RoleController {
     private static final Logger log = LoggerFactory.getLogger(RoleController.class);
     @Autowired
     private IRoleService roleService;
+
     @Autowired
 
     @ApiOperation(value = "搜索角色信息")
@@ -55,7 +54,7 @@ public class RoleController {
         return Result.ok().add(role);
     }
 
-    @ApiOperation(value="加载角色下用户")
+    @ApiOperation(value = "加载角色下用户")
     @RequiresPermissions("sys:user:show")
     @PostMapping("/handleLoadRoleUsers")
     public Result handleLoadRoleUsers(@RequestBody RoleUserDTO roleUserDTO) {
@@ -125,9 +124,7 @@ public class RoleController {
     @ApiOperation(value = "加载所有角色")
     @GetMapping("/loadRoles")
     public Result loadRoles() {
-        List<Map<String, Object>> roleList = roleService.listMaps(new QueryWrapper<Role>()
-                .select("id as value, role_name as label"));
-        return Result.ok().add(roleList);
+        return Result.ok().add(roleService.getCacheListMaps());
     }
 
 }

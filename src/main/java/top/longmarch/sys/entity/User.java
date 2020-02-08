@@ -56,6 +56,14 @@ public class User implements Serializable {
     @TableField("last_login_time")
     private Date lastLoginTime;
 
+    @ApiModelProperty(value = "部门ID")
+    @TableField(value = "dept_id")
+    private Long deptId;
+
+    @ApiModelProperty(value = "部门PIDS")
+    @TableField("dept_pids")
+    private String deptPids;
+
     @ApiModelProperty(value = "创建人ID")
     @TableField(value = "create_by", fill = FieldFill.INSERT)
     private Long createBy;
@@ -77,6 +85,9 @@ public class User implements Serializable {
 
     @TableField(exist = false)
     private String roleNames;
+
+    @TableField(exist = false)
+    private String deptName;
 
     public Long getId() {
         return id;
@@ -134,6 +145,15 @@ public class User implements Serializable {
     public void setLastLoginTime(Date lastLoginTime) {
         this.lastLoginTime = lastLoginTime;
     }
+
+    public Long getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(Long deptId) {
+        this.deptId = deptId;
+    }
+
     public Long getCreateBy() {
         return createBy;
     }
@@ -179,6 +199,22 @@ public class User implements Serializable {
         this.roleNames = roleNames;
     }
 
+    public String getDeptName() {
+        return deptName;
+    }
+
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
+    }
+
+    public String getDeptPids() {
+        return deptPids;
+    }
+
+    public void setDeptPids(String deptPids) {
+        this.deptPids = deptPids;
+    }
+
     @Override
     public String toString() {
         return "SysUser{" +
@@ -190,6 +226,8 @@ public class User implements Serializable {
                 ", headImgUrl=" + headImgUrl +
                 ", loginCount=" + loginCount +
                 ", lastLoginTime=" + lastLoginTime +
+                ", deptId=" + deptId +
+                ", deptPids=" + deptPids +
                 ", createBy=" + createBy +
                 ", createTime=" + createTime +
                 ", updateBy=" + updateBy +

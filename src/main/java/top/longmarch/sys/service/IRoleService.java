@@ -3,6 +3,7 @@ package top.longmarch.sys.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.longmarch.sys.entity.Role;
+import top.longmarch.sys.entity.vo.RoleDTO;
 import top.longmarch.sys.entity.vo.RoleUserDTO;
 
 import java.util.List;
@@ -31,4 +32,6 @@ public interface IRoleService extends IService<Role> {
     List<RoleUserDTO> handleLoadRoleUsers(Long roleId, String username);
 
     void addRoleUsers(Role role);
+
+    List<RoleDTO> getCacheListMaps();
 }

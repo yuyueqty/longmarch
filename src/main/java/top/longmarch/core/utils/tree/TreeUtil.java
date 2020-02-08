@@ -5,10 +5,10 @@ import cn.hutool.core.collection.CollectionUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 public class TreeUtil {
-
-//    private static List childrenIdList = new ArrayList();
 
     /**
      * 获取指定节点和所有子节点集合
@@ -82,6 +82,41 @@ public class TreeUtil {
             }
         }
         return dataTree;
+    }
+
+    public static List<Tree> buildTreeList() {
+        List<Tree> treeList = new ArrayList<>();
+        Tree tree = new Tree();
+        tree.setId(1);
+        tree.setPid(0);
+        treeList.add(tree);
+
+        tree = new Tree();
+        tree.setId(2);
+        tree.setPid(1);
+        treeList.add(tree);
+
+        tree = new Tree();
+        tree.setId(3);
+        tree.setPid(1);
+        treeList.add(tree);
+
+        tree = new Tree();
+        tree.setId(4);
+        tree.setPid(3);
+        treeList.add(tree);
+
+        tree = new Tree();
+        tree.setId(5);
+        tree.setPid(3);
+        treeList.add(tree);
+
+        return treeList;
+    }
+
+    public static void main(String[] args) {
+        List<Tree> treeList = list2Tree(buildTreeList());
+        System.out.println(treeList);
     }
 
 }

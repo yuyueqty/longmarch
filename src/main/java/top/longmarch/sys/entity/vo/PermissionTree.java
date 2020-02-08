@@ -17,6 +17,9 @@ public class PermissionTree extends Tree<Long> {
 
     private static final long serialVersionUID = 1L;
 
+    @ApiModelProperty(value = "父节点IDS")
+    private String pids;
+
     @ApiModelProperty(value = "权限名称")
     private String permissionName;
 
@@ -94,6 +97,14 @@ public class PermissionTree extends Tree<Long> {
         this.createTime = createTime;
     }
 
+    public String getPids() {
+        return pids;
+    }
+
+    public void setPids(String pids) {
+        this.pids = pids;
+    }
+
     @Override
     public String toString() {
         return "PermissionTree{" +
@@ -101,6 +112,7 @@ public class PermissionTree extends Tree<Long> {
                 ", description='" + description + '\'' +
                 ", permissionString='" + permissionString + '\'' +
                 ", type=" + type +
+                ", pids=" + pids +
                 ", status=" + status +
                 ", checked=" + checked +
                 ", createTime=" + createTime +

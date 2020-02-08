@@ -4,13 +4,19 @@
 
     <select id="search" resultType="top.longmarch.sys.entity.User">
         SELECT
-        u.id, u.username, u.`status`, u.phone, u.login_count AS loginCount, u.last_login_time AS lastLoginTime,
-        u.create_time AS createTime, u.head_img_url AS headImgUrl,
-        GROUP_CONCAT(r.id ORDER BY u.id) roleIds,
-        GROUP_CONCAT(r.role_name ORDER BY u.id) roleNames
+            u.id, u.username, u.`status`, u.phone,
+            u.login_count AS loginCount,
+            u.last_login_time AS lastLoginTime,
+            u.create_time AS createTime,
+            u.head_img_url AS headImgUrl,
+            GROUP_CONCAT(r.id ORDER BY u.id) roleIds,
+            GROUP_CONCAT(r.role_name ORDER BY u.id) roleNames,
+            u.dept_pids AS deptPids,
+            d.dep_name AS deptName
         FROM sys_user u
         LEFT JOIN sys_user_role_rel ur ON ur.user_id = u.id
         LEFT JOIN sys_role r ON r.id = ur.role_id
+        LEFT JOIN sys_department d ON u.dept_id = d.id
         <where>
             <if test="params.status != null">
                 AND u.status = #{params.status}
