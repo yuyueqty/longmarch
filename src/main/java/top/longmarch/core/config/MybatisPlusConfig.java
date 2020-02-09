@@ -14,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import top.longmarch.core.common.Constant;
+import top.longmarch.core.utils.UserUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +26,12 @@ import java.util.List;
 public class MybatisPlusConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(MybatisPlusConfig.class);
-    private static final String TENANT_ID = "create_by";
+    private static final String USER_ID = "create_by";
     private static List<String> tableList = new ArrayList<String>();
 
     static {
         tableList.add("cms_article");
+        tableList.add("cms_category");
     }
 
     /**
@@ -45,13 +48,14 @@ public class MybatisPlusConfig {
         return new AutoFillMetaObjectHandler();
     }
 
-    @Bean
-    public PaginationInterceptor paginationInterceptor() {
+    //    @Bean
+    public PaginationInterceptor paginationInterceptor2() {
         logger.info("分页插件加载完成");
         return new PaginationInterceptor();
     }
 
-    public PaginationInterceptor paginationInterceptor2() {
+    @Bean
+    public PaginationInterceptor paginationInterceptor() {
         logger.info("分页插件加载完成");
         PaginationInterceptor paginationInterceptor = new PaginationInterceptor();
         /*
@@ -63,8 +67,10 @@ public class MybatisPlusConfig {
         tenantSqlParser.setTenantHandler(new TenantHandler() {
             @Override
             public Expression getTenantId(boolean where) {
-                //如果是where，可以追加多租户多个条件in，不是where的情况：比如当insert时，不能insert into user(name, tenant_id) values('test', tenant_id IN (1, 2));
-                final boolean multipleTenantIds = true;//自己判断是单个tenantId还是需要多个id in(1,2,3)
+                //如果是where，可以追加多租户多个条件in，不是where的情况：比如当insert时，
+                // 不能insert into user(name, tenant_id) values('test', tenant_id IN (1, 2));
+                //自己判断是单个tenantId还是需要多个id in(1,2,3)
+                final boolean multipleTenantIds = UserUtil.loginUser().getType() == Constant.MORE_USER;
                 if (where && multipleTenantIds) {
                     //演示如何实现tenant_id in (1,2)
                     return multipleTenantIdCondition();
@@ -75,16 +81,22 @@ public class MybatisPlusConfig {
             }
 
             private Expression singleTenantIdCondition() {
-                return new LongValue(1);//ID自己想办法获取到
+                if (UserUtil.loginUser().getType() == Constant.ONE_USER) {
+                    return new LongValue(UserUtil.loginUser().getId());
+                }
+                return new LongValue(0);//ID自己想办法获取到
             }
 
             private Expression multipleTenantIdCondition() {
                 final InExpression inExpression = new InExpression();
                 inExpression.setLeftExpression(new Column(getTenantIdColumn()));
                 final ExpressionList itemsList = new ExpressionList();
-                final List<Expression> inValues = new ArrayList<>(2);
-                inValues.add(new LongValue(1));//ID自己想办法获取到
-                inValues.add(new LongValue(2));
+                final List<Expression> inValues = new ArrayList<>(UserUtil.loginUser().getUserIdSet().size());
+                if (UserUtil.loginUser().getType() == Constant.MORE_USER) {
+                    for (Long deptId : UserUtil.loginUser().getUserIdSet()) {
+                        inValues.add(new LongValue(deptId));
+                    }
+                }
                 itemsList.setExpressions(inValues);
                 inExpression.setRightItemsList(itemsList);
                 return inExpression;
@@ -92,13 +104,13 @@ public class MybatisPlusConfig {
 
             @Override
             public String getTenantIdColumn() {
-                return TENANT_ID;
+                return USER_ID;
             }
 
             @Override
             public boolean doTableFilter(String tableName) {
                 // 这里可以判断是否过滤表
-                if (tableList.contains(tableName)) {
+                if (tableList.contains(tableName) && UserUtil.loginUser().getType() != Constant.All_USER) {
                     return false;
                 }
                 return true;

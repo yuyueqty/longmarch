@@ -15,7 +15,9 @@ import top.longmarch.sys.service.IDepartmentUserRelService;
 import top.longmarch.sys.service.IUserService;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -79,6 +81,27 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentDao, Department
         if (deleteUserIds != null && deleteUserIds.size() > 0) {
             departmentUserRelService.remove(new LambdaQueryWrapper<DepartmentUserRel>()
                     .eq(DepartmentUserRel::getDepartmentId, departmentUserDTO.getDepId()).in(DepartmentUserRel::getUserId, deleteUserIds));
+        }
+    }
+
+    @Override
+    public Set<Long> getDownDeptIds(Long deptId) {
+        Set<Long> deptIds = new LinkedHashSet<>();
+        deptIds.add(deptId);
+        List<Department> departmentList = this.list(new LambdaQueryWrapper<Department>().eq(Department::getParentId, deptId));
+        if (departmentList != null && departmentList.size() > 0) {
+            forLoop(departmentList, deptIds);
+        }
+        return deptIds;
+    }
+
+    private void forLoop(List<Department> departmentList, Set<Long> deptIds) {
+        for (Department department : departmentList) {
+            deptIds.add(department.getId());
+            List<Department> list = this.list(new LambdaQueryWrapper<Department>().eq(Department::getParentId, department.getId()));
+            if (list != null && list.size() > 0) {
+                forLoop(list, deptIds);
+            }
         }
     }
 

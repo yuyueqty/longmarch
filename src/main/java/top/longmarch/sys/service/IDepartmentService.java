@@ -6,6 +6,7 @@ import top.longmarch.sys.entity.vo.DepartmentTree;
 import top.longmarch.sys.entity.vo.DepartmentUserDTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -22,4 +23,6 @@ public interface IDepartmentService extends IService<Department> {
     List<DepartmentUserDTO> handleLoadDepartmentUsers(Long depId);
 
     void addDepartmentUsers(DepartmentUserDTO departmentUserDTO);
+
+    Set<Long> getDownDeptIds(Long deptId);
 }

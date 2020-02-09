@@ -1,9 +1,7 @@
 package top.longmarch.sys.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.slf4j.Logger;
@@ -26,10 +24,7 @@ import top.longmarch.sys.entity.UserRoleRel;
 import top.longmarch.sys.entity.vo.PermissionTree;
 import top.longmarch.sys.entity.vo.RoleDTO;
 import top.longmarch.sys.entity.vo.RoleUserDTO;
-import top.longmarch.sys.service.IRolePermissionRelService;
-import top.longmarch.sys.service.IRoleService;
-import top.longmarch.sys.service.IUserRoleRelService;
-import top.longmarch.sys.service.IUserService;
+import top.longmarch.sys.service.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -60,6 +55,8 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements IRole
     private IUserRoleRelService userRoleRelService;
     @Autowired
     private IUserService userService;
+    @Autowired
+    private IDepartmentService departmentService;
 
     @Override
     public IPage<Role> search(Map<String, Object> params) {

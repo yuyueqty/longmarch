@@ -15,4 +15,13 @@ public class Constant {
     public static final String DEFAULT_USER_ROLE = "default_user_role";
     public static final String SYS_PARAMS = "sys_params";
 
+    // 数据权限类型
+    public static final Integer ONE_USER = 1;
+    public static final Integer MORE_USER = 2;
+    public static final Integer All_USER = 3;
+
+    // 菜单/按钮
+    public static final Integer MENU = 1;
+    public static final Integer BUTTON = 2;
+
 }

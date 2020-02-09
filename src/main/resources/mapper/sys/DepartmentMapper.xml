@@ -4,15 +4,14 @@
 
     <select id="getDepartmentList" resultType="top.longmarch.sys.entity.vo.DepartmentTree">
         SELECT
-            t2.id,
-            t2.parent_id AS pid,
-            t2.parent_ids AS pids,
-            t2.sort,
-            t2.dep_name AS depName,
-            COUNT(t1.user_id) AS userCount
-        FROM sys_department_user_rel t1
-        RIGHT JOIN sys_department t2 ON t1.department_id = t2.id
-        GROUP BY t2.id ORDER BY t2.sort DESC
+            t1.id,
+            t1.parent_id AS pid,
+            t1.parent_ids AS pids,
+            t1.sort,
+            t1.dep_name AS depName,
+            COUNT(t2.dept_id) userCount
+        FROM sys_department t1 LEFT JOIN sys_user t2 ON t1.id = t2.dept_id AND t2.`status` = 1
+        GROUP BY t1.id ORDER BY t1.sort DESC
     </select>
 
     <select id="handleLoadDepartmentUsers" resultType="top.longmarch.sys.entity.vo.DepartmentUserDTO">

@@ -38,6 +38,10 @@ public class Department implements Serializable {
     @TableField("dep_name")
     private String depName;
 
+    @ApiModelProperty(value = "排序")
+    @TableField("sort")
+    private Integer sort;
+
     @TableField(exist = false)
     private Integer userCount;
 
@@ -79,6 +83,14 @@ public class Department implements Serializable {
         this.parentIds = parentIds;
     }
 
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
+
     @Override
     public String toString() {
         return "Department{" +
@@ -86,6 +98,7 @@ public class Department implements Serializable {
             ", parentId=" + parentId +
             ", parentIds=" + parentIds +
             ", depName=" + depName +
+            ", sort=" + sort +
             ", userCount=" + userCount +
         "}";
     }

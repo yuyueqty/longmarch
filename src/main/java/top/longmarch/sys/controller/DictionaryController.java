@@ -60,12 +60,17 @@ public class DictionaryController {
         return Result.ok().add(ictionaryService.page(page, wrapper));
     }
 
+    /**
+     * any_value mysql group by 的一个bug
+     * https://www.cnblogs.com/kenshinobiy/p/9580701.html
+     * @return
+     */
     @ApiOperation(value = "字典编码")
     @GetMapping("/loadDictionaryCode")
     public Result loadDictionaryCode() {
         QueryWrapper<Dictionary> wrapper = new QueryWrapper<>();
         wrapper.eq("status", StatusEnum.YES.getValue());
-        wrapper.select("description as label", "code as value");
+        wrapper.select("any_value(description) as label", "code as value");
         wrapper.groupBy("code");
         List<Map<String, Object>> dictionaryList = ictionaryService.listMaps(wrapper);
         return Result.ok().add(dictionaryList);

@@ -7,6 +7,8 @@
             t2.id,
             t2.role_name AS roleName,
             t2.description,
+            t2.data_perm AS dataPerm,
+            t2.data_perm_ids AS dataPermIds,
             t2.`status`,
             t2. create_time AS createTime,
             COUNT(t1.user_id) AS userCount
@@ -32,6 +34,20 @@
             t1.type,
             t1.create_time AS createTime,
             CASE WHEN t2.permission_id IS NULL THEN FALSE ELSE TRUE END AS checked
+        FROM sys_permission t1 LEFT JOIN sys_role_permission_rel t2
+        ON t2.permission_id = t1.id AND t2.role_id = #{roleId}
+        WHERE t1.status = 1
+    </select>
+
+    <select id="selectRoleDeptById" resultType="top.longmarch.sys.entity.vo.DepartmentTree">
+        SELECT
+        t1.id,
+        t1.parent_id AS pid,
+        t1.permission_name AS permissionName,
+        t1.permission_string AS permissionString,
+        t1.type,
+        t1.create_time AS createTime,
+        CASE WHEN t2.permission_id IS NULL THEN FALSE ELSE TRUE END AS checked
         FROM sys_permission t1 LEFT JOIN sys_role_permission_rel t2
         ON t2.permission_id = t1.id AND t2.role_id = #{roleId}
         WHERE t1.status = 1

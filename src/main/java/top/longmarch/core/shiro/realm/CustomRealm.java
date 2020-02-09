@@ -15,6 +15,7 @@ import top.longmarch.core.enums.StatusEnum;
 import top.longmarch.core.shiro.service.UserIRolePermissionService;
 import top.longmarch.sys.entity.User;
 
+import java.util.Map;
 import java.util.Set;
 
 public class CustomRealm extends AuthorizingRealm {
@@ -48,6 +49,9 @@ public class CustomRealm extends AuthorizingRealm {
         if (StatusEnum.NO.getValue() == user.getStatus()) {
             throw new LockedAccountException("用户已停用");
         }
+        Map<String, Object> map = userIRolePermissionService.getRoleDeptIdsByUserId(user.getId());
+        user.setType(Integer.valueOf(map.get("type").toString()));
+        user.setUserIdSet((Set) map.get("userIdSet"));
         return new SimpleAuthenticationInfo(user, user.getPassword(), getName());
     }
 

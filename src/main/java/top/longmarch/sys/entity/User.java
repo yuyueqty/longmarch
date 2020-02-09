@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
+import java.util.Set;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -88,6 +90,18 @@ public class User implements Serializable {
 
     @TableField(exist = false)
     private String deptName;
+
+    /**
+     * 数据权限类型（1 个人， 2 部门， 3 全部）
+     */
+    @TableField(exist = false)
+    private Integer type;
+
+    /**
+     * 允许访问的部门ID集合
+     */
+    @TableField(exist = false)
+    private Set<Long> userIdSet;
 
     public Long getId() {
         return id;
@@ -213,6 +227,22 @@ public class User implements Serializable {
 
     public void setDeptPids(String deptPids) {
         this.deptPids = deptPids;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public Set<Long> getUserIdSet() {
+        return userIdSet;
+    }
+
+    public void setUserIdSet(Set<Long> userIdSet) {
+        this.userIdSet = userIdSet;
     }
 
     @Override
