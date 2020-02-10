@@ -39,7 +39,7 @@
 
 ### 项目选项
 | 技术        | 版本   |  地址  |
-| --------   | :-----:  | :----:  |
+| --------   | :-----:  | :----  |
 | Spring Boot     | 2.1.6.RELEASE |   http://projects.spring.io/spring-boot/     |
 | mybatis-plus-boot-starter        |   3.3.1.tmp   |   http://mp.baomidou.com/guide/install.html#spring-boot   |
 | druid-spring-boot-starter        |    1.1.17    |  https://github.com/alibaba/druid/tree/master/druid-spring-boot-starter  |
