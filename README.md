@@ -6,6 +6,7 @@
 项目地址：https://www.longmarch.top  
 账号密码：admin/111111  
 视频演示：http://www.56.com/u61/v_MTYyMzg3Nzcw.html  
+前端地址：https://github.com/yuyueqty/longmarch-web
 
 ### 系统特色
 
