@@ -13,12 +13,12 @@ spring:
       time-zone: GMT+8
   datasource:
     druid:
-#      url: jdbc:mysql://122.51.244.159:3306/longmarch?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true
-#      username: longmarch
-#      password: pfbNKZmkcZ7CDhSf
-      url: jdbc:mysql://192.168.1.115:3306/longmarch?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true
-      username: root
-      password: root
+      url: jdbc:mysql://122.51.244.159:3306/longmarch?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true
+      username: longmarch
+      password: pfbNKZmkcZ7CDhSf
+#      url: jdbc:mysql://192.168.1.115:3306/longmarch?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true
+#      username: root
+#      password: root
       driver-class-name: com.mysql.cj.jdbc.Driver
       # 下面为连接池的补充设置，应用到上面所有数据源中
       initial-size: 5
