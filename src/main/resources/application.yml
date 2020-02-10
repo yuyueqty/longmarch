@@ -96,6 +96,6 @@ mybatis-plus:
 #    default-enum-type-handler: com.baomidou.mybatisplus.extension.handlers.EnumTypeHandler
 
 logging:
-#  config: classpath:conf/log4j2.xml
-  level:
-    top.longmarch: debug
+  config: classpath:conf/log4j2.xml
+#  level:
+#    top.longmarch: debug

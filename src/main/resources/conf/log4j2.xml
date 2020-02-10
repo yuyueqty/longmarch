@@ -3,8 +3,8 @@
     <!-- 日志文件目录和压缩文件 -->
     <Properties>
         <Property name="projectName">long-march</Property>
-        <Property name="fileName">d:/logs</Property>
-        <Property name="fileGz">d:/logs/7z</Property>
+        <Property name="fileName">./logs</Property>
+        <Property name="fileGz">./logs/7z</Property>
     </Properties>
     <Appenders>
         <!--这个输出控制台的配置 -->
