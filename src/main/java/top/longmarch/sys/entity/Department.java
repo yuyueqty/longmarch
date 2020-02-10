@@ -35,8 +35,8 @@ public class Department implements Serializable {
     private String parentIds;
 
     @ApiModelProperty(value = "部门名称")
-    @TableField("dep_name")
-    private String depName;
+    @TableField("dept_name")
+    private String deptName;
 
     @ApiModelProperty(value = "排序")
     @TableField("sort")
@@ -59,12 +59,13 @@ public class Department implements Serializable {
     public void setParentId(Long parentId) {
         this.parentId = parentId;
     }
-    public String getDepName() {
-        return depName;
+
+    public String getDeptName() {
+        return deptName;
     }
 
-    public void setDepName(String depName) {
-        this.depName = depName;
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
     }
 
     public Integer getUserCount() {
@@ -97,7 +98,7 @@ public class Department implements Serializable {
             "id=" + id +
             ", parentId=" + parentId +
             ", parentIds=" + parentIds +
-            ", depName=" + depName +
+            ", deptName=" + deptName +
             ", sort=" + sort +
             ", userCount=" + userCount +
         "}";

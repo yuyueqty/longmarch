@@ -41,4 +41,12 @@
         </where>
         ORDER BY t1.id DESC
     </select>
+
+    <update id="batchPublishArticles">
+        UPDATE cms_article SET publish_status = 3, update_time = NOW()
+        WHERE publish_status = 1 AND auto_publish_status = 1
+        AND DATE_FORMAT(publish_time,'%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
+    </update>
+
+
 </mapper>

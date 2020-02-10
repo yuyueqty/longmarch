@@ -64,6 +64,10 @@ public class Article implements Serializable {
     @TableField("publish_status")
     private Integer publishStatus;
 
+    @ApiModelProperty(value = "是否自动发布（0 否，1 是，默认 0）")
+    @TableField("auto_publish_status")
+    private Integer autoPublishStatus;
+
     @ApiModelProperty(value = "点击次数（默认0）")
     @TableField("clicks")
     private Integer clicks;
@@ -245,6 +249,14 @@ public class Article implements Serializable {
         this.categoryName = categoryName;
     }
 
+    public Integer getAutoPublishStatus() {
+        return autoPublishStatus;
+    }
+
+    public void setAutoPublishStatus(Integer autoPublishStatus) {
+        this.autoPublishStatus = autoPublishStatus;
+    }
+
     @Override
     public String toString() {
         return "Article{" +
@@ -259,6 +271,7 @@ public class Article implements Serializable {
                 ", author='" + author + '\'' +
                 ", publishTime=" + publishTime +
                 ", publishStatus=" + publishStatus +
+                ", autoPublishStatus=" + autoPublishStatus +
                 ", clicks=" + clicks +
                 ", likes=" + likes +
                 ", sort=" + sort +

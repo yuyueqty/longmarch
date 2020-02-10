@@ -17,7 +17,7 @@ import java.util.List;
  */
 public interface DepartmentDao extends BaseMapper<Department> {
 
-    List<DepartmentTree> getDepartmentList();
+    List<DepartmentTree> getDepartmentTree();
 
     List<DepartmentUserDTO> handleLoadDepartmentUsers(Long depId);
 }

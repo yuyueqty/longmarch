@@ -2,13 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="top.longmarch.sys.dao.DepartmentDao">
 
-    <select id="getDepartmentList" resultType="top.longmarch.sys.entity.vo.DepartmentTree">
+    <select id="getDepartmentTree" resultType="top.longmarch.sys.entity.vo.DepartmentTree">
         SELECT
             t1.id,
             t1.parent_id AS pid,
             t1.parent_ids AS pids,
             t1.sort,
-            t1.dep_name AS depName,
+            t1.dept_name AS deptName,
             COUNT(t2.dept_id) userCount
         FROM sys_department t1 LEFT JOIN sys_user t2 ON t1.id = t2.dept_id AND t2.`status` = 1
         GROUP BY t1.id ORDER BY t1.sort DESC

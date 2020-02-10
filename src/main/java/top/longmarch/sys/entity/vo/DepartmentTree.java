@@ -5,7 +5,7 @@ import top.longmarch.core.utils.tree.Tree;
 public class DepartmentTree extends Tree<Long> {
 
     private String pids;
-    private String depName;
+    private String deptName;
     private Integer userCount;
     private Integer sort;
 
@@ -17,12 +17,12 @@ public class DepartmentTree extends Tree<Long> {
         this.pids = pids;
     }
 
-    public String getDepName() {
-        return depName;
+    public String getDeptName() {
+        return deptName;
     }
 
-    public void setDepName(String depName) {
-        this.depName = depName;
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
     }
 
     public Integer getUserCount() {

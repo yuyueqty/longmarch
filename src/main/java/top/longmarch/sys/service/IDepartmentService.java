@@ -18,11 +18,11 @@ import java.util.Set;
  */
 public interface IDepartmentService extends IService<Department> {
 
-    List<DepartmentTree> getDepartmentList();
+    List<DepartmentTree> getDepartmentTree();
 
     List<DepartmentUserDTO> handleLoadDepartmentUsers(Long depId);
 
-    void addDepartmentUsers(DepartmentUserDTO departmentUserDTO);
-
     Set<Long> getDownDeptIds(Long deptId);
+
+    List<Long> getUpDeptIds(Long deptId);
 }

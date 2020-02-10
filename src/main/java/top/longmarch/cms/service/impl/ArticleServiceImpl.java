@@ -16,7 +16,6 @@ import top.longmarch.cms.service.IArticleService;
 import top.longmarch.core.utils.SummaryExtractorUtil;
 import top.longmarch.core.utils.UserUtil;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -67,20 +66,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleDao, Article> impleme
     @Override
     public void batchPublishArticles() {
         // 发布时间小于等于当前时间，且发布状态必须为草稿
-        List<Article> articleList = this.list(new LambdaQueryWrapper<Article>()
-                .eq(Article::getPublishStatus, 1)
-                .le(Article::getPublishTime, new Date()));
-        if (articleList != null && articleList.size() > 0) {
-            List<Article> updateArticleList = new ArrayList<>();
-            for (Article article : articleList) {
-                article.setPublishStatus(3);
-                article.setUpdateBy(article.getCreateBy());
-                article.setUpdateTime(new Date());
-                updateArticleList.add(article);
-            }
-            this.updateBatchById(updateArticleList);
-        }
-        log.info("批量更新文章状态数量：{}", articleList.size());
+        articleDao.batchPublishArticles();
+        log.info("定时更新文章状态执行完成");
     }
 
 }

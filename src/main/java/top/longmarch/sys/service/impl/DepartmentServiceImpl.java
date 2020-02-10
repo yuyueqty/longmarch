@@ -4,21 +4,15 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import top.longmarch.core.common.Result;
 import top.longmarch.core.utils.tree.TreeUtil;
 import top.longmarch.sys.dao.DepartmentDao;
 import top.longmarch.sys.entity.Department;
-import top.longmarch.sys.entity.DepartmentUserRel;
 import top.longmarch.sys.entity.vo.DepartmentTree;
 import top.longmarch.sys.entity.vo.DepartmentUserDTO;
 import top.longmarch.sys.service.IDepartmentService;
-import top.longmarch.sys.service.IDepartmentUserRelService;
-import top.longmarch.sys.service.IUserService;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * <p>
@@ -33,55 +27,16 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentDao, Department
 
     @Autowired
     private DepartmentDao departmentDao;
-    @Autowired
-    private IDepartmentUserRelService departmentUserRelService;
-    @Autowired
-    private IUserService userService;
 
 
     @Override
-    public List<DepartmentTree> getDepartmentList() {
-        return TreeUtil.list2Tree(departmentDao.getDepartmentList());
+    public List<DepartmentTree> getDepartmentTree() {
+        return TreeUtil.list2Tree(departmentDao.getDepartmentTree());
     }
 
     @Override
     public List<DepartmentUserDTO> handleLoadDepartmentUsers(Long depId) {
         return departmentDao.handleLoadDepartmentUsers(depId);
-    }
-
-    @Override
-    public void addDepartmentUsers(DepartmentUserDTO departmentUserDTO) {
-        // 页面选择的用户ID集合
-        List<Long> selectUserIds = departmentUserDTO.getCheckedKeys();
-        if (selectUserIds == null) {
-            return;
-        }
-        List<DepartmentUserRel> departmentUserRelList = departmentUserRelService.list(new LambdaQueryWrapper<DepartmentUserRel>()
-                .eq(DepartmentUserRel::getDepartmentId, departmentUserDTO.getDepId()));
-        List<Long> insertUserIds = null;
-        List<Long> deleteUserIds = null;
-        if (departmentUserRelList == null || departmentUserRelList.size() == 0) {
-            // 添加所有用户到该部门下面
-            insertUserIds = selectUserIds;
-        } else {
-            List<Long> dhUserIds = departmentUserRelList.stream().map(DepartmentUserRel::getUserId).collect(Collectors.toList());
-            insertUserIds = selectUserIds.stream().filter(id -> !dhUserIds.contains(id)).collect(Collectors.toList());
-            deleteUserIds = dhUserIds.stream().filter(id -> !selectUserIds.contains(id)).collect(Collectors.toList());
-        }
-        if (insertUserIds != null && insertUserIds.size() > 0) {
-            List<DepartmentUserRel> insertDepartmentUserRelList = new ArrayList<>();
-            for (Long userId : insertUserIds) {
-                DepartmentUserRel departmentUserRel = new DepartmentUserRel();
-                departmentUserRel.setDepartmentId(departmentUserDTO.getDepId());
-                departmentUserRel.setUserId(userId);
-                insertDepartmentUserRelList.add(departmentUserRel);
-            }
-            departmentUserRelService.saveBatch(insertDepartmentUserRelList);
-        }
-        if (deleteUserIds != null && deleteUserIds.size() > 0) {
-            departmentUserRelService.remove(new LambdaQueryWrapper<DepartmentUserRel>()
-                    .eq(DepartmentUserRel::getDepartmentId, departmentUserDTO.getDepId()).in(DepartmentUserRel::getUserId, deleteUserIds));
-        }
     }
 
     @Override
@@ -103,6 +58,30 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentDao, Department
                 forLoop(list, deptIds);
             }
         }
+    }
+
+    @Override
+    public List<Long> getUpDeptIds(Long deptId) {
+        List<Long> deptIds = new ArrayList<>();
+        Department department = this.getById(deptId);
+        if (department == null) {
+            Result.ok().add(deptIds);
+        }
+        if (department.getParentId() == 0) {
+            deptIds.add(deptId);
+            Result.ok().add(deptIds);
+        }
+        forLoop(deptIds, department);
+        Collections.sort(deptIds);
+        return deptIds;
+    }
+
+    private void forLoop(List<Long> deptIds, Department department) {
+        if (department.getParentId() == 0) {
+            return;
+        }
+        deptIds.add(department.getParentId());
+        forLoop(deptIds, this.getById(department.getParentId()));
     }
 
 }

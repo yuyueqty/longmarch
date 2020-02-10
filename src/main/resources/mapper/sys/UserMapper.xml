@@ -12,7 +12,7 @@
             GROUP_CONCAT(r.id ORDER BY u.id) roleIds,
             GROUP_CONCAT(r.role_name ORDER BY u.id) roleNames,
             u.dept_pids AS deptPids,
-            d.dep_name AS deptName
+            d.dept_name AS deptName
         FROM sys_user u
         LEFT JOIN sys_user_role_rel ur ON ur.user_id = u.id
         LEFT JOIN sys_role r ON r.id = ur.role_id

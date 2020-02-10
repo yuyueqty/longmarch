@@ -40,7 +40,7 @@ public class DepartmentController {
     @ApiOperation(value = "权限树")
     @PostMapping("/tree")
     public Result tree() {
-        return Result.ok().add(departmentService.getDepartmentList());
+        return Result.ok().add(departmentService.getDepartmentTree());
     }
 
     @ApiOperation(value = "搜索部门信息")
@@ -70,16 +70,6 @@ public class DepartmentController {
     }
 
     @Log
-    @ApiOperation(value = "添加部门用户")
-    @RequiresPermissions("sys:department:update")
-    @PostMapping("/addDepartmentUsers")
-    public Result addDepartmentUsers(@Validated @RequestBody DepartmentUserDTO departmentUserDTO) {
-        log.info("添加部门用户, depId={}, checkedKeys={}", departmentUserDTO.getDepId(), departmentUserDTO.getCheckedKeys());
-        departmentService.addDepartmentUsers(departmentUserDTO);
-        return Result.ok();
-    }
-
-    @Log
     @ApiOperation(value = "创建部门信息")
     @RequiresPermissions("sys:department:create")
     @PostMapping("/create")
@@ -105,7 +95,8 @@ public class DepartmentController {
     @PostMapping("/delete")
     public Result delete(@RequestBody Long[] ids) {
         log.info("删除部门信息, ids={}", ids);
-        List<Department> departmentList = departmentService.list(new LambdaQueryWrapper<Department>().eq(Department::getParentId, ids[0]));
+        List<Department> departmentList = departmentService.list(new LambdaQueryWrapper<Department>()
+                .eq(Department::getParentId, ids[0]));
         if (departmentList != null && departmentList.size() > 0) {
             return Result.fail("请先删除子部门节点");
         }
@@ -116,26 +107,8 @@ public class DepartmentController {
     @ApiOperation(value = "获取上级部门集")
     @GetMapping("/getPIds/{id}")
     public Result getPIds(@PathVariable Long id) {
-        List<Long> pIds = new ArrayList<>();
-        Department department = departmentService.getById(id);
-        if (department == null) {
-            Result.ok().add(pIds);
-        }
-        if (department.getParentId() == 0) {
-            pIds.add(id);
-            Result.ok().add(pIds);
-        }
-        getPidList(pIds, department);
-        Collections.sort(pIds);
+        List<Long> pIds = departmentService.getUpDeptIds(id);
         return Result.ok().add(pIds);
-    }
-
-    private void getPidList(List<Long> pIds, Department department) {
-        if (department.getParentId() == 0) {
-            return;
-        }
-        pIds.add(department.getParentId());
-        getPidList(pIds, departmentService.getById(department.getParentId()));
     }
 
 }

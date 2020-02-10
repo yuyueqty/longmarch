@@ -19,7 +19,7 @@
 		<spring-cloud.version>Greenwich.SR2</spring-cloud.version>
 		<!-- MyBatis-Plus插件 已包含MyBatis和Spring集成jar包 -->
 		<!-- http://mp.baomidou.com/guide/install.html#spring-boot -->
-		<mybatis-plus-spring-boot-starter.sersion>3.3.0</mybatis-plus-spring-boot-starter.sersion>
+		<mybatis-plus-spring-boot-starter.sersion>3.3.1.tmp</mybatis-plus-spring-boot-starter.sersion>
 		<mybatis-plus-generator.sersion>3.3.1.tmp</mybatis-plus-generator.sersion>
 		<!-- https://github.com/alibaba/druid/tree/master/druid-spring-boot-starter -->
 		<druid-spring-boot-starter.sersion>1.1.17</druid-spring-boot-starter.sersion>
