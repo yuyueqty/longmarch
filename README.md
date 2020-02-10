@@ -6,6 +6,7 @@
 项目地址：https://www.longmarch.top  
 账号密码：admin/111111  
 视频演示：http://www.56.com/u61/v_MTYyMzg3Nzcw.html  
+前端地址：https://github.com/yuyueqty/longmarch-web
 
 ### 系统特色
 
@@ -53,40 +54,41 @@
 | vue-element-admin        |    last-version    |  https://github.com/PanJiaChen/vue-element-admin  |
 
 ### 预览图片
-![用户管理页面][1]
+![用户管理][2]
 
-![角色管理][2]
+![角色管理][3]
 
-![部门管理][3]
+![部门管理][4]
 
-![权限管理][4]
+![权限管理][5]
 
-![字典管理][5]
+![字典管理][6]
 
-![登录日志][6]
+![登录日志][7]
 
-![操作日志][7]
+![操作日志][8]
 
-![系统参数配置页面][8]
+![系统参数配置页面][9]
 
-![任务管理][9]
+![任务管理][10]
 
-![文章管理][10]
+![文章管理][11]
 
-![编辑文章][11]
+![编辑文章][12]
 
-![文章分类管理][12]
+![文章分类管理][13]
+
 
   [1]: http://upload.longmarch.top/2.jpg
-  [2]: http://upload.longmarch.top/13.jpg
-  [3]: http://upload.longmarch.top/11.jpg
-  [4]: http://upload.longmarch.top/12.jpg
-  [5]: http://upload.longmarch.top/14.jpg
-  [6]: http://upload.longmarch.top/15.jpg
-  [7]: http://upload.longmarch.top/16.jpg
-  [8]: http://upload.longmarch.top/3.jpg
-  [9]: http://upload.longmarch.top/17.jpg
-  [10]: http://upload.longmarch.top/18.png
-  [11]: http://upload.longmarch.top/19.jpg
-  [12]: http://upload.longmarch.top/20.png
-  
+  [2]: http://upload.longmarch.top/21.png
+  [3]: http://upload.longmarch.top/13.jpg
+  [4]: http://upload.longmarch.top/11.jpg
+  [5]: http://upload.longmarch.top/12.jpg
+  [6]: http://upload.longmarch.top/14.jpg
+  [7]: http://upload.longmarch.top/15.jpg
+  [8]: http://upload.longmarch.top/16.jpg
+  [9]: http://upload.longmarch.top/3.jpg
+  [10]: http://upload.longmarch.top/17.jpg
+  [11]: http://upload.longmarch.top/18.png
+  [12]: http://upload.longmarch.top/19.jpg
+  [13]: http://upload.longmarch.top/20.png
