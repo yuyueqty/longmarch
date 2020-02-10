@@ -3,10 +3,11 @@
 
 ------
 ### 项目演示
-项目地址：https://www.longmarch.top  
+在线演示：https://www.longmarch.top  
 账号密码：admin/111111  
 视频演示：http://www.56.com/u61/v_MTYyMzg3Nzcw.html  
-前端地址：https://github.com/yuyueqty/longmarch-web
+后端仓库：https://github.com/yuyueqty/longmarch  
+前端仓库：https://github.com/yuyueqty/longmarch-web
 
 ### 系统特色
 
