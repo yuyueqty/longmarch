@@ -79,7 +79,6 @@
 ![文章分类管理][13]
 
 
-  [1]: http://upload.longmarch.top/2.jpg
   [2]: http://upload.longmarch.top/21.png
   [3]: http://upload.longmarch.top/13.jpg
   [4]: http://upload.longmarch.top/11.jpg
@@ -92,3 +91,15 @@
   [11]: http://upload.longmarch.top/18.png
   [12]: http://upload.longmarch.top/19.jpg
   [13]: http://upload.longmarch.top/20.png
+  [2]: http://upload.longmarch.top/13.jpg
+  [3]: http://upload.longmarch.top/11.jpg
+  [4]: http://upload.longmarch.top/12.jpg
+  [5]: http://upload.longmarch.top/14.jpg
+  [6]: http://upload.longmarch.top/15.jpg
+  [7]: http://upload.longmarch.top/16.jpg
+  [8]: http://upload.longmarch.top/3.jpg
+  [9]: http://upload.longmarch.top/17.jpg
+  [10]: http://upload.longmarch.top/18.png
+  [11]: http://upload.longmarch.top/19.jpg
+  [12]: http://upload.longmarch.top/20.png
+  
