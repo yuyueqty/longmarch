@@ -498,7 +498,7 @@ CREATE TABLE `sys_role`  (
   `status` tinyint(2) NOT NULL DEFAULT 1 COMMENT '状态（0 停用， 1 启用， 默认 1）',
   `data_perm` int(11) NULL DEFAULT 3 COMMENT '数据权限（1 用户ID， 2 部门ID， 3 全部）',
   `data_perm_ids` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '数据权限ID集合',
-  `create_by` bigint(20) UNSIGNED ZEROFILL NULL DEFAULT NULL COMMENT '创建人ID',
+  `create_by` bigint(20) NULL DEFAULT NULL COMMENT '创建人ID',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` bigint(20) NULL DEFAULT NULL COMMENT '更新人ID',
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
@@ -508,7 +508,7 @@ CREATE TABLE `sys_role`  (
 -- ----------------------------
 -- Records of sys_role
 -- ----------------------------
-INSERT INTO `sys_role` VALUES (1, '管理员角色', '管理员角色', 1, 3, NULL, 00000000000000000001, '2020-02-10 18:20:46', NULL, NULL);
+INSERT INTO `sys_role` VALUES (1, '管理员角色', '管理员角色', 1, 3, NULL, 1, '2020-02-10 18:20:46', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for sys_role_permission_rel
