@@ -2,11 +2,15 @@ package top.longmarch.core.shiro.service;//package top.longmarch.core.shiro.serv
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.longmarch.core.common.Constant;
 import top.longmarch.core.enums.StatusEnum;
+import top.longmarch.core.utils.tree.TreeUtil;
 import top.longmarch.sys.entity.*;
+import top.longmarch.sys.entity.vo.RouteMeta;
+import top.longmarch.sys.entity.vo.RoutesTree;
 import top.longmarch.sys.service.*;
 
 import java.util.*;
@@ -129,4 +133,48 @@ public class UserIRolePermissionService {
         return permissionStringSet;
     }
 
+    public List<RoutesTree> getRoutes(Long userId) {
+        List<RoutesTree> routes = new ArrayList<>();
+        User user = getUserByUserId(userId);
+        if (null == user || user.getStatus() == StatusEnum.NO.getValue()) {
+            return routes;
+        }
+        List<UserRoleRel> userRoleRelList = userRoleRelService.list(new LambdaQueryWrapper<UserRoleRel>().eq(UserRoleRel::getUserId, userId));
+        if (null == userRoleRelList || userRoleRelList.size() == 0) {
+            return routes;
+        }
+        Set<Long> roleSet = userRoleRelList.stream().map(UserRoleRel::getRoleId).collect(Collectors.toSet());
+        List<RolePermissionRel> rolePermissionRelList = rolePermissionRelService.list(new LambdaQueryWrapper<RolePermissionRel>().in(RolePermissionRel::getRoleId, roleSet));
+        if (null == rolePermissionRelList || rolePermissionRelList.size() == 0) {
+            return routes;
+        }
+        Set<Long> permissionIdSet = rolePermissionRelList.stream().map(RolePermissionRel::getPermissionId).collect(Collectors.toSet());
+        List<Permission> permissionList = permissionService.list(new LambdaQueryWrapper<Permission>()
+                .eq(Permission::getStatus, StatusEnum.YES.getValue())
+                .eq(Permission::getType, 1)
+                .in(Permission::getId, permissionIdSet)
+                .orderByAsc(Permission::getSort));
+
+        // 开始构建路由
+        for (Permission permission : permissionList) {
+            if (StrUtil.isBlank(permission.getPath())) {
+                continue;
+            }
+
+            RoutesTree routesTree = new RoutesTree();
+            BeanUtils.copyProperties(permission, routesTree);
+
+            RouteMeta routeMeta = new RouteMeta();
+            BeanUtils.copyProperties(permission, routeMeta);
+            routeMeta.setNoCache(permission.getCache()==1);
+
+            routesTree.setMeta(routeMeta);
+
+            routesTree.setId(permission.getId());
+            routesTree.setPid(permission.getParentId());
+            routes.add(routesTree);
+        }
+
+        return TreeUtil.list2Tree(routes);
+    }
 }

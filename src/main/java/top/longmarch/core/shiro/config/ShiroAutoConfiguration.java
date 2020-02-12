@@ -3,20 +3,26 @@ package top.longmarch.core.shiro.config;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
+import org.apache.shiro.codec.Base64;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.servlet.SimpleCookie;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import top.longmarch.core.shiro.filter.LMFormAuthenticationFilter;
 import top.longmarch.core.shiro.filter.LMPathMatchingFilter;
+import top.longmarch.core.shiro.listener.LongmarchSessionListener;
 import top.longmarch.core.shiro.realm.CustomRealm;
 
 import javax.servlet.Filter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -69,7 +75,38 @@ public class ShiroAutoConfiguration {
         DefaultWebSecurityManager defaultSecurityManager = new DefaultWebSecurityManager();
         defaultSecurityManager.setRealm(customRealm());
         defaultSecurityManager.setCacheManager(cacheManager);
+        defaultSecurityManager.setSessionManager(sessionManager(cacheManager));
+        defaultSecurityManager.setRememberMeManager(rememberMeManager());
         return defaultSecurityManager;
+    }
+
+    @Bean
+    public DefaultWebSessionManager sessionManager(CacheManager cacheManager) {
+        DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
+        SimpleCookie simpleCookie = new SimpleCookie();
+        simpleCookie.setName("long-march");
+        simpleCookie.setHttpOnly(true);
+        simpleCookie.setMaxAge(-1);
+        sessionManager.setSessionIdCookie(simpleCookie);
+        // 默认SESSION超时时间：1小时=3600000毫秒(ms)
+        sessionManager.setGlobalSessionTimeout(3600000);
+        sessionManager.setSessionIdCookieEnabled(true);
+        sessionManager.setSessionListeners(Arrays.asList(new LongmarchSessionListener()));
+        sessionManager.setCacheManager(cacheManager);
+        return sessionManager;
+    }
+
+    @Bean
+    public CookieRememberMeManager rememberMeManager() {
+        CookieRememberMeManager rememberMeManager = new CookieRememberMeManager();
+        SimpleCookie simpleCookie = new SimpleCookie();
+        simpleCookie.setName("remember-long-march");
+        simpleCookie.setHttpOnly(true);
+        simpleCookie.setMaxAge(-1);
+        rememberMeManager.setCookie(simpleCookie);
+        byte[] decode = Base64.decode("6ZmI6I2j5Y+R5aSn5ZOlAA==");
+        rememberMeManager.setCipherKey(decode);
+        return rememberMeManager;
     }
 
     @Bean

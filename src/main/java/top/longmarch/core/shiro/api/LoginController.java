@@ -1,6 +1,7 @@
 package top.longmarch.core.shiro.api;
 
 import cn.hutool.core.lang.UUID;
+import cn.hutool.json.JSONUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
@@ -19,12 +20,10 @@ import top.longmarch.core.shiro.model.LoginUser;
 import top.longmarch.core.shiro.service.UserIRolePermissionService;
 import top.longmarch.core.utils.UserUtil;
 import top.longmarch.sys.entity.User;
+import top.longmarch.sys.entity.vo.RoutesTree;
 import top.longmarch.sys.service.IDictionaryService;
 
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Api(value = "用户登陆模块", tags = "用户登陆模块接口")
 @RestController
@@ -102,7 +101,72 @@ public class LoginController {
         showUser.put("createTime", user.getCreateTime());
         showUser.put("updateTime", user.getUpdateTime());
         userMap.put("userInfo", showUser);
+
+        userMap.put("routes", JSONUtil.parse(buildRoutes(user.getId())));
         return Result.ok().add(userMap);
+    }
+
+    public List<RoutesTree> buildRoutes(Long userId) {
+        return userIRolePermissionService.getRoutes(userId);
+    }
+
+    public List<Map<String, Object>> buildRoutes2(Long userId) {
+        List<Map<String, Object>> routes = new ArrayList<>();
+        List<String> roles = null;
+
+        Map<String, Object> systemRoute = new HashMap<>();
+        systemRoute.put("path", "/system");
+        systemRoute.put("component", "Layout");
+        systemRoute.put("redirect", "/system/user");
+        systemRoute.put("name", "System");
+        systemRoute.put("hidden", false);
+        Map<String, Object> systemMeta = new HashMap<>();
+        systemMeta.put("title", "system");
+        systemMeta.put("icon", "tree");
+        systemMeta.put("noCache", true);
+
+//        roles = new ArrayList<>();
+//        roles.add("sys:manage");
+//        systemMeta.put("roles", roles);
+        systemRoute.put("meta", systemMeta);
+
+
+        List<Map<String, Object>> systemChildren = new ArrayList<>();
+
+        Map<String, Object> userRoute = new HashMap<>();
+        userRoute.put("path", "user");
+        userRoute.put("component", "user/index");
+        userRoute.put("name", "UserManage");
+        userRoute.put("hidden", false);
+        Map<String, Object> userMeta = new HashMap<>();
+        userMeta.put("title", "userManage");
+        userMeta.put("noCache", true);
+        userMeta.put("icon", "user");
+//        roles = new ArrayList<>();
+//        roles.add("sys:user:manage");
+//        userMeta.put("roles", roles);
+        userRoute.put("meta", userMeta);
+        systemChildren.add(userRoute);
+
+        Map<String, Object> roleRoute = new HashMap<>();
+        roleRoute.put("path", "role");
+        roleRoute.put("component", "role/index");
+        roleRoute.put("name", "RoleManage");
+        roleRoute.put("hidden", false);
+        Map<String, Object> roleMeta = new HashMap<>();
+        roleMeta.put("title", "roleManage");
+        roleMeta.put("noCache", true);
+        roleMeta.put("icon", "peoples");
+//        roles = new ArrayList<>();
+//        roles.add("sys:role:manage");
+//        roleMeta.put("roles", roles);
+        roleRoute.put("meta", roleMeta);
+        systemChildren.add(roleRoute);
+
+
+        systemRoute.put("children", systemChildren);
+        routes.add(systemRoute);
+        return routes;
     }
 
 }

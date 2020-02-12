@@ -1,5 +1,6 @@
 package top.longmarch.sys.entity.vo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModelProperty;
 import top.longmarch.core.utils.tree.Tree;
 
@@ -34,6 +35,33 @@ public class PermissionTree extends Tree<Long> {
 
     @ApiModelProperty(value = "状态（1 停用， 0 启用， 默认 0）")
     private Integer status;
+
+    @ApiModelProperty(value = "路径")
+    private String path;
+
+    @ApiModelProperty(value = "组件")
+    private String component;
+
+    @ApiModelProperty(value = "重定向")
+    private String redirect;
+
+    @ApiModelProperty(value = "路由名字")
+    private String name;
+
+    @ApiModelProperty(value = "路由标题")
+    private String title;
+
+    @ApiModelProperty(value = "图标")
+    private String icon;
+
+    @ApiModelProperty(value = "是否隐藏")
+    private Integer hidden;
+
+    @ApiModelProperty(value = "是否缓存")
+    private Integer cache;
+
+    @ApiModelProperty(value = "排序")
+    private Integer sort;
 
     @ApiModelProperty(value = "是否已选择")
     private Boolean checked;
@@ -103,6 +131,78 @@ public class PermissionTree extends Tree<Long> {
 
     public void setPids(String pids) {
         this.pids = pids;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getComponent() {
+        return component;
+    }
+
+    public void setComponent(String component) {
+        this.component = component;
+    }
+
+    public String getRedirect() {
+        return redirect;
+    }
+
+    public void setRedirect(String redirect) {
+        this.redirect = redirect;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public Integer getHidden() {
+        return hidden;
+    }
+
+    public void setHidden(Integer hidden) {
+        this.hidden = hidden;
+    }
+
+    public Integer getCache() {
+        return cache;
+    }
+
+    public void setCache(Integer cache) {
+        this.cache = cache;
+    }
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
     }
 
     @Override

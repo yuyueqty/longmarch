@@ -56,6 +56,42 @@ public class Permission implements Serializable {
     @TableField("status")
     private Integer status;
 
+    @ApiModelProperty(value = "路径")
+    @TableField("path")
+    private String path;
+
+    @ApiModelProperty(value = "组件")
+    @TableField("component")
+    private String component;
+
+    @ApiModelProperty(value = "重定向")
+    @TableField("redirect")
+    private String redirect;
+
+    @ApiModelProperty(value = "路由名字")
+    @TableField("name")
+    private String name;
+
+    @ApiModelProperty(value = "路由标题")
+    @TableField("title")
+    private String title;
+
+    @ApiModelProperty(value = "图标")
+    @TableField("icon")
+    private String icon;
+
+    @ApiModelProperty(value = "是否隐藏")
+    @TableField("hidden")
+    private Integer hidden;
+
+    @ApiModelProperty(value = "是否缓存")
+    @TableField("cache")
+    private Integer cache;
+
+    @ApiModelProperty(value = "排序")
+    @TableField("sort")
+    private Integer sort;
+
     @ApiModelProperty(value = "创建人ID")
     @TableField(value = "create_by", fill = FieldFill.INSERT)
     private Long createBy;
@@ -156,6 +192,78 @@ public class Permission implements Serializable {
 
     public void setParentIds(String parentIds) {
         this.parentIds = parentIds;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getComponent() {
+        return component;
+    }
+
+    public void setComponent(String component) {
+        this.component = component;
+    }
+
+    public String getRedirect() {
+        return redirect;
+    }
+
+    public void setRedirect(String redirect) {
+        this.redirect = redirect;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public Integer getHidden() {
+        return hidden;
+    }
+
+    public void setHidden(Integer hidden) {
+        this.hidden = hidden;
+    }
+
+    public Integer getCache() {
+        return cache;
+    }
+
+    public void setCache(Integer cache) {
+        this.cache = cache;
+    }
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
     }
 
     @Override

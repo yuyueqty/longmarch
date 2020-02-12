@@ -45,7 +45,7 @@ public class PermissionController {
     @ApiOperation(value = "权限树")
     @PostMapping("/tree")
     public Result tree() {
-        List<Permission> permissionAllList = permissionService.list();
+        List<Permission> permissionAllList = permissionService.list(new LambdaQueryWrapper<Permission>().orderByAsc(Permission::getSort));
         List<Permission> menuList = permissionAllList.stream().filter(p -> p.getType() == 1).collect(Collectors.toList());
 
         List<PermissionTree> permissionAllTreeList = permissionAllList.stream().map(permission -> {
