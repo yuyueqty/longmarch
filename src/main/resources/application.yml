@@ -3,7 +3,7 @@ server:
   tomcat:
     uri-encoding: UTF-8
   servlet:
-    context-path: 
+    context-path: /lmapi
     
 spring:
   mvc:
@@ -35,6 +35,18 @@ spring:
       test-on-borrow: false
       test-on-return: false
       max-pool-prepared-statement-per-connection-size: 20
+      #是否启用StatFilter默认值false
+      web-stat-filter:
+        enabled: true
+        session-stat-enable: true
+        session-stat-max-count: 10
+        profile-enable: true
+        principal-cookie-name: druid-cookie
+        principal-session-name: druid-session
+      stat-view-servlet:
+        enabled: true
+        login-username: longmarch
+        login-password: 111111
       # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
       filters: stat,wall,slf4j
       # 通过connectProperties属性来打开mergeSql功能；慢SQL记录

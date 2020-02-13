@@ -46,7 +46,7 @@ public class PermissionController {
     @PostMapping("/tree")
     public Result tree() {
         List<Permission> permissionAllList = permissionService.list(new LambdaQueryWrapper<Permission>().orderByAsc(Permission::getSort));
-        List<Permission> menuList = permissionAllList.stream().filter(p -> p.getType() == 1).collect(Collectors.toList());
+        List<Permission> menuList = permissionAllList.stream().filter(p -> p.getType() != 2).collect(Collectors.toList());
 
         List<PermissionTree> permissionAllTreeList = permissionAllList.stream().map(permission -> {
             PermissionTree permissionTree = new PermissionTree();

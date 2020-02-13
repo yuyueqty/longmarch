@@ -151,7 +151,7 @@ public class UserIRolePermissionService {
         Set<Long> permissionIdSet = rolePermissionRelList.stream().map(RolePermissionRel::getPermissionId).collect(Collectors.toSet());
         List<Permission> permissionList = permissionService.list(new LambdaQueryWrapper<Permission>()
                 .eq(Permission::getStatus, StatusEnum.YES.getValue())
-                .eq(Permission::getType, 1)
+                .in(Permission::getType, 1, 3)
                 .in(Permission::getId, permissionIdSet)
                 .orderByAsc(Permission::getSort));
 
@@ -163,6 +163,7 @@ public class UserIRolePermissionService {
 
             RoutesTree routesTree = new RoutesTree();
             BeanUtils.copyProperties(permission, routesTree);
+            routesTree.setHidden(permission.getHidden()==1);
 
             RouteMeta routeMeta = new RouteMeta();
             BeanUtils.copyProperties(permission, routeMeta);
