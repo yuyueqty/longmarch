@@ -3,6 +3,9 @@ package top.longmarch.sys.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import top.longmarch.core.common.Result;
 import top.longmarch.core.utils.tree.TreeUtil;
@@ -22,6 +25,7 @@ import java.util.*;
  * @author YuYue
  * @since 2020-02-05
  */
+@CacheConfig(cacheNames = {"IDepartmentService"})
 @Service
 public class DepartmentServiceImpl extends ServiceImpl<DepartmentDao, Department> implements IDepartmentService {
 
@@ -29,6 +33,7 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentDao, Department
     private DepartmentDao departmentDao;
 
 
+    @Cacheable(key = "'department_tree'")
     @Override
     public List<DepartmentTree> getDepartmentTree() {
         return TreeUtil.list2Tree(departmentDao.getDepartmentTree());
@@ -39,6 +44,7 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentDao, Department
         return departmentDao.handleLoadDepartmentUsers(depId);
     }
 
+    @Cacheable(key = "'department_tree_downdept_' + #deptId")
     @Override
     public Set<Long> getDownDeptIds(Long deptId) {
         Set<Long> deptIds = new LinkedHashSet<>();
@@ -60,6 +66,7 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentDao, Department
         }
     }
 
+    @Cacheable(key = "'department_tree_updept_' + #deptId")
     @Override
     public List<Long> getUpDeptIds(Long deptId) {
         List<Long> deptIds = new ArrayList<>();
@@ -82,6 +89,24 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentDao, Department
         }
         deptIds.add(department.getParentId());
         forLoop(deptIds, this.getById(department.getParentId()));
+    }
+
+    @CacheEvict(key = "'department_tree'")
+    @Override
+    public void saveDepartment(Department department) {
+        this.save(department);
+    }
+
+    @CacheEvict(key = "'department_tree'")
+    @Override
+    public void updateDepartmentById(Department department) {
+        this.updateById(department);
+    }
+
+    @CacheEvict(key = "'department_tree'")
+    @Override
+    public void removeDepartmentByIds(List<Long> ids) {
+        this.removeByIds(ids);
     }
 
 }

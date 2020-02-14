@@ -75,7 +75,7 @@ public class DepartmentController {
     @PostMapping("/create")
     public Result create(@Validated @RequestBody Department department) {
         log.info("创建部门信息, 入参：{}", department);
-        departmentService.save(department);
+        departmentService.saveDepartment(department);
         return Result.ok().add(department);
     }
 
@@ -85,7 +85,7 @@ public class DepartmentController {
     @PostMapping("/update")
     public Result update(@Validated @RequestBody Department department) {
         log.info("更新部门信息, 入参：{}", department);
-        departmentService.updateById(department);
+        departmentService.updateDepartmentById(department);
         return Result.ok().add(department);
     }
 
@@ -100,7 +100,7 @@ public class DepartmentController {
         if (departmentList != null && departmentList.size() > 0) {
             return Result.fail("请先删除子部门节点");
         }
-        departmentService.removeByIds(Arrays.asList(ids));
+        departmentService.removeDepartmentByIds(Arrays.asList(ids));
         return Result.ok();
     }
 

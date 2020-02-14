@@ -1,6 +1,7 @@
 package top.longmarch.core.shiro.service;//package top.longmarch.core.shiro.service;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,8 @@ public class UserIRolePermissionService {
     private IRolePermissionRelService rolePermissionRelService;
     @Autowired
     private IDepartmentService departmentService;
+    @Autowired
+    private IDictionaryService dictionaryService;
 
 
     public User getUserByUserName(String username) {
@@ -178,4 +181,23 @@ public class UserIRolePermissionService {
 
         return TreeUtil.list2Tree(routes);
     }
+
+    public Map<String, Object> getActivityUserInfo(Long userId) {
+        Map<String, Object> info = new HashMap<>();
+        User user = userService.getById(userId);
+        if (user == null) {
+            return info;
+        }
+        info.put("userId", user.getId());
+        info.put("username", user.getUsername());
+        info.put("avatar", user.getHeadImgUrl());
+        info.put("introduction", "测试系统");
+        Set<String> roles = this.getUserRoleByUserId(user.getId());
+        info.put("roles", roles);
+        info.put("permissions", this.getUserPermissionByUserId(user.getId()));
+        info.put("dictionary", dictionaryService.getAllDict());
+        info.put("routes", JSONUtil.parse(this.getRoutes(user.getId())));
+        return info;
+    }
+
 }

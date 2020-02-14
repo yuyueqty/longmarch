@@ -25,4 +25,10 @@ public interface IDepartmentService extends IService<Department> {
     Set<Long> getDownDeptIds(Long deptId);
 
     List<Long> getUpDeptIds(Long deptId);
+
+    void saveDepartment(Department department);
+
+    void updateDepartmentById(Department department);
+
+    void removeDepartmentByIds(List<Long> ids);
 }

@@ -1,7 +1,6 @@
 package top.longmarch.core.shiro.api;
 
 import cn.hutool.core.lang.UUID;
-import cn.hutool.json.JSONUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
@@ -18,20 +17,15 @@ import top.longmarch.core.annotation.Log;
 import top.longmarch.core.common.Result;
 import top.longmarch.core.shiro.model.LoginUser;
 import top.longmarch.core.shiro.service.UserIRolePermissionService;
-import top.longmarch.core.utils.UserUtil;
-import top.longmarch.sys.entity.User;
-import top.longmarch.sys.entity.vo.RoutesTree;
-import top.longmarch.sys.service.IDictionaryService;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @Api(value = "用户登陆模块", tags = "用户登陆模块接口")
 @RestController
 public class LoginController {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
-    @Autowired
-    private IDictionaryService dictionaryService;
     @Autowired
     private UserIRolePermissionService userIRolePermissionService;
 
@@ -45,13 +39,14 @@ public class LoginController {
         result.put("token", uuid);
         String username = loginUser.getUsername();
         String password = loginUser.getPassword();
+        Boolean rememberMe = loginUser.getRememberMe();
         // 从SecurityUtils里边创建一个 subject
         Subject subject = SecurityUtils.getSubject();
         if (subject.isAuthenticated()) {
             return Result.ok().add(result);
         }
         // 在认证提交前准备 token（令牌）
-        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+        UsernamePasswordToken token = new UsernamePasswordToken(username, password, rememberMe);
         // 执行认证登陆
         try {
             subject.login(token);
@@ -74,130 +69,6 @@ public class LoginController {
     public Result logout() {
         SecurityUtils.getSubject().logout();
         return Result.ok();
-    }
-
-    @ApiOperation(value = "用户信息")
-    @GetMapping("/info")
-    public Result info() {
-        User user = userIRolePermissionService.getUserByUserId(UserUtil.loginUser().getId());
-        Map<String, Object> userMap = new HashMap<>();
-        userMap.put("introduction", "测试系统");
-        userMap.put("username", user.getUsername());
-        userMap.put("avatar", user.getHeadImgUrl());
-        userMap.put("dictionary", dictionaryService.getAllDict());
-        Set<String> roles = userIRolePermissionService.getUserRoleByUserId(user.getId());
-        if (roles == null || roles.size() == 0) {
-            roles = new LinkedHashSet<>();
-            roles.add("未授权组");
-        }
-        userMap.put("roles", roles);
-        userMap.put("permissions", userIRolePermissionService.getUserPermissionByUserId(user.getId()));
-        userMap.put("menus", userIRolePermissionService.getUserMenusByUserId(user.getId()));
-        // 用户信息
-        Map<String, Object> showUser = new HashMap<>();
-        showUser.put("userId", user.getId());
-        showUser.put("username", user.getUsername());
-        showUser.put("status", user.getStatus());
-        showUser.put("createTime", user.getCreateTime());
-        showUser.put("updateTime", user.getUpdateTime());
-        userMap.put("userInfo", showUser);
-
-        userMap.put("routes", JSONUtil.parse(buildRoutes(user.getId())));
-        userMap.put("routes2", JSONUtil.parse(buildRoutes2(user.getId())));
-        return Result.ok().add(userMap);
-    }
-
-    public List<RoutesTree> buildRoutes(Long userId) {
-        return userIRolePermissionService.getRoutes(userId);
-    }
-
-    public List<Map<String, Object>> buildRoutes2(Long userId) {
-        List<Map<String, Object>> routes = new ArrayList<>();
-
-        Map<String, Object> systemRoute = new HashMap<>();
-        systemRoute.put("path", "/system");
-        systemRoute.put("component", "Layout");
-        systemRoute.put("redirect", "/system/user");
-        systemRoute.put("name", "System");
-        systemRoute.put("hidden", false);
-        Map<String, Object> systemMeta = new HashMap<>();
-        systemMeta.put("title", "system");
-        systemMeta.put("icon", "tree");
-        systemMeta.put("noCache", true);
-        systemRoute.put("meta", systemMeta);
-
-
-        List<Map<String, Object>> systemChildren = new ArrayList<>();
-
-        Map<String, Object> userRoute = new HashMap<>();
-        userRoute.put("path", "user");
-        userRoute.put("component", "user/index");
-        userRoute.put("name", "UserManage");
-        userRoute.put("hidden", false);
-        Map<String, Object> userMeta = new HashMap<>();
-        userMeta.put("title", "userManage");
-        userMeta.put("noCache", true);
-        userMeta.put("icon", "user");
-        userRoute.put("meta", userMeta);
-        systemChildren.add(userRoute);
-
-        Map<String, Object> roleRoute = new HashMap<>();
-        roleRoute.put("path", "role");
-        roleRoute.put("component", "role/index");
-        roleRoute.put("name", "RoleManage");
-        roleRoute.put("hidden", false);
-        Map<String, Object> roleMeta = new HashMap<>();
-        roleMeta.put("title", "roleManage");
-        roleMeta.put("noCache", true);
-        roleMeta.put("icon", "peoples");
-        roleRoute.put("meta", roleMeta);
-        systemChildren.add(roleRoute);
-
-        systemRoute.put("children", systemChildren);
-
-        Map<String, Object> cmsRoute = new HashMap<>();
-        cmsRoute.put("path", "/cms");
-        cmsRoute.put("component", "Layout");
-        cmsRoute.put("redirect", "/cms/article");
-        cmsRoute.put("name", "CmsManage");
-        cmsRoute.put("hidden", false);
-        Map<String, Object> cmsMeta = new HashMap<>();
-        cmsMeta.put("title", "cmsManage");
-        cmsMeta.put("icon", "documentation");
-        cmsMeta.put("noCache", true);
-        cmsRoute.put("meta", cmsMeta);
-
-        List<Map<String, Object>> cmsChildren = new ArrayList<>();
-        Map<String, Object> articleRoute = new HashMap<>();
-        articleRoute.put("path", "article");
-        articleRoute.put("component", "cms/article");
-        articleRoute.put("name", "ArticleManage");
-        articleRoute.put("hidden", false);
-        Map<String, Object> articleMeta = new HashMap<>();
-        articleMeta.put("title", "articleManage");
-        articleMeta.put("noCache", true);
-        articleMeta.put("icon", "form");
-        articleRoute.put("meta", articleMeta);
-        cmsChildren.add(articleRoute);
-
-        Map<String, Object> articleCreateRoute = new HashMap<>();
-        articleCreateRoute.put("path", "create");
-        articleCreateRoute.put("component", "cms/create");
-        articleCreateRoute.put("name", "CreateArticle");
-        articleCreateRoute.put("hidden", true);
-        Map<String, Object> articleCreateMeta = new HashMap<>();
-        articleCreateMeta.put("title", "创建文章");
-        articleCreateMeta.put("noCache", true);
-        articleCreateMeta.put("icon", "edit");
-        articleCreateRoute.put("meta", articleCreateMeta);
-        cmsChildren.add(articleCreateRoute);
-
-        cmsRoute.put("children", cmsChildren);
-
-
-        routes.add(systemRoute);
-        routes.add(cmsRoute);
-        return routes;
     }
 
 }

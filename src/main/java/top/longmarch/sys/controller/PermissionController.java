@@ -15,15 +15,11 @@ import org.springframework.web.bind.annotation.*;
 import top.longmarch.core.annotation.Log;
 import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.common.Result;
-import top.longmarch.core.utils.tree.TreeUtil;
 import top.longmarch.sys.entity.Permission;
-import top.longmarch.sys.entity.Role;
 import top.longmarch.sys.entity.vo.ChangeStatusDTO;
-import top.longmarch.sys.entity.vo.PermissionTree;
 import top.longmarch.sys.service.IPermissionService;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -45,27 +41,8 @@ public class PermissionController {
     @ApiOperation(value = "权限树")
     @PostMapping("/tree")
     public Result tree() {
-        List<Permission> permissionAllList = permissionService.list(new LambdaQueryWrapper<Permission>().orderByAsc(Permission::getSort));
-        List<Permission> menuList = permissionAllList.stream().filter(p -> p.getType() != 2).collect(Collectors.toList());
-
-        List<PermissionTree> permissionAllTreeList = permissionAllList.stream().map(permission -> {
-            PermissionTree permissionTree = new PermissionTree();
-            BeanUtils.copyProperties(permission, permissionTree);
-            permissionTree.setPid(permission.getParentId());
-            permissionTree.setPids(permission.getParentIds());
-            return permissionTree;
-        }).collect(Collectors.toList());
-        List<PermissionTree> permissionTrees = TreeUtil.list2Tree(permissionAllTreeList);
-
-        List<PermissionTree> menuAllTreeList = menuList.stream().map(permission -> {
-            PermissionTree permissionTree = new PermissionTree();
-            BeanUtils.copyProperties(permission, permissionTree);
-            permissionTree.setPid(permission.getParentId());
-            permissionTree.setPids(permission.getParentIds());
-            return permissionTree;
-        }).collect(Collectors.toList());
-        List<PermissionTree> permsList = TreeUtil.list2Tree(menuAllTreeList);
-        return Result.ok().add(permissionTrees).add("permsList", permsList);
+        Map<String, Object> tree = permissionService.getPermissionTree();
+        return Result.ok().add(tree);
     }
 
     @ApiOperation(value = "搜索权限信息")
@@ -94,7 +71,7 @@ public class PermissionController {
         log.info("修改权限状态, 入参：{}", changeStatusDTO);
         Permission permission = new Permission();
         BeanUtils.copyProperties(changeStatusDTO, permission);
-        permissionService.updateById(permission);
+        permissionService.updatePermissionById(permission);
         return Result.ok().add(permission);
     }
 
@@ -104,7 +81,7 @@ public class PermissionController {
     @PostMapping("/create")
     public Result create(@Validated @RequestBody Permission permission) {
         log.info("创建权限信息, 入参：{}", permission);
-        permissionService.save(permission);
+        permissionService.savePermission(permission);
         return Result.ok().add(permission);
     }
 
@@ -114,7 +91,7 @@ public class PermissionController {
     @PostMapping("/update")
     public Result update(@Validated @RequestBody Permission permission) {
         log.info("更新权限信息, 入参：{}", permission);
-        permissionService.updateById(permission);
+        permissionService.updatePermissionById(permission);
         return Result.ok().add(permission);
     }
 
@@ -128,7 +105,7 @@ public class PermissionController {
         if (permissionList != null && permissionList.size() > 0) {
             return Result.fail("请先删除子分类节点");
         }
-        permissionService.removeByIds(Arrays.asList(ids));
+        permissionService.removePermissionByIds(Arrays.asList(ids));
         return Result.ok();
     }
 

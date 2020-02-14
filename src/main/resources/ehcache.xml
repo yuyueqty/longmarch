@@ -89,4 +89,28 @@
            timeToLiveSeconds="3600"
            statistics="true">
     </cache>
+    <!-- 系统角色缓存 -->
+    <cache name="UserIRolePermissionCacheService"
+           maxEntriesLocalHeap="2000"
+           overflowToDisk="true"
+           eternal="false"
+           timeToLiveSeconds="3600"
+           statistics="true">
+    </cache>
+    <!-- 系统部门缓存 -->
+    <cache name="IDepartmentService"
+           maxEntriesLocalHeap="2000"
+           overflowToDisk="true"
+           eternal="false"
+           timeToLiveSeconds="3600"
+           statistics="true">
+    </cache>
+    <!-- 系统部门缓存 -->
+    <cache name="IPermissionService"
+           maxEntriesLocalHeap="2000"
+           overflowToDisk="true"
+           eternal="false"
+           timeToLiveSeconds="3600"
+           statistics="true">
+    </cache>
 </ehcache>

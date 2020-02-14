@@ -26,6 +26,10 @@ public class UserUtil {
         return getSubject() == null ? null : (User) getSubject().getPrincipals().getPrimaryPrincipal();
     }
 
+    public static Long getUserId() {
+        return loginUser() == null ? null : loginUser().getId();
+    }
+
     public static String getUsername() {
         return loginUser() == null ? null : loginUser().getUsername();
     }

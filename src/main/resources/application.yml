@@ -32,17 +32,17 @@ spring:
       min-evictable-idle-time-millis: 300000
       validation-query: SELECT 1 FROM DUAL
       test-while-idle: true
-      test-on-borrow: false
+      test-on-borrow: true
       test-on-return: false
-      max-pool-prepared-statement-per-connection-size: 20
+      max-pool-prepared-statement-per-connection-size: 100
       #是否启用StatFilter默认值false
-      web-stat-filter:
-        enabled: true
-        session-stat-enable: true
-        session-stat-max-count: 10
-        profile-enable: true
-        principal-cookie-name: druid-cookie
-        principal-session-name: druid-session
+#      web-stat-filter:
+#        enabled: true
+#        session-stat-enable: true
+#        session-stat-max-count: 10
+#        profile-enable: true
+#        principal-cookie-name: druid-cookie
+#        principal-session-name: druid-session
       stat-view-servlet:
         enabled: true
         login-username: longmarch
@@ -55,7 +55,7 @@ spring:
   cache:
     type: ehcache
     ehcache:
-      config: classpath:conf/ehcache.xml
+      config: classpath:ehcache.xml
 #  redis:
 #   database: 1
 #   host: 192.168.1.115

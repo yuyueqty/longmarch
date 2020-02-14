@@ -1,5 +1,6 @@
 package top.longmarch.core.shiro.realm;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -50,8 +51,12 @@ public class CustomRealm extends AuthorizingRealm {
             throw new LockedAccountException("用户已停用");
         }
         Map<String, Object> map = userIRolePermissionService.getRoleDeptIdsByUserId(user.getId());
-        user.setType(Integer.valueOf(map.get("type").toString()));
-        user.setUserIdSet((Set) map.get("userIdSet"));
+        if (CollectionUtil.isEmpty(map)) {
+            user.setType(1);
+        } else {
+            user.setType(Integer.valueOf(map.get("type").toString()));
+            user.setUserIdSet((Set) map.get("userIdSet"));
+        }
         return new SimpleAuthenticationInfo(user, user.getPassword(), getName());
     }
 
