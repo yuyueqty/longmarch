@@ -3,6 +3,7 @@ package top.longmarch.sys.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import top.longmarch.core.utils.tree.TreeUtil;
 import top.longmarch.sys.entity.Permission;
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
  * @author YuYue
  * @since 2020-01-12
  */
-@CacheConfig(cacheNames = {"IPermissionService"})
+@CacheConfig(cacheNames = {"PermissionService"})
 @Service
 public class PermissionServiceImpl extends ServiceImpl<PermissionDao, Permission> implements IPermissionService {
 
@@ -58,16 +59,19 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionDao, Permission
         return tree;
     }
 
+    @CacheEvict(key = "'permission_tree'")
     @Override
     public void updatePermissionById(Permission permission) {
         this.updateById(permission);
     }
 
+    @CacheEvict(key = "'permission_tree'")
     @Override
     public void savePermission(Permission permission) {
         this.save(permission);
     }
 
+    @CacheEvict(key = "'permission_tree'")
     @Override
     public void removePermissionByIds(List<Long> ids) {
         this.removeByIds(ids);

@@ -106,7 +106,7 @@
            statistics="true">
     </cache>
     <!-- 系统部门缓存 -->
-    <cache name="IPermissionService"
+    <cache name="PermissionService"
            maxEntriesLocalHeap="2000"
            overflowToDisk="true"
            eternal="false"

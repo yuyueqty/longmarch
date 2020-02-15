@@ -5,6 +5,8 @@ import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.codec.Base64;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO;
+import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -80,17 +82,22 @@ public class ShiroAutoConfiguration {
         return defaultSecurityManager;
     }
 
+//    public SessionDAO sessionDAO() {
+//        EnterpriseCacheSessionDAO enterpriseCacheSessionDAO = new EnterpriseCacheSessionDAO();
+//
+//        return enterpriseCacheSessionDAO;
+//    }
+
     @Bean
     public DefaultWebSessionManager sessionManager(CacheManager cacheManager) {
         DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
-        SimpleCookie simpleCookie = new SimpleCookie();
-        simpleCookie.setName("long-march");
+        SimpleCookie simpleCookie = new SimpleCookie("long-march");
         simpleCookie.setHttpOnly(true);
         simpleCookie.setMaxAge(-1);
         sessionManager.setSessionIdCookie(simpleCookie);
         // 默认SESSION超时时间：1小时=3600000毫秒(ms)
-        sessionManager.setGlobalSessionTimeout(3600000);
-        sessionManager.setSessionIdCookieEnabled(true);
+        long timeout = 1000 * 60 * 60 * 24;
+        sessionManager.setGlobalSessionTimeout(timeout);
         sessionManager.setSessionListeners(Arrays.asList(new LongmarchSessionListener()));
         sessionManager.setCacheManager(cacheManager);
         return sessionManager;
@@ -99,8 +106,7 @@ public class ShiroAutoConfiguration {
     @Bean
     public CookieRememberMeManager rememberMeManager() {
         CookieRememberMeManager rememberMeManager = new CookieRememberMeManager();
-        SimpleCookie simpleCookie = new SimpleCookie();
-        simpleCookie.setName("remember-long-march");
+        SimpleCookie simpleCookie = new SimpleCookie("remember-long-march");
         simpleCookie.setHttpOnly(true);
         simpleCookie.setMaxAge(-1);
         rememberMeManager.setCookie(simpleCookie);
