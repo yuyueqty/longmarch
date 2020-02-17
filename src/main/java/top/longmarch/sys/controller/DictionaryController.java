@@ -55,8 +55,13 @@ public class DictionaryController {
 
         Object code = params.get("code");
         Object fuzzySearch = params.get(Constant.FUZZY_SEARCH);
+        Object prop = params.get(Constant.PROP);
+        Object order = params.get(Constant.ORDER);
         wrapper.eq(LmUtils.isNotBlank(code), Dictionary::getCode, code);
         wrapper.like(LmUtils.isNotBlank(fuzzySearch), Dictionary::getLabel, fuzzySearch);
+        boolean condition = LmUtils.isNotBlank(prop) && LmUtils.isNotBlank(order);
+        boolean isAsc = "ascending".equals(order);
+        wrapper.orderBy(condition, isAsc, Dictionary::getCode);
         return Result.ok().add(ictionaryService.page(page, wrapper));
     }
 

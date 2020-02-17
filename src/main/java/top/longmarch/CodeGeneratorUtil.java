@@ -12,9 +12,7 @@ import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class CodeGeneratorUtil {
@@ -25,16 +23,82 @@ public class CodeGeneratorUtil {
         CodeGeneratorUtil codeGenerator = new CodeGeneratorUtil();
 //        codeGenerator.run("sys2", Arrays.asList("sys_user","sys_role","sys_permission","sys_user_role_rel","sys_role_permission_rel","sys_dictionary", "sys_login_log", "sys_operate_log", "sys_parameter"));
 //        codeGenerator.run("cms", Arrays.asList("cms_article","cms_category"));
-        codeGenerator.run("sys", Arrays.asList("sys_department_user_rel"));
+//        codeGenerator.run("sys", Arrays.asList("sys_department_user_rel"));
+        codeGenerator.run("sys2", Arrays.asList("sys_user"));
     }
 
     public void run(String moduleName, List<String> tableNameList) {
         for (String tableName : tableNameList) {
-            buildAutoGenerator(moduleName, tableName).execute();
+            buildAutoGenerator(moduleName, tableName, buildFieldGenerationConditionList(tableName)).execute();
         }
     }
 
-    private AutoGenerator buildAutoGenerator(String moduleName, String tableName) {
+    public List<Map<String, Object>> buildFieldGenerationConditionList(String tableName) {
+        List<Map<String, Object>> fieldGenerationConditionList = new ArrayList<>();
+
+        Map<String, Object> fieldGenerationCondition = new HashMap<>();
+        fieldGenerationCondition.put("tableName", tableName);
+        fieldGenerationCondition.put("propertyName", "id");
+        fieldGenerationCondition.put("notNull", false);
+        fieldGenerationCondition.put("listShow", true);
+        fieldGenerationCondition.put("formShow", false);
+        fieldGenerationCondition.put("formType", null);
+        fieldGenerationCondition.put("queryType", null);
+        fieldGenerationCondition.put("orderBy", true);
+        fieldGenerationCondition.put("parameter", true);
+        fieldGenerationCondition.put("defaultValue", "null");
+        fieldGenerationCondition.put("dictCode", null);
+        fieldGenerationConditionList.add(fieldGenerationCondition);
+
+        fieldGenerationCondition = new HashMap<>();
+        fieldGenerationCondition.put("tableName", tableName);
+        fieldGenerationCondition.put("propertyName", "username");
+        fieldGenerationCondition.put("remark", "用户名");
+        fieldGenerationCondition.put("notNull", true);
+        fieldGenerationCondition.put("listShow", true);
+        fieldGenerationCondition.put("formShow", true);
+        fieldGenerationCondition.put("formType", "input");
+        fieldGenerationCondition.put("queryType", "like");
+        fieldGenerationCondition.put("orderBy", false);
+        fieldGenerationCondition.put("parameter", true);
+        fieldGenerationCondition.put("defaultValue", "null");
+        fieldGenerationCondition.put("dictCode", null);
+        fieldGenerationConditionList.add(fieldGenerationCondition);
+
+        fieldGenerationCondition = new HashMap<>();
+        fieldGenerationCondition.put("tableName", tableName);
+        fieldGenerationCondition.put("propertyName", "status");
+        fieldGenerationCondition.put("remark", "用户状态");
+        fieldGenerationCondition.put("notNull", true);
+        fieldGenerationCondition.put("listShow", true);
+        fieldGenerationCondition.put("formShow", true);
+        fieldGenerationCondition.put("formType", "select");
+        fieldGenerationCondition.put("queryType", "eq");
+        fieldGenerationCondition.put("orderBy", false);
+        fieldGenerationCondition.put("parameter", true);
+        fieldGenerationCondition.put("defaultValue", 1);
+        fieldGenerationCondition.put("dictCode", "dict_status");
+        fieldGenerationConditionList.add(fieldGenerationCondition);
+
+        fieldGenerationCondition = new HashMap<>();
+        fieldGenerationCondition.put("tableName", tableName);
+        fieldGenerationCondition.put("propertyName", "createTime");
+        fieldGenerationCondition.put("remark", "创建日期");
+        fieldGenerationCondition.put("notNull", true);
+        fieldGenerationCondition.put("listShow", true);
+        fieldGenerationCondition.put("formShow", true);
+        fieldGenerationCondition.put("formType", "date");
+        fieldGenerationCondition.put("queryType", "eq");
+        fieldGenerationCondition.put("orderBy", false);
+        fieldGenerationCondition.put("parameter", true);
+        fieldGenerationCondition.put("defaultValue", "null");
+        fieldGenerationCondition.put("dictCode", null);
+        fieldGenerationConditionList.add(fieldGenerationCondition);
+
+        return fieldGenerationConditionList;
+    }
+
+    private AutoGenerator buildAutoGenerator(String moduleName, String tableName, List<Map<String, Object>> fieldGenerationConditionList) {
         AutoGenerator autoGenerator = new AutoGenerator();
         GlobalConfig globalConfig = buildGlobalConfig();
         TemplateConfig templateConfig = buildTemplateConfig();
@@ -49,7 +113,7 @@ public class CodeGeneratorUtil {
         autoGenerator.setPackageInfo(packageConfig);
         autoGenerator.setCfg(injectionConfig);
         autoGenerator.setStrategy(strategy);
-        autoGenerator.setTemplateEngine(new FreemarkerTemplateEngine());
+        autoGenerator.setTemplateEngine(new LmFreemarkerTemplateEngine(fieldGenerationConditionList));
 
         return autoGenerator;
     }
@@ -57,8 +121,6 @@ public class CodeGeneratorUtil {
     private TemplateConfig buildTemplateConfig() {
         TemplateConfig templateConfig = new TemplateConfig();
         templateConfig.setEntity("/templates/entity.java");
-//        templateConfig.setEntity("templates/page.vue");
-        templateConfig.setXml("/templates/page.vue");
         templateConfig.setController("/templates/controller.java");
         return templateConfig;
     }
@@ -87,17 +149,30 @@ public class CodeGeneratorUtil {
             @Override
             public void initMap() {
                 // to do nothing
+                Map<String, Object> map = new HashMap<>();
+                map.put("fieldName", "name");
+                map.put("key1", 1);
+                map.put("key1", 1);
+                setMap(map);
             }
         };
         List<FileOutConfig> fileOutConfigList = new ArrayList<>();
-        fileOutConfigList.add(new FileOutConfig("/templates/mapper.xml.ftl") {
+//        fileOutConfigList.add(new FileOutConfig("/templates/mapper.xml.ftl") {
+//            @Override
+//            public String outputFile(TableInfo tableInfo) {
+//                // 自定义输入文件名称
+//                return projectPath + "/src/main/resources/mapper/" + packageConfig.getModuleName()
+//                        + "/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
+//            }
+//
+//        });
+        fileOutConfigList.add(new FileOutConfig("/templates/index.vue.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输入文件名称
-                return projectPath + "/src/main/resources/mapper/" + packageConfig.getModuleName()
-                        + "/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
+                return projectPath + "/src/main/resources/page/" + packageConfig.getModuleName()
+                        + "/" + tableInfo.getEntityName() + "/index.vue";
             }
-
         });
         injectionConfig.setFileOutConfigList(fileOutConfigList);
         return injectionConfig;

@@ -7,6 +7,7 @@
             t1.id,
             t1.title,
             t1.summary,
+            t1.image_url AS imageUrl,
             t1.category_id AS categoryId,
             t2.category_name AS categoryName,
             t1.source_url AS sourceUrl,

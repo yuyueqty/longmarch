@@ -9,6 +9,8 @@ public class Constant {
     public static final String SIZE_VALUE = "10";
     public static final String FUZZY_SEARCH = "fuzzySearch";
     public static final String STATUS = "status";
+    public static final String PROP = "prop";
+    public static final String ORDER = "order";
 
     // 系统参数相关常量
     public static final String QINIU_UPLOAD = "qiniu_upload";

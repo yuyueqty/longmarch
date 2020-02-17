@@ -45,7 +45,9 @@ public class OperateLogController {
         params = PageFactory.buildMap(params);
         IPage<OperateLog> page = PageFactory.getInstance(params);
         Object fuzzySearch = params.get(Constant.FUZZY_SEARCH);
+        Object username = params.get("username");
         LambdaQueryWrapper<OperateLog> wrapper = new LambdaQueryWrapper<OperateLog>()
+                .eq(LmUtils.isNotBlank(username), OperateLog::getUserName, username)
                 .and(LmUtils.isNotBlank(fuzzySearch), p ->
                         p.like(OperateLog::getUserName, fuzzySearch)
                                 .or().like(OperateLog::getOperateType, fuzzySearch)
