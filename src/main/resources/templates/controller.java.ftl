@@ -11,13 +11,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import top.longmarch.core.common.Constant;
 import top.longmarch.core.annotation.Log;
 import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.common.Result;
+import top.longmarch.core.utils.LmUtils;
 import ${package.Entity}.${entity};
 import ${package.Service}.${table.serviceName};
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 <#if restControllerStyle>
@@ -61,8 +64,30 @@ public class ${table.controllerName} {
     @PostMapping("/search")
     public Result search(@RequestBody(required = false) Map<String, Object> params) {
         IPage<${entity}> page = PageFactory.getInstance(params);
+        Object fuzzySearch = params.get(Constant.FUZZY_SEARCH);
+        Object prop = params.get(Constant.PROP);
+        Object order = params.get(Constant.ORDER);
         LambdaQueryWrapper<${entity}> wrapper = new LambdaQueryWrapper<>();
-        // 自定义查询条件
+        <#list fieldGenerationConditionList as condition>
+        <#if condition.queryType??>
+        <#if condition.queryType == "eq">
+        wrapper.eq(LmUtils.isNotBlank(params.get("${condition.propertyName}")), ${table.entityName}::get${condition.propertyName?cap_first}, params.get("${condition.propertyName}"));
+        <#elseif condition.queryType == "like">
+        wrapper.like(LmUtils.isNotBlank(fuzzySearch), ${table.entityName}::get${condition.propertyName?cap_first}, fuzzySearch);
+        <#elseif condition.formType == "date">
+        if (LmUtils.isNotBlank(params.get("${condition.propertyName}"))) {
+            List<Object> createTime = (List<Object>) params.get("${condition.propertyName}");
+            wrapper.between(Member::getCreateTime, ${condition.propertyName}.get(0), ${condition.propertyName}.get(1));
+        }
+        <#else>
+        </#if>
+        </#if>
+        <#if condition.orderBy>
+        boolean condition = LmUtils.isNotBlank(prop) && LmUtils.isNotBlank(order);
+        boolean isAsc = "ascending".equals(order);
+        wrapper.orderBy(condition, isAsc, ${table.entityName}::get${condition.propertyName?cap_first});
+        </#if>
+        </#list>
         return Result.ok().add(${table.serviceName?substring(1)?uncap_first}.page(page, wrapper));
     }
 

@@ -6,40 +6,44 @@
           <el-form-item class="postInfo-container-item">
             <el-input v-model="listQuery.fuzzySearch" clearable :placeholder="$t('table.fuzzySearch')" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
           </el-form-item>
-          <#list fieldGenerationConditionList as condition>
-          <#if condition.queryType?? && condition.queryType == "eq" && condition.dictCode??>
-          <el-form-item class="postInfo-container-item">
-            <el-select v-model="listQuery.${condition.propertyName}" clearable placeholder="请选择${condition.remark}">
+                    <el-form-item class="postInfo-container-item">
+            <el-select v-model="listQuery.sex" clearable placeholder="请选择性别">
               <el-option
-                v-for="item in dictionary.${condition.dictCode}"
+                v-for="item in dictionary.sex_dict"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
               />
             </el-select>
           </el-form-item>
-          <#elseif condition.queryType?? && condition.queryType == "date">
+          <el-form-item class="postInfo-container-item">
+            <el-select v-model="listQuery.status" clearable placeholder="请选择用户状态">
+              <el-option
+                v-for="item in dictionary.status_dict"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
           <el-form-item class="postInfo-container-item">
             <el-date-picker
-              v-model="listQuery.${condition.propertyName}"
+              v-model="listQuery.createTime"
               value-format="yyyy-MM-dd HH:mm:ss"
               type="daterange"
               range-separator="至"
-              start-placeholder="${condition.remark}开始日期"
-              end-placeholder="${condition.remark}结束日期"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
             />
           </el-form-item>
-          <#else>
-          </#if>
-          </#list>
           <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
             {{ $t('table.search') }}
           </el-button>
         </el-form>
-        <el-button v-permission="['${package.ModuleName}:${table.entityName?lower_case}:create']" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
+        <el-button v-permission="['test:member:create']" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
           {{ $t('table.add') }}
         </el-button>
-        <el-button v-permission="['${package.ModuleName}:${table.entityName?lower_case}:delete']" :disabled="batchDeleteButtonStatus" class="filter-item" style="margin-left: 10px;" type="danger" icon="el-icon-delete" @click="deleteData()">
+        <el-button v-permission="['test:member:delete']" :disabled="batchDeleteButtonStatus" class="filter-item" style="margin-left: 10px;" type="danger" icon="el-icon-delete" @click="deleteData()">
           {{ $t('table.batchDelete') }}
         </el-button>
       </div>
@@ -56,29 +60,41 @@
           type="selection"
           width="55"
         />
-        <#list fieldGenerationConditionList as condition>
-        <#if condition.listShow>
-        <el-table-column<#if condition.orderBy> prop="${condition.propertyName}" sortable="custom"</#if> :label="$t('${entity}.${condition.propertyName}')" align="center">
-          <#if condition.dictCode??>
+        <el-table-column prop="id" sortable="custom" :label="$t('Member.id')" align="center">
           <template slot-scope="scope">
-            <el-tag :type="scope.row.${condition.propertyName} | dictFirst(dictionary.style_dict)">
-              <span>{{ scope.row.${condition.propertyName} | dictFirst(dictionary.${condition.dictCode}) }}</span>
+            <span>{{ scope.row.id }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('Member.name')" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('Member.sex')" align="center">
+          <template slot-scope="scope">
+            <el-tag :type="scope.row.sex | dictFirst(dictionary.style_dict)">
+              <span>{{ scope.row.sex | dictFirst(dictionary.sex_dict) }}</span>
             </el-tag>
           </template>
-          <#else>
-          <template slot-scope="scope">
-            <span>{{ scope.row.${condition.propertyName} }}</span>
-          </template>
-          </#if>
         </el-table-column>
-      </#if>
-      </#list>
-        <el-table-column v-if="checkPermission(['${package.ModuleName}:${table.entityName?lower_case}:update', '${package.ModuleName}:${table.name}:delete'])" fixed="right" :label="$t('table.actions')" width="200px" align="center" class-name="small-padding fixed-width">
+        <el-table-column :label="$t('Member.status')" align="center">
+          <template slot-scope="scope">
+            <el-tag :type="scope.row.status | dictFirst(dictionary.style_dict)">
+              <span>{{ scope.row.status | dictFirst(dictionary.status_dict) }}</span>
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('Member.createTime')" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.createTime }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="checkPermission(['test:member:update', 'test:test_member:delete'])" fixed="right" :label="$t('table.actions')" width="200px" align="center" class-name="small-padding fixed-width">
           <template slot-scope="{row}">
-            <el-button v-permission="['${package.ModuleName}:${table.entityName?lower_case}:update']" class="filter-item" style="margin-left: 10px;" type="primary" @click="handleUpdate(row)">
+            <el-button v-permission="['test:member:update']" class="filter-item" style="margin-left: 10px;" type="primary" @click="handleUpdate(row)">
               {{ $t('table.edit') }}
             </el-button>
-            <el-button v-permission="['${package.ModuleName}:${table.entityName?lower_case}:delete']" class="filter-item" style="margin-left: 10px;" type="danger" @click="deleteData(row)">
+            <el-button v-permission="['test:member:delete']" class="filter-item" style="margin-left: 10px;" type="danger" @click="deleteData(row)">
               {{ $t('table.delete') }}
             </el-button>
           </template>
@@ -88,37 +104,28 @@
     </el-card>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="right" label-width="80px" style="width: 500px; margin-left:50px;">
-        <#list fieldGenerationConditionList as condition>
-        <#if condition.formShow>
-        <el-form-item :label="$t('${entity}.${condition.propertyName}')">
-          <#if condition.dictCode??>
-          <el-radio-group v-model="temp.${condition.propertyName}">
-            <el-radio-button v-for="item in dictionary.${condition.dictCode}" :key="item.value" :label="item.value">{{ item.label }}</el-radio-button>
+        <el-form-item :label="$t('Member.name')">
+          <el-input v-model="temp.name" />
+        </el-form-item>
+        <el-form-item :label="$t('Member.sex')">
+          <el-radio-group v-model="temp.sex">
+            <el-radio-button v-for="item in dictionary.sex_dict" :key="item.value" :label="item.value">{{ item.label }}</el-radio-button>
           </el-radio-group>
-          <#else>
-          <#if condition.formType == "input">
-          <el-input v-model="temp.${condition.propertyName}" />
-          <#elseif condition.formType == "textarea">
-          <el-input v-model="temp.${condition.propertyName}" type="textarea" :rows="2" placeholder="请输入内容" />
-          <#elseif condition.formType == "radio">
-          <el-radio v-model="temp.${condition.propertyName}" label="1">备选项1</el-radio>
-          <el-radio v-model="temp.${condition.propertyName}" label="2">备选项2</el-radio>
-          <#elseif condition.formType == "checkbox">
-
-          <#elseif condition.formType == "date">
+        </el-form-item>
+        <el-form-item :label="$t('Member.status')">
+          <el-radio-group v-model="temp.status">
+            <el-radio-button v-for="item in dictionary.status_dict" :key="item.value" :label="item.value">{{ item.label }}</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item :label="$t('Member.createTime')">
           <el-date-picker
-            v-model="temp.${condition.propertyName}"
+            v-model="temp.createTime"
             value-format="yyyy-MM-dd HH:mm:ss"
             type="date"
             placeholder="选择日期"
             :picker-options="pickerOptions"
           />
-          <#else>
-          </#if>
-          </#if>
         </el-form-item>
-        </#if>
-        </#list>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">
@@ -135,13 +142,13 @@
 <script>
 import permission from '@/directive/permission/index.js'
 import checkPermission from '@/utils/permission'
-import { fetchList, create, update, remove, changeStatus } from '@/api/${table.entityName}Api'
+import { fetchList, create, update, remove, changeStatus } from '@/api/MemberApi'
 import waves from '@/directive/waves'
 import Pagination from '@/components/Pagination'
 import { mapGetters } from 'vuex'
 
 export default {
-  name: '${table.entityName}Manage',
+  name: 'MemberManage',
   components: { Pagination },
   directives: { waves, permission },
   filters: {
@@ -166,20 +173,18 @@ export default {
         fuzzySearch: null
       },
       temp: {
-      <#list fieldGenerationConditionList as condition>
-      <#if condition.parameter>
-        ${condition.propertyName}: ${condition.defaultValue}<#if condition_has_next>,</#if>
-      </#if>
-      </#list>
+        id: null,
+        name: null,
+        sex: 1,
+        status: 1,
+        createTime: null
       },
       dialogFormVisible: false,
       dialogStatus: 'create',
       textMap: {
-        update: '编辑${table.comment}',
-        create: '添加${table.comment}'
+        update: '编辑会员',
+        create: '添加会员'
       },
-      <#list fieldGenerationConditionList as condition>
-      <#if condition.formShow && condition.formType == "date">
       pickerOptions: {
         disabledDate(time) {
           return time.getTime() > Date.now()
@@ -205,15 +210,11 @@ export default {
           }
         }]
       },
-      <#break>
-      </#if>
-      </#list>
       rules: {
-		  <#list fieldGenerationConditionList as condition>
-			  <#if condition.notNull>
-        ${condition.propertyName}: [{ required: true, message: '${condition.remark}不能为空', trigger: 'blur' }]<#if condition_has_next>,</#if>
-			  </#if>
-	    </#list>
+        name: [{ required: true, message: '用户名不能为空', trigger: 'blur' }],
+        sex: [{ required: true, message: '性别不能为空', trigger: 'blur' }],
+        status: [{ required: true, message: '用户状态不能为空', trigger: 'blur' }],
+        createTime: [{ required: true, message: '创建日期不能为空', trigger: 'blur' }]
       }
     }
   },
@@ -255,11 +256,11 @@ export default {
     /** 初始化属性值 **/
     resetTemp() {
       this.temp = {
-      <#list fieldGenerationConditionList as condition>
-       <#if condition.parameter>
-        ${condition.propertyName}: null<#if condition_has_next>,</#if>
-       </#if>
-       </#list>
+        id: null,
+        name: null,
+        sex: null,
+        status: null,
+        createTime: null
       }
     },
     /** 创建前置处理 **/

@@ -4,21 +4,21 @@ server:
     uri-encoding: UTF-8
   servlet:
     context-path: /lmapi
-    
+
 spring:
   mvc:
     date-format: yyyy-MM-dd HH:mm:ss
   jackson:
-      date-format: yyyy-MM-dd HH:mm:ss
-      time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
   datasource:
     druid:
       url: jdbc:mysql://122.51.244.159:3306/longmarch?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true
       username: longmarch
       password: pfbNKZmkcZ7CDhSf
-#      url: jdbc:mysql://192.168.1.115:3306/longmarch?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true
-#      username: root
-#      password: root
+      #      url: jdbc:mysql://192.168.1.115:3306/longmarch?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true
+      #      username: root
+      #      password: root
       driver-class-name: com.mysql.cj.jdbc.Driver
       # 下面为连接池的补充设置，应用到上面所有数据源中
       initial-size: 5
@@ -35,14 +35,25 @@ spring:
       test-on-borrow: true
       test-on-return: false
       max-pool-prepared-statement-per-connection-size: 100
+      # Spring监控配置，说明请参考Druid Github Wiki，配置_Druid和Spring关联监控配置
+      aop-patterns:
+        - top.longmarch.sys.service.*
+        - top.longmarch.sys.dao.*
+        - top.longmarch.job.service.*
+        - top.longmarch.job.dao.*
+        - top.longmarch.cms.service.*
+        - top.longmarch.cms.dao.*
       #是否启用StatFilter默认值false
-#      web-stat-filter:
-#        enabled: true
-#        session-stat-enable: true
-#        session-stat-max-count: 10
-#        profile-enable: true
-#        principal-cookie-name: druid-cookie
-#        principal-session-name: druid-session
+      web-stat-filter:
+        enabled: true
+        url-pattern: /*
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
+        session-stat-enable: true
+        # 缺省sessionStatMaxCount是1000个
+        session-stat-max-count: 1000
+        profile-enable: true
+        principal-cookie-name: admin
+        principal-session-name: admin
       stat-view-servlet:
         enabled: true
         login-username: longmarch
@@ -56,28 +67,28 @@ spring:
     type: ehcache
     ehcache:
       config: classpath:ehcache.xml
-#  redis:
-#   database: 1
-#   host: 192.168.1.115
-#   port: 6385
-##   password: 'wktWKT!!!'
-#   timeout: 5000
-#   pool:
-#     # 连接池最大连接数（使用负值表示没有限制）
-#     max-active: 8
-#     # 连接池最大阻塞等待时间（使用负值表示没有限制）
-#     max-wait: -1
-#     # 连接池中的最大空闲连接
-#     max-idle: 8
-#     # 连接池中的最小空闲连接
-#     min-idle: 0
-      
+      #  redis:
+      #   database: 1
+      #   host: 192.168.1.115
+      #   port: 6385
+      ##   password: 'wktWKT!!!'
+      #   timeout: 5000
+      #   pool:
+      #     # 连接池最大连接数（使用负值表示没有限制）
+      #     max-active: 8
+      #     # 连接池最大阻塞等待时间（使用负值表示没有限制）
+      #     max-wait: -1
+      #     # 连接池中的最大空闲连接
+      #     max-idle: 8
+      #     # 连接池中的最小空闲连接
+      #     min-idle: 0
+
 mybatis-plus:
   mapper-locations: classpath*:/mapper/*/*Mapper.xml
   #实体扫描，多个package用逗号或者分号分隔
   typeAliasesPackage: top.longmarch.*.entity
   #支持统配符 * 或者 ; 分割
-#  typeEnumsPackage: com.longmarch.common.enums
+  #  typeEnumsPackage: com.longmarch.common.enums
   global-config:
     # 数据库相关配置
     db-config:
@@ -108,6 +119,6 @@ mybatis-plus:
 #    default-enum-type-handler: com.baomidou.mybatisplus.extension.handlers.EnumTypeHandler
 
 logging:
-#  config: classpath:conf/log4j2.xml
+  #  config: classpath:conf/log4j2.xml
   level:
     top.longmarch: debug

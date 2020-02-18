@@ -24,7 +24,7 @@ public class CodeGeneratorUtil {
 //        codeGenerator.run("sys2", Arrays.asList("sys_user","sys_role","sys_permission","sys_user_role_rel","sys_role_permission_rel","sys_dictionary", "sys_login_log", "sys_operate_log", "sys_parameter"));
 //        codeGenerator.run("cms", Arrays.asList("cms_article","cms_category"));
 //        codeGenerator.run("sys", Arrays.asList("sys_department_user_rel"));
-        codeGenerator.run("sys2", Arrays.asList("sys_user"));
+        codeGenerator.run("test", Arrays.asList("test_member"));
     }
 
     public void run(String moduleName, List<String> tableNameList) {
@@ -39,10 +39,11 @@ public class CodeGeneratorUtil {
         Map<String, Object> fieldGenerationCondition = new HashMap<>();
         fieldGenerationCondition.put("tableName", tableName);
         fieldGenerationCondition.put("propertyName", "id");
+        fieldGenerationCondition.put("remark", "ID");
         fieldGenerationCondition.put("notNull", false);
         fieldGenerationCondition.put("listShow", true);
         fieldGenerationCondition.put("formShow", false);
-        fieldGenerationCondition.put("formType", null);
+        fieldGenerationCondition.put("formType", "null");
         fieldGenerationCondition.put("queryType", null);
         fieldGenerationCondition.put("orderBy", true);
         fieldGenerationCondition.put("parameter", true);
@@ -52,7 +53,7 @@ public class CodeGeneratorUtil {
 
         fieldGenerationCondition = new HashMap<>();
         fieldGenerationCondition.put("tableName", tableName);
-        fieldGenerationCondition.put("propertyName", "username");
+        fieldGenerationCondition.put("propertyName", "name");
         fieldGenerationCondition.put("remark", "用户名");
         fieldGenerationCondition.put("notNull", true);
         fieldGenerationCondition.put("listShow", true);
@@ -67,6 +68,21 @@ public class CodeGeneratorUtil {
 
         fieldGenerationCondition = new HashMap<>();
         fieldGenerationCondition.put("tableName", tableName);
+        fieldGenerationCondition.put("propertyName", "sex");
+        fieldGenerationCondition.put("remark", "性别");
+        fieldGenerationCondition.put("notNull", true);
+        fieldGenerationCondition.put("listShow", true);
+        fieldGenerationCondition.put("formShow", true);
+        fieldGenerationCondition.put("formType", "input");
+        fieldGenerationCondition.put("queryType", "eq");
+        fieldGenerationCondition.put("orderBy", false);
+        fieldGenerationCondition.put("parameter", true);
+        fieldGenerationCondition.put("defaultValue", 1);
+        fieldGenerationCondition.put("dictCode", "sex_dict");
+        fieldGenerationConditionList.add(fieldGenerationCondition);
+
+        fieldGenerationCondition = new HashMap<>();
+        fieldGenerationCondition.put("tableName", tableName);
         fieldGenerationCondition.put("propertyName", "status");
         fieldGenerationCondition.put("remark", "用户状态");
         fieldGenerationCondition.put("notNull", true);
@@ -77,7 +93,7 @@ public class CodeGeneratorUtil {
         fieldGenerationCondition.put("orderBy", false);
         fieldGenerationCondition.put("parameter", true);
         fieldGenerationCondition.put("defaultValue", 1);
-        fieldGenerationCondition.put("dictCode", "dict_status");
+        fieldGenerationCondition.put("dictCode", "status_dict");
         fieldGenerationConditionList.add(fieldGenerationCondition);
 
         fieldGenerationCondition = new HashMap<>();
@@ -88,7 +104,7 @@ public class CodeGeneratorUtil {
         fieldGenerationCondition.put("listShow", true);
         fieldGenerationCondition.put("formShow", true);
         fieldGenerationCondition.put("formType", "date");
-        fieldGenerationCondition.put("queryType", "eq");
+        fieldGenerationCondition.put("queryType", "date");
         fieldGenerationCondition.put("orderBy", false);
         fieldGenerationCondition.put("parameter", true);
         fieldGenerationCondition.put("defaultValue", "null");
@@ -148,30 +164,37 @@ public class CodeGeneratorUtil {
         InjectionConfig injectionConfig = new InjectionConfig() {
             @Override
             public void initMap() {
-                // to do nothing
-                Map<String, Object> map = new HashMap<>();
-                map.put("fieldName", "name");
-                map.put("key1", 1);
-                map.put("key1", 1);
-                setMap(map);
             }
         };
         List<FileOutConfig> fileOutConfigList = new ArrayList<>();
-//        fileOutConfigList.add(new FileOutConfig("/templates/mapper.xml.ftl") {
-//            @Override
-//            public String outputFile(TableInfo tableInfo) {
-//                // 自定义输入文件名称
-//                return projectPath + "/src/main/resources/mapper/" + packageConfig.getModuleName()
-//                        + "/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
-//            }
-//
-//        });
         fileOutConfigList.add(new FileOutConfig("/templates/index.vue.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
-                // 自定义输入文件名称
-                return projectPath + "/src/main/resources/page/" + packageConfig.getModuleName()
-                        + "/" + tableInfo.getEntityName() + "/index.vue";
+                return projectPath + "/src/main/resources/page/index.vue";
+            }
+        });
+        fileOutConfigList.add(new FileOutConfig("/templates/api.js.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                return projectPath + "/src/main/resources/page/"+tableInfo.getEntityName()+"Api.js";
+            }
+        });
+        fileOutConfigList.add(new FileOutConfig("/templates/lang_zh.js.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                return projectPath + "/src/main/resources/page/lang_zh.js";
+            }
+        });
+        fileOutConfigList.add(new FileOutConfig("/templates/lang_en.js.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                return projectPath + "/src/main/resources/page/lang_en.js";
+            }
+        });
+        fileOutConfigList.add(new FileOutConfig("/templates/longmarch.sql.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                return projectPath + "/src/main/resources/page/longmarch.sql";
             }
         });
         injectionConfig.setFileOutConfigList(fileOutConfigList);
