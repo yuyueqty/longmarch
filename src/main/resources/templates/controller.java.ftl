@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import top.longmarch.core.annotation.Log;
 import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.common.Result;
 import top.longmarch.core.utils.LmUtils;
+import top.longmarch.sys.entity.vo.ChangeStatusDTO;
 import ${package.Entity}.${entity};
 import ${package.Service}.${table.serviceName};
 
@@ -60,21 +62,19 @@ public class ${table.controllerName} {
     @Autowired
     private ${table.serviceName} ${table.serviceName?substring(1)?uncap_first};
 
-    @ApiOperation(value="搜索${table.comment!}")
+    @ApiOperation(value = "搜索${table.comment!}")
     @PostMapping("/search")
     public Result search(@RequestBody(required = false) Map<String, Object> params) {
         IPage<${entity}> page = PageFactory.getInstance(params);
-        Object fuzzySearch = params.get(Constant.FUZZY_SEARCH);
-        Object prop = params.get(Constant.PROP);
-        Object order = params.get(Constant.ORDER);
         LambdaQueryWrapper<${entity}> wrapper = new LambdaQueryWrapper<>();
         <#list fieldGenerationConditionList as condition>
         <#if condition.queryType??>
         <#if condition.queryType == "eq">
         wrapper.eq(LmUtils.isNotBlank(params.get("${condition.propertyName}")), ${table.entityName}::get${condition.propertyName?cap_first}, params.get("${condition.propertyName}"));
         <#elseif condition.queryType == "like">
+        Object fuzzySearch = params.get(Constant.FUZZY_SEARCH);
         wrapper.like(LmUtils.isNotBlank(fuzzySearch), ${table.entityName}::get${condition.propertyName?cap_first}, fuzzySearch);
-        <#elseif condition.formType == "date">
+        <#elseif condition.queryType == "date">
         if (LmUtils.isNotBlank(params.get("${condition.propertyName}"))) {
             List<Object> createTime = (List<Object>) params.get("${condition.propertyName}");
             wrapper.between(Member::getCreateTime, ${condition.propertyName}.get(0), ${condition.propertyName}.get(1));
@@ -82,7 +82,9 @@ public class ${table.controllerName} {
         <#else>
         </#if>
         </#if>
-        <#if condition.orderBy>
+        <#if condition.orderBy?? && condition.orderBy>
+        Object prop = params.get(Constant.PROP);
+        Object order = params.get(Constant.ORDER);
         boolean condition = LmUtils.isNotBlank(prop) && LmUtils.isNotBlank(order);
         boolean isAsc = "ascending".equals(order);
         wrapper.orderBy(condition, isAsc, ${table.entityName}::get${condition.propertyName?cap_first});
@@ -91,7 +93,7 @@ public class ${table.controllerName} {
         return Result.ok().add(${table.serviceName?substring(1)?uncap_first}.page(page, wrapper));
     }
 
-    @ApiOperation(value="查看${table.comment!}")
+    @ApiOperation(value = "查看${table.comment!}")
     @RequiresPermissions("${package.ModuleName}:${entity?uncap_first}:show")
     @GetMapping("/show/{id}")
     public Result show(@PathVariable("id")Long id) {
@@ -100,7 +102,7 @@ public class ${table.controllerName} {
     }
 
     @Log
-    @ApiOperation(value="创建${table.comment!}")
+    @ApiOperation(value = "创建${table.comment!}")
     @RequiresPermissions("${package.ModuleName}:${entity?uncap_first}:create")
     @PostMapping("/create")
     public Result create(@Validated @RequestBody ${entity} ${entity?uncap_first}) {
@@ -110,7 +112,7 @@ public class ${table.controllerName} {
     }
 
     @Log
-    @ApiOperation(value="更新${table.comment!}")
+    @ApiOperation(value = "更新${table.comment!}")
     @RequiresPermissions("${package.ModuleName}:${entity?uncap_first}:update")
     @PostMapping("/update")
     public Result update(@Validated @RequestBody ${entity} ${entity?uncap_first}) {
@@ -120,13 +122,25 @@ public class ${table.controllerName} {
     }
 
     @Log
-    @ApiOperation(value="删除${table.comment!}")
+    @ApiOperation(value = "删除${table.comment!}")
     @RequiresPermissions("${package.ModuleName}:${entity?uncap_first}:delete")
     @PostMapping("/delete")
     public Result delete(@RequestBody Long[] ids) {
         log.info("删除${table.comment!}, ids={}", ids);
         ${table.serviceName?substring(1)?uncap_first}.removeByIds(Arrays.asList(ids));
         return Result.ok();
+    }
+
+    @Log
+    @ApiOperation(value = "修改${table.comment!}状态")
+    @RequiresPermissions("${package.ModuleName}:${entity?uncap_first}:update")
+    @PostMapping("/changeStatus")
+    public Result changeStatus(@RequestBody ChangeStatusDTO changeStatusDTO) {
+        log.info("修改${table.comment!}状态, 入参：{}", changeStatusDTO);
+        ${entity} ${entity?uncap_first} = new ${entity}();
+        BeanUtils.copyProperties(changeStatusDTO, ${entity?uncap_first});
+        ${table.serviceName?substring(1)?uncap_first}.updateById(${entity?uncap_first});
+        return Result.ok().add(${entity?uncap_first});
     }
 
 }

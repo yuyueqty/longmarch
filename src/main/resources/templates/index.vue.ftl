@@ -57,7 +57,7 @@
           width="55"
         />
         <#list fieldGenerationConditionList as condition>
-        <#if condition.listShow>
+        <#if condition.listShow?? && condition.listShow>
         <el-table-column<#if condition.orderBy> prop="${condition.propertyName}" sortable="custom"</#if> :label="$t('${entity}.${condition.propertyName}')" align="center">
           <#if condition.dictCode??>
           <template slot-scope="scope">
@@ -96,16 +96,16 @@
             <el-radio-button v-for="item in dictionary.${condition.dictCode}" :key="item.value" :label="item.value">{{ item.label }}</el-radio-button>
           </el-radio-group>
           <#else>
-          <#if condition.formType == "input">
+          <#if condition.formType?? && condition.formType == "input">
           <el-input v-model="temp.${condition.propertyName}" />
-          <#elseif condition.formType == "textarea">
+          <#elseif condition.formType?? && condition.formType == "textarea">
           <el-input v-model="temp.${condition.propertyName}" type="textarea" :rows="2" placeholder="请输入内容" />
-          <#elseif condition.formType == "radio">
+          <#elseif condition.formType?? && condition.formType == "radio">
           <el-radio v-model="temp.${condition.propertyName}" label="1">备选项1</el-radio>
           <el-radio v-model="temp.${condition.propertyName}" label="2">备选项2</el-radio>
-          <#elseif condition.formType == "checkbox">
+          <#elseif condition.formType?? && condition.formType == "checkbox">
 
-          <#elseif condition.formType == "date">
+          <#elseif condition.formType?? && condition.formType == "date">
           <el-date-picker
             v-model="temp.${condition.propertyName}"
             value-format="yyyy-MM-dd HH:mm:ss"
@@ -161,14 +161,12 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-        current: 1,
-        size: 10,
-        fuzzySearch: null
+        current: 1
       },
       temp: {
       <#list fieldGenerationConditionList as condition>
       <#if condition.parameter>
-        ${condition.propertyName}: ${condition.defaultValue}<#if condition_has_next>,</#if>
+        ${condition.propertyName}: null<#if condition_has_next>,</#if>
       </#if>
       </#list>
       },
@@ -179,7 +177,7 @@ export default {
         create: '添加${table.comment}'
       },
       <#list fieldGenerationConditionList as condition>
-      <#if condition.formShow && condition.formType == "date">
+      <#if condition.formShow && condition.formType?? && condition.formType == "date">
       pickerOptions: {
         disabledDate(time) {
           return time.getTime() > Date.now()
@@ -257,7 +255,7 @@ export default {
       this.temp = {
       <#list fieldGenerationConditionList as condition>
        <#if condition.parameter>
-        ${condition.propertyName}: null<#if condition_has_next>,</#if>
+        ${condition.propertyName}: <#if condition.defaultValue??>${condition.defaultValue}<#else>null</#if><#if condition_has_next>,</#if>
        </#if>
        </#list>
       }

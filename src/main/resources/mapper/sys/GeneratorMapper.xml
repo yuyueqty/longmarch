@@ -11,9 +11,43 @@
         order by create_time desc
     </select>
 
-    <select id="queryColumns" resultType="map">
-        select column_name columnName, column_type columnType, column_comment `comment` from information_schema.columns
-        where table_name = #{tableName} and table_schema = (select database()) order by ordinal_position
+    <select id="queryColumns" resultType="top.longmarch.sys.entity.Generator">
+        SELECT
+            t1.table_name AS tableName,
+            t1.column_name AS columnName,
+            t1.column_type columnType,
+            t1.column_comment `comment`,
+            CASE WHEN t2.not_null IS NULL THEN FALSE ELSE t2.not_null END AS notNull,
+            CASE WHEN t2.list_show IS NULL THEN TRUE ELSE t2.list_show END AS listShow,
+            CASE WHEN t2.form_show IS NULL THEN TRUE ELSE t2.form_show END AS formShow,
+            CASE WHEN t2.order_by IS NULL THEN FALSE ELSE t2.order_by END AS orderBy,
+            CASE WHEN t2.parameter IS NULL THEN TRUE ELSE t2.parameter END AS parameter,
+            t2.property_name AS propertyName,
+            t2.remark,
+            t2.form_type AS formType,
+            t2.query_type AS queryType,
+            t2.default_value AS defaultValue,
+            t2.dict_code AS dictCode
+        FROM information_schema.`columns` t1
+        LEFT JOIN sys_generator t2 ON t1.table_name = t2.table_name AND t1.column_name = t2.column_name
+        WHERE t1.table_name = #{tableName} and t1.table_schema = (select database()) order by t1.ordinal_position
+    </select>
+
+    <update id="updateByTableNameAndColumnName" parameterType="Map">
+        UPDATE sys_generator SET remark = #{p.remark}, not_null = #{p.notNull}, list_show = #{p.listShow}, form_show = #{p.formShow}, order_by = #{p.orderBy}, parameter = #{p.parameter}
+        , property_name = #{p.propertyName}, form_type = #{p.formType}, query_type = #{p.queryType}, default_value = #{p.defaultValue}, dict_code = #{p.dictCode}
+        WHERE table_name = #{p.tableName} AND column_name = #{p.columnName}
+    </update>
+
+    <insert id="insertGenerator" parameterType="Map">
+        INSERT INTO sys_generator(`table_name`, `column_name`, `column_type`, `remark`, `not_null`, `list_show`, `form_show`, `order_by`, `parameter`
+                , `property_name`, `form_type`, `query_type`, `default_value`, `dict_code`)
+        VALUES (#{p.tableName}, #{p.columnName}, #{p.columnType}, #{p.remark}, #{p.notNull}, #{p.listShow}, #{p.formShow}, #{p.orderBy}, #{p.parameter}
+                , #{p.propertyName}, #{p.formType}, #{p.queryType}, #{p.defaultValue} , #{p.dictCode})
+    </insert>
+
+    <select id="selectCount" resultType="Integer">
+        SELECT COUNT(*) FROM sys_generator WHERE table_name = #{tableName} AND column_name = #{columnName}
     </select>
 
 </mapper>

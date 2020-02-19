@@ -1,9 +1,9 @@
 ##################################################
 # 用于初始化系统数据，再不启动服务的情况下使用
 ##################################################
-url = jdbc:mysql://192.168.1.115:3306/longmarch_2?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true
-user = root
-pass = root
+url = jdbc:mysql://122.51.244.159:3306/longmarch?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true
+user = longmarch
+pass = pfbNKZmkcZ7CDhSf
 
 ## 可选配置
 # 是否在日志中显示执行的SQL

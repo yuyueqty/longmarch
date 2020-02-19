@@ -7,17 +7,7 @@
             <el-input v-model="listQuery.fuzzySearch" clearable :placeholder="$t('table.fuzzySearch')" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
           </el-form-item>
                     <el-form-item class="postInfo-container-item">
-            <el-select v-model="listQuery.sex" clearable placeholder="请选择性别">
-              <el-option
-                v-for="item in dictionary.sex_dict"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item class="postInfo-container-item">
-            <el-select v-model="listQuery.status" clearable placeholder="请选择用户状态">
+            <el-select v-model="listQuery.status" clearable placeholder="请选择会员状态">
               <el-option
                 v-for="item in dictionary.status_dict"
                 :key="item.value"
@@ -32,8 +22,8 @@
               value-format="yyyy-MM-dd HH:mm:ss"
               type="daterange"
               range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
+              start-placeholder="创建时间开始日期"
+              end-placeholder="创建时间结束日期"
             />
           </el-form-item>
           <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
@@ -60,11 +50,6 @@
           type="selection"
           width="55"
         />
-        <el-table-column prop="id" sortable="custom" :label="$t('Member.id')" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.id }}</span>
-          </template>
-        </el-table-column>
         <el-table-column :label="$t('Member.name')" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.name }}</span>
@@ -105,7 +90,6 @@
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="right" label-width="80px" style="width: 500px; margin-left:50px;">
         <el-form-item :label="$t('Member.name')">
-          <el-input v-model="temp.name" />
         </el-form-item>
         <el-form-item :label="$t('Member.sex')">
           <el-radio-group v-model="temp.sex">
@@ -116,15 +100,6 @@
           <el-radio-group v-model="temp.status">
             <el-radio-button v-for="item in dictionary.status_dict" :key="item.value" :label="item.value">{{ item.label }}</el-radio-button>
           </el-radio-group>
-        </el-form-item>
-        <el-form-item :label="$t('Member.createTime')">
-          <el-date-picker
-            v-model="temp.createTime"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            type="date"
-            placeholder="选择日期"
-            :picker-options="pickerOptions"
-          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -168,15 +143,13 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-        current: 1,
-        size: 10,
-        fuzzySearch: null
+        current: 1
       },
       temp: {
         id: null,
         name: null,
-        sex: 1,
-        status: 1,
+        sex: null,
+        status: null,
         createTime: null
       },
       dialogFormVisible: false,
@@ -185,36 +158,9 @@ export default {
         update: '编辑会员',
         create: '添加会员'
       },
-      pickerOptions: {
-        disabledDate(time) {
-          return time.getTime() > Date.now()
-        },
-        shortcuts: [{
-          text: '今天',
-          onClick(picker) {
-            picker.$emit('pick', new Date())
-          }
-        }, {
-          text: '昨天',
-          onClick(picker) {
-            const date = new Date()
-            date.setTime(date.getTime() - 3600 * 1000 * 24)
-            picker.$emit('pick', date)
-          }
-        }, {
-          text: '一周前',
-          onClick(picker) {
-            const date = new Date()
-            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
-            picker.$emit('pick', date)
-          }
-        }]
-      },
       rules: {
-        name: [{ required: true, message: '用户名不能为空', trigger: 'blur' }],
-        sex: [{ required: true, message: '性别不能为空', trigger: 'blur' }],
-        status: [{ required: true, message: '用户状态不能为空', trigger: 'blur' }],
-        createTime: [{ required: true, message: '创建日期不能为空', trigger: 'blur' }]
+        name: [{ required: true, message: '会员名称不能为空', trigger: 'blur' }],
+        status: [{ required: true, message: '会员状态不能为空', trigger: 'blur' }],
       }
     }
   },
@@ -258,8 +204,8 @@ export default {
       this.temp = {
         id: null,
         name: null,
-        sex: null,
-        status: null,
+        sex: 1,
+        status: 1,
         createTime: null
       }
     },

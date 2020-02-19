@@ -4,8 +4,8 @@ route: {
 
 Member: {
   id: 'ID',
-  name: '用户名',
-  sex: '性别',
-  status: '用户状态',
-  createTime: '创建日期'
+  name: '会员名称',
+  sex: '会员性别',
+  status: '会员状态',
+  createTime: '创建时间'
 }

@@ -4,13 +4,13 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import top.longmarch.core.generator.CodeGeneratorUtil;
 import top.longmarch.core.common.Result;
+import top.longmarch.sys.entity.Generator;
 import top.longmarch.sys.service.GeneratorService;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +21,8 @@ public class GeneratorController {
 
     @Autowired
     private GeneratorService generatorService;
+    @Autowired
+    private CodeGeneratorUtil codeGeneratorUtil;
 
     @ApiOperation(value="数据库表列表")
     @GetMapping("/tableList")
@@ -36,8 +38,22 @@ public class GeneratorController {
     @ApiOperation(value="表列名")
     @GetMapping("/tableColumns")
     public Result tableColumns(@RequestParam String tableName) {
-        List<Map<String, String>> tableColumnsInfo = generatorService.queryColumns(tableName);
+        List<Generator> tableColumnsInfo = generatorService.queryColumns(tableName);
         return Result.ok().add(tableColumnsInfo);
+    }
+
+    @ApiOperation(value="创建规则")
+    @PostMapping("/saveGenerator")
+    public Result create(@RequestBody Map<String, Object> params) {
+        generatorService.saveGenerator(params);
+        return Result.ok();
+    }
+
+    @ApiOperation(value="下载文件")
+    @GetMapping("/download")
+    public Result download(String tableName) {
+        codeGeneratorUtil.run("test", Arrays.asList(tableName));
+        return Result.ok();
     }
 
 }

@@ -1,6 +1,7 @@
 package top.longmarch.test.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.IdType;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.FieldFill;
@@ -11,20 +12,20 @@ import io.swagger.annotations.ApiModelProperty;
 
 /**
  * <p>
- * 
+ * 会员
  * </p>
  *
  * @author YuYue
- * @since 2020-02-18
+ * @since 2020-02-19
  */
 @TableName("test_member")
-@ApiModel(value="Member对象", description="")
+@ApiModel(value="Member对象", description="会员")
 public class Member implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "ID")
-    @TableId("id")
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     @ApiModelProperty(value = "名字")

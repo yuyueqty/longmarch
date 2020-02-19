@@ -1,7 +1,8 @@
-package top.longmarch;
+package top.longmarch.core.generator;
 
+import cn.hutool.db.Db;
+import cn.hutool.db.Entity;
 import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
@@ -9,9 +10,10 @@ import com.baomidou.mybatisplus.generator.config.po.TableFill;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
-import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import org.springframework.stereotype.Service;
+import top.longmarch.sys.entity.Generator;
 
+import java.sql.SQLException;
 import java.util.*;
 
 @Service
@@ -28,26 +30,93 @@ public class CodeGeneratorUtil {
     }
 
     public void run(String moduleName, List<String> tableNameList) {
+//        CodeGeneratorUtil codeGenerator = new CodeGeneratorUtil();
         for (String tableName : tableNameList) {
             buildAutoGenerator(moduleName, tableName, buildFieldGenerationConditionList(tableName)).execute();
         }
+//        codeGenerator.run(moduleName, tableNameList);
     }
 
-    public List<Map<String, Object>> buildFieldGenerationConditionList(String tableName) {
+    private List<Generator> buildFieldGenerationConditionList(String tableName) {
+        List<Generator> generatorList = new ArrayList<>();
+        List<Entity> entityList = null;
+        try {
+            entityList = Db.use().findAll(Entity.create("sys_generator").set("table_name", tableName));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if (entityList == null) {
+            return generatorList;
+        }
+        for (Entity entity : entityList) {
+            Generator generator = new Generator();
+            for (String fieldName : entity.getFieldNames()) {
+                if ("id".equals(fieldName)) {
+                    generator.setId(entity.getLong(fieldName));
+                }
+                if ("table_name".equals(fieldName)) {
+                    generator.setTableName(entity.getStr(fieldName));
+                }
+                if ("column_name".equals(fieldName)) {
+                    generator.setColumnName(entity.getStr(fieldName));
+                }
+                if ("column_type".equals(fieldName)) {
+                    generator.setColumnType(entity.getStr(fieldName));
+                }
+                if ("property_name".equals(fieldName)) {
+                    generator.setPropertyName(entity.getStr(fieldName));
+                }
+                if ("remark".equals(fieldName)) {
+                    generator.setRemark(entity.getStr(fieldName));
+                }
+                if ("not_null".equals(fieldName)) {
+                    generator.setNotNull(entity.getBool(fieldName));
+                }
+                if ("list_show".equals(fieldName)) {
+                    generator.setListShow(entity.getBool(fieldName));
+                }
+                if ("form_show".equals(fieldName)) {
+                    generator.setFormShow(entity.getBool(fieldName));
+                }
+                if ("form_type".equals(fieldName)) {
+                    generator.setFormType(entity.getStr(fieldName));
+                }
+                if ("query_type".equals(fieldName)) {
+                    generator.setQueryType(entity.getStr(fieldName));
+                }
+                if ("order_by".equals(fieldName)) {
+                    generator.setOrderBy(entity.getBool(fieldName));
+                }
+                if ("parameter".equals(fieldName)) {
+                    generator.setParameter(entity.getBool(fieldName));
+                }
+                if ("default_value".equals(fieldName)) {
+                    generator.setDefaultValue(entity.getStr(fieldName));
+                }
+                if ("dict_code".equals(fieldName)) {
+                    generator.setDictCode(entity.getStr(fieldName));
+                }
+            }
+            generatorList.add(generator);
+        }
+        return generatorList;
+    }
+
+    private List<Map<String, Object>> buildFieldGenerationConditionList2(String tableName) {
         List<Map<String, Object>> fieldGenerationConditionList = new ArrayList<>();
 
         Map<String, Object> fieldGenerationCondition = new HashMap<>();
         fieldGenerationCondition.put("tableName", tableName);
         fieldGenerationCondition.put("propertyName", "id");
         fieldGenerationCondition.put("remark", "ID");
-        fieldGenerationCondition.put("notNull", false);
+        fieldGenerationCondition.put("notNull", true);
         fieldGenerationCondition.put("listShow", true);
-        fieldGenerationCondition.put("formShow", false);
-        fieldGenerationCondition.put("formType", "null");
+        fieldGenerationCondition.put("formShow", true);
+        fieldGenerationCondition.put("formType", null);
         fieldGenerationCondition.put("queryType", null);
         fieldGenerationCondition.put("orderBy", true);
         fieldGenerationCondition.put("parameter", true);
-        fieldGenerationCondition.put("defaultValue", "null");
+        fieldGenerationCondition.put("defaultValue", null);
         fieldGenerationCondition.put("dictCode", null);
         fieldGenerationConditionList.add(fieldGenerationCondition);
 
@@ -62,7 +131,7 @@ public class CodeGeneratorUtil {
         fieldGenerationCondition.put("queryType", "like");
         fieldGenerationCondition.put("orderBy", false);
         fieldGenerationCondition.put("parameter", true);
-        fieldGenerationCondition.put("defaultValue", "null");
+        fieldGenerationCondition.put("defaultValue", null);
         fieldGenerationCondition.put("dictCode", null);
         fieldGenerationConditionList.add(fieldGenerationCondition);
 
@@ -107,14 +176,14 @@ public class CodeGeneratorUtil {
         fieldGenerationCondition.put("queryType", "date");
         fieldGenerationCondition.put("orderBy", false);
         fieldGenerationCondition.put("parameter", true);
-        fieldGenerationCondition.put("defaultValue", "null");
+        fieldGenerationCondition.put("defaultValue", null);
         fieldGenerationCondition.put("dictCode", null);
         fieldGenerationConditionList.add(fieldGenerationCondition);
 
         return fieldGenerationConditionList;
     }
 
-    private AutoGenerator buildAutoGenerator(String moduleName, String tableName, List<Map<String, Object>> fieldGenerationConditionList) {
+    private AutoGenerator buildAutoGenerator(String moduleName, String tableName, List<Generator> fieldGenerationConditionList) {
         AutoGenerator autoGenerator = new AutoGenerator();
         GlobalConfig globalConfig = buildGlobalConfig();
         TemplateConfig templateConfig = buildTemplateConfig();
@@ -176,7 +245,7 @@ public class CodeGeneratorUtil {
         fileOutConfigList.add(new FileOutConfig("/templates/api.js.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
-                return projectPath + "/src/main/resources/page/"+tableInfo.getEntityName()+"Api.js";
+                return projectPath + "/src/main/resources/page/" + tableInfo.getEntityName() + "Api.js";
             }
         });
         fileOutConfigList.add(new FileOutConfig("/templates/lang_zh.js.ftl") {
