@@ -39,3 +39,4 @@ Thumbs.db
 .idea/
 *.iml
 logs/
+build.sh

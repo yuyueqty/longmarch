@@ -52,7 +52,7 @@ public class LMFormAuthenticationFilter extends FormAuthenticationFilter {
                         "Authentication url [" + getLoginUrl() + "]");
             }
             saveRequest(request);
-            ResponseUtil.respondJson(WebUtils.toHttp(response), 10, "用户未登陆");
+            ResponseUtil.respondJson(WebUtils.toHttp(request), WebUtils.toHttp(response), 10, "用户未登陆");
             return false;
         }
     }

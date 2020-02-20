@@ -5,8 +5,6 @@ import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.codec.Base64;
 import org.apache.shiro.mgt.SecurityManager;
-import org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO;
-import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -18,6 +16,7 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import top.longmarch.core.shiro.filter.KickoutSessionControlFilter;
 import top.longmarch.core.shiro.filter.LMFormAuthenticationFilter;
 import top.longmarch.core.shiro.filter.LMPathMatchingFilter;
 import top.longmarch.core.shiro.listener.LongmarchSessionListener;
@@ -48,11 +47,15 @@ public class ShiroAutoConfiguration {
     }
 
     @Bean
-    public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
+    public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager, CacheManager cacheManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         Map<String, Filter> filterMap = new HashMap<>();
         filterMap.put("cross", new LMPathMatchingFilter());
         filterMap.put("authc", new LMFormAuthenticationFilter());
+        KickoutSessionControlFilter kickoutSessionControlFilter = new KickoutSessionControlFilter();
+        kickoutSessionControlFilter.setCacheManager(cacheManager);
+        kickoutSessionControlFilter.setSessionManager(sessionManager(cacheManager));
+        filterMap.put("Kickout", kickoutSessionControlFilter);
         shiroFilterFactoryBean.setFilters(filterMap);
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
@@ -67,7 +70,7 @@ public class ShiroAutoConfiguration {
         //对外暴露API接口
         filterChainDefinitionMap.put("/api/**", "cross,anon");
         //主要这行代码必须放在所有权限设置的最后，不然会导致所有 url 都被拦截 剩余的都需要认证
-        filterChainDefinitionMap.put("/**", "cross,authc");
+        filterChainDefinitionMap.put("/**", "cross,Kickout,authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
     }

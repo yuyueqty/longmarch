@@ -3,12 +3,18 @@ package top.longmarch.core.utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
 
 public class ResponseUtil {
+
+    public static void respondJson(HttpServletRequest request,
+            HttpServletResponse response, Integer code, String message) {
+        respondJson(response, code, message, null);
+    }
 
     public static void respondJson(
             HttpServletResponse response, Integer code, String message) {

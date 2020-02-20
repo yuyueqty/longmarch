@@ -35,7 +35,7 @@
             statistics="true">
     </cache>
     <!-- 保持账号唯一用户登陆缓存 -->
-    <cache  name="shiro-keepOneUserCache"
+    <cache  name="__keepOneUserCache__"
             maxEntriesLocalHeap="2000"
             overflowToDisk="true" 
             eternal="true"
