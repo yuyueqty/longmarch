@@ -36,6 +36,10 @@ public class Category implements Serializable {
     @TableField("parent_id")
     private Long parentId;
 
+    @ApiModelProperty(value = "类型")
+    @TableField("type")
+    private Integer type;
+
     @ApiModelProperty(value = "跳转地址")
     @TableField("redirect_url")
     private String redirectUrl;
@@ -88,6 +92,14 @@ public class Category implements Serializable {
     }
     public Long getParentId() {
         return parentId;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     public void setParentId(Long parentId) {
@@ -163,6 +175,7 @@ public class Category implements Serializable {
             "id=" + id +
             ", categoryName=" + categoryName +
             ", parentId=" + parentId +
+            ", type=" + type +
             ", redirectUrl=" + redirectUrl +
             ", icon=" + icon +
             ", sort=" + sort +

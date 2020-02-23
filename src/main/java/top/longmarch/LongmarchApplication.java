@@ -8,7 +8,6 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
-import springfox.documentation.annotations.Cacheable;
 import top.longmarch.core.config.CrossDomainFilter;
 
 import java.net.InetAddress;

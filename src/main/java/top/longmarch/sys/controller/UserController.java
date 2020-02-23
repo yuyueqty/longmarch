@@ -43,8 +43,6 @@ public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     @Autowired
     private IUserService userService;
-    @Autowired
-    private IDepartmentService departmentService;
 
     @ApiOperation(value="搜索用户信息")
     @PostMapping("/search")
@@ -58,53 +56,6 @@ public class UserController {
     @GetMapping("/show/{id}")
     public Result show(@PathVariable("id")Long id) {
         User user = userService.getById(id);
-        return Result.ok().add(user);
-    }
-
-    @ApiOperation(value="加载个人信息")
-    @GetMapping("/loadPersonalInfo")
-    public Result loadPersonalInfo() {
-        User user = userService.getById(UserUtil.getUserId());
-        Department department = departmentService.getById(user.getDeptId());
-        Map<String, Object> userInfo = new HashMap<>();
-        userInfo.put("username", user.getUsername());
-        userInfo.put("phone", user.getPhone());
-        userInfo.put("headImgUrl", user.getHeadImgUrl());
-        userInfo.put("loginCount", user.getLoginCount());
-        userInfo.put("lastLoginTime", user.getLastLoginTime());
-        userInfo.put("dept", department.getDeptName());
-        return Result.ok().add(userInfo);
-    }
-
-    @Log
-    @ApiOperation(value="修改个人信息")
-    @PostMapping("/modifyingPersonalInfo")
-    public Result modifyingPersonalInfo(@RequestBody User user) {
-        log.info("修改个人信息, 入参：{}", user);
-        User updateUser = new User();
-        updateUser.setId(UserUtil.getUserId());
-        updateUser.setPhone(user.getPhone());
-        updateUser.setHeadImgUrl(user.getHeadImgUrl());
-        userService.updateById(updateUser);
-        return Result.ok().add(updateUser);
-    }
-
-    @Log
-    @ApiOperation(value="修改个人密码")
-    @PostMapping("/modifyingPersonalPassword")
-    public Result modifyingPersonalPassword(@RequestBody ModifyingPersonalPassword modifyingPersonalPassword) {
-        log.info("修改个人密码, 入参：{}", modifyingPersonalPassword);
-        User user = userService.getById(UserUtil.getUserId());
-        if (!user.getPassword().equals(PasswordUtil.password(modifyingPersonalPassword.getOldPassword()))) {
-            return Result.fail("旧密码不正确");
-        }
-        if (!modifyingPersonalPassword.getNewPassword().equals(modifyingPersonalPassword.getConfirmPassword())) {
-            return Result.fail("确认密码不正确");
-        }
-        User updateUser = new User();
-        updateUser.setId(user.getId());
-        updateUser.setPassword(PasswordUtil.password(modifyingPersonalPassword.getNewPassword()));
-        userService.updateById(updateUser);
         return Result.ok().add(user);
     }
 

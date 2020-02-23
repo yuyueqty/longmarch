@@ -1,5 +1,6 @@
 package top.longmarch.sys.service;
 
+import cn.hutool.json.JSONObject;
 import top.longmarch.sys.entity.Permission;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -16,7 +17,7 @@ import java.util.Map;
  */
 public interface IPermissionService extends IService<Permission> {
 
-    Map<String, Object> getPermissionTree();
+    JSONObject getPermissionTree();
 
     void updatePermissionById(Permission permission);
 

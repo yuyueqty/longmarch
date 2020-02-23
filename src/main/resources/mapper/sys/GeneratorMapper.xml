@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="top.longmarch.sys.dao.GeneratorDao">
 
-    <select id="queryList" resultType="map">
+    <select id="queryTables" resultType="map">
         select table_name tableName, `engine`, table_collation encoding, table_comment `comment`, create_time createTime from information_schema.tables
         where table_schema = (select database()) AND table_comment != ''
         <if test="tableName != null and tableName.trim() != ''">
@@ -13,6 +13,7 @@
 
     <select id="queryColumns" resultType="top.longmarch.sys.entity.Generator">
         SELECT
+            t2.id,
             t1.table_name AS tableName,
             t1.column_name AS columnName,
             t1.column_type columnType,
@@ -31,23 +32,6 @@
         FROM information_schema.`columns` t1
         LEFT JOIN sys_generator t2 ON t1.table_name = t2.table_name AND t1.column_name = t2.column_name
         WHERE t1.table_name = #{tableName} and t1.table_schema = (select database()) order by t1.ordinal_position
-    </select>
-
-    <update id="updateByTableNameAndColumnName" parameterType="Map">
-        UPDATE sys_generator SET remark = #{p.remark}, not_null = #{p.notNull}, list_show = #{p.listShow}, form_show = #{p.formShow}, order_by = #{p.orderBy}, parameter = #{p.parameter}
-        , property_name = #{p.propertyName}, form_type = #{p.formType}, query_type = #{p.queryType}, default_value = #{p.defaultValue}, dict_code = #{p.dictCode}
-        WHERE table_name = #{p.tableName} AND column_name = #{p.columnName}
-    </update>
-
-    <insert id="insertGenerator" parameterType="Map">
-        INSERT INTO sys_generator(`table_name`, `column_name`, `column_type`, `remark`, `not_null`, `list_show`, `form_show`, `order_by`, `parameter`
-                , `property_name`, `form_type`, `query_type`, `default_value`, `dict_code`)
-        VALUES (#{p.tableName}, #{p.columnName}, #{p.columnType}, #{p.remark}, #{p.notNull}, #{p.listShow}, #{p.formShow}, #{p.orderBy}, #{p.parameter}
-                , #{p.propertyName}, #{p.formType}, #{p.queryType}, #{p.defaultValue} , #{p.dictCode})
-    </insert>
-
-    <select id="selectCount" resultType="Integer">
-        SELECT COUNT(*) FROM sys_generator WHERE table_name = #{tableName} AND column_name = #{columnName}
     </select>
 
 </mapper>

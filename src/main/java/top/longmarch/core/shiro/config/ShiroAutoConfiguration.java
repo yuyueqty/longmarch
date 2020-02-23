@@ -69,6 +69,14 @@ public class ShiroAutoConfiguration {
         filterChainDefinitionMap.put("/logout", "cross,anon");
         //对外暴露API接口
         filterChainDefinitionMap.put("/api/**", "cross,anon");
+        filterChainDefinitionMap.put("/css/**", "anon");
+        filterChainDefinitionMap.put("/bootstrap/**", "anon");
+        filterChainDefinitionMap.put("/font-awesome/**", "anon");
+        filterChainDefinitionMap.put("/highlight/**", "anon");
+        filterChainDefinitionMap.put("/img/**", "anon");
+        filterChainDefinitionMap.put("/jquery/**", "anon");
+        filterChainDefinitionMap.put("/temporary-img/**", "anon");
+        filterChainDefinitionMap.put("/view/**", "anon");
         //主要这行代码必须放在所有权限设置的最后，不然会导致所有 url 都被拦截 剩余的都需要认证
         filterChainDefinitionMap.put("/**", "cross,Kickout,authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);

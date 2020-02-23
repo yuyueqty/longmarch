@@ -16,6 +16,7 @@ public class Constant {
     public static final String QINIU_UPLOAD = "qiniu_upload";
     public static final String DEFAULT_USER_ROLE = "default_user_role";
     public static final String SYS_PARAMS = "sys_params";
+    public static final String PROJECT_PATH = System.getProperty("java.io.tmpdir") + "/soundcode";
 
     // 数据权限类型
     public static final Integer ONE_USER = 1;

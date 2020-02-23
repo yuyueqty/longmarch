@@ -30,11 +30,9 @@ public class CodeGeneratorUtil {
     }
 
     public void run(String moduleName, List<String> tableNameList) {
-//        CodeGeneratorUtil codeGenerator = new CodeGeneratorUtil();
         for (String tableName : tableNameList) {
             buildAutoGenerator(moduleName, tableName, buildFieldGenerationConditionList(tableName)).execute();
         }
-//        codeGenerator.run(moduleName, tableNameList);
     }
 
     private List<Generator> buildFieldGenerationConditionList(String tableName) {
@@ -205,8 +203,8 @@ public class CodeGeneratorUtil {
 
     private TemplateConfig buildTemplateConfig() {
         TemplateConfig templateConfig = new TemplateConfig();
-        templateConfig.setEntity("/templates/entity.java");
-        templateConfig.setController("/templates/controller.java");
+        templateConfig.setEntity("/generator/entity.java");
+        templateConfig.setController("/generator/controller.java");
         return templateConfig;
     }
 
@@ -236,31 +234,31 @@ public class CodeGeneratorUtil {
             }
         };
         List<FileOutConfig> fileOutConfigList = new ArrayList<>();
-        fileOutConfigList.add(new FileOutConfig("/templates/index.vue.ftl") {
+        fileOutConfigList.add(new FileOutConfig("/generator/index.vue.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 return projectPath + "/src/main/resources/page/index.vue";
             }
         });
-        fileOutConfigList.add(new FileOutConfig("/templates/api.js.ftl") {
+        fileOutConfigList.add(new FileOutConfig("/generator/api.js.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 return projectPath + "/src/main/resources/page/" + tableInfo.getEntityName() + "Api.js";
             }
         });
-        fileOutConfigList.add(new FileOutConfig("/templates/lang_zh.js.ftl") {
+        fileOutConfigList.add(new FileOutConfig("/generator/lang_zh.js.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 return projectPath + "/src/main/resources/page/lang_zh.js";
             }
         });
-        fileOutConfigList.add(new FileOutConfig("/templates/lang_en.js.ftl") {
+        fileOutConfigList.add(new FileOutConfig("/generator/lang_en.js.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 return projectPath + "/src/main/resources/page/lang_en.js";
             }
         });
-        fileOutConfigList.add(new FileOutConfig("/templates/longmarch.sql.ftl") {
+        fileOutConfigList.add(new FileOutConfig("/generator/longmarch.sql.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 return projectPath + "/src/main/resources/page/longmarch.sql";

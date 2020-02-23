@@ -1,21 +1,20 @@
 package top.longmarch.sys.service.impl;
 
+import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
 import top.longmarch.core.utils.tree.TreeUtil;
-import top.longmarch.sys.entity.Permission;
 import top.longmarch.sys.dao.PermissionDao;
+import top.longmarch.sys.entity.Permission;
 import top.longmarch.sys.entity.vo.PermissionTree;
 import top.longmarch.sys.service.IPermissionService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -32,8 +31,8 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionDao, Permission
 
     @Cacheable(key = "'permission_tree'")
     @Override
-    public Map<String, Object> getPermissionTree() {
-        Map<String, Object> tree = new HashMap<>();
+    public JSONObject getPermissionTree() {
+        JSONObject tree = new JSONObject();
         List<Permission> permissionAllList = this.list(new LambdaQueryWrapper<Permission>().orderByAsc(Permission::getSort));
         List<Permission> menuList = permissionAllList.stream().filter(p -> p.getType() != 2).collect(Collectors.toList());
 

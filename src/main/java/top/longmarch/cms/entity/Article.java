@@ -60,7 +60,7 @@ public class Article implements Serializable {
     @TableField("publish_time")
     private Date publishTime;
 
-    @ApiModelProperty(value = "发布状态（0 未发布， 1 审核中，2 已发布，默认 0）")
+    @ApiModelProperty(value = "发布状态（1 未发布， 2 审核中，3 已发布，默认 1）")
     @TableField("publish_status")
     private Integer publishStatus;
 
