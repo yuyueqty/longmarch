@@ -38,6 +38,10 @@ public class User implements Serializable {
     @TableField("password")
     private String password;
 
+    @ApiModelProperty(value = "昵称")
+    @TableField("nickname")
+    private String nickname;
+
     @ApiModelProperty(value = "用户头像")
     @TableField("head_img_url")
     private String headImgUrl;
@@ -49,6 +53,10 @@ public class User implements Serializable {
     @ApiModelProperty(value = "状态（1 停用， 0 启用， 默认 0）")
     @TableField("status")
     private Integer status;
+
+    @ApiModelProperty(value = "用户类型（1 后台管理用户， 2 注册会员）")
+    @TableField("user_type")
+    private Integer userType;
 
     @ApiModelProperty(value = "登录次数")
     @TableField("login_count")
@@ -245,6 +253,22 @@ public class User implements Serializable {
         this.userIdSet = userIdSet;
     }
 
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public Integer getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Integer userType) {
+        this.userType = userType;
+    }
+
     @Override
     public String toString() {
         return "SysUser{" +
@@ -254,6 +278,8 @@ public class User implements Serializable {
                 ", phone=" + phone +
                 ", status=" + status +
                 ", headImgUrl=" + headImgUrl +
+                ", userType=" + userType +
+                ", nickname=" + nickname +
                 ", loginCount=" + loginCount +
                 ", lastLoginTime=" + lastLoginTime +
                 ", deptId=" + deptId +

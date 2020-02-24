@@ -48,7 +48,7 @@ public class CustomRealm extends AuthorizingRealm {
             throw new UnknownAccountException("用户不存在");
         }
         if (StatusEnum.NO.getValue() == user.getStatus()) {
-            throw new LockedAccountException("用户已停用");
+            throw new LockedAccountException("用户已冻结，请联系管理员");
         }
         Map<String, Object> map = userIRolePermissionService.getRoleDeptIdsByUserId(user.getId());
         if (CollectionUtil.isEmpty(map)) {

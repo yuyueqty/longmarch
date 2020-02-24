@@ -17,6 +17,7 @@ public class CrossDomainFilter implements Filter {
     
     private static Set<String> allowedOrigins = new LinkedHashSet<>();
     static {
+        allowedOrigins.add("http://localhost:9527");
         allowedOrigins.add("http://localhost:9528");
         allowedOrigins.add("http://localhost:8080");
     }

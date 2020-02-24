@@ -16,6 +16,7 @@ import net.sf.jsqlparser.expression.operators.relational.ItemsList;
 import net.sf.jsqlparser.expression.operators.relational.SupportsOldOracleJoinSyntax;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
+import net.sf.jsqlparser.statement.insert.Insert;
 import net.sf.jsqlparser.statement.select.FromItem;
 import net.sf.jsqlparser.statement.select.Join;
 import net.sf.jsqlparser.statement.select.PlainSelect;
@@ -32,6 +33,11 @@ import net.sf.jsqlparser.statement.select.SubSelect;
  * @date 2019/8/1
  */
 public class MyTenantParser extends TenantSqlParser {
+
+    @Override
+    public void processInsert(Insert insert) {
+        //TODO 目前项目还未加入多租户模式
+    }
 
     /**
      * 目前仅支持：in, between, >, <, =, !=等比较操作，处理多租户的字段加上表别名

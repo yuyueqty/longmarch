@@ -114,7 +114,7 @@ public class ArticleController {
         return Result.ok().add(article);
     }
 
-    @Log
+    @Log(value = "#{#article.title}")
     @ApiOperation(value = "创建文章")
     @RequiresPermissions("cms:article:create")
     @PostMapping("/create")
@@ -124,7 +124,7 @@ public class ArticleController {
         return Result.ok().add(article);
     }
 
-    @Log
+    @Log(value = "#{#article.title}")
     @ApiOperation(value = "更新文章")
     @RequiresPermissions("cms:article:update")
     @PostMapping("/update")

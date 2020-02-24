@@ -90,6 +90,8 @@ public class UserController {
     @PostMapping("/create")
     public Result create(@Validated @RequestBody User user) {
         log.info("创建用户信息, 入参：{}", user);
+        // 后台创建的用户默认是后台用户
+        user.setUserType(1);
         userService.saveUser(user);
         return Result.ok().add(user);
     }

@@ -44,6 +44,8 @@ public class RegisterController {
 
     private User RegisterUser2UserInfo(RegisterUser registerUser) {
         User user = new User();
+        // 注册的用户默认为平台会员
+        user.setUserType(2);
         String paramValue = parameterService.getParameterByName(Constant.DEFAULT_USER_ROLE).getParamValue();
         user.setRoleIds(JSONUtil.parseObj(paramValue).getStr("roleId"));
         user.setCreateBy(0L);
