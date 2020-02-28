@@ -1,7 +1,7 @@
 package ${package.Controller};
 
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,8 +39,8 @@ import ${superControllerClassPackage};
  * ${table.comment!} 前端控制器
  * </p>
  *
- * @author YuYue
- * @since 2020-01-12
+ * @author ${author}
+ * @since ${date}
 */
 @Api(value = "${table.comment!}模块", tags = "${table.comment!}模块接口")
 <#if restControllerStyle>
@@ -66,11 +66,11 @@ public class ${table.controllerName} {
     @PostMapping("/search")
     public Result search(@RequestBody(required = false) Map<String, Object> params) {
         IPage<${entity}> page = PageFactory.getInstance(params);
-        LambdaQueryWrapper<${entity}> wrapper = new LambdaQueryWrapper<>();
+        QueryWrapper<${entity}> wrapper = new QueryWrapper<>();
         <#list fieldGenerationConditionList as condition>
         <#if condition.queryType??>
         <#if condition.queryType == "eq">
-        wrapper.eq(LmUtils.isNotBlank(params.get("${condition.propertyName}")), ${table.entityName}::get${condition.propertyName?cap_first}, params.get("${condition.propertyName}"));
+        wrapper.lambda().eq(LmUtils.isNotBlank(params.get("${condition.propertyName}")), ${table.entityName}::get${condition.propertyName?cap_first}, params.get("${condition.propertyName}"));
         <#elseif condition.queryType == "like">
         Object fuzzySearch = params.get(Constant.FUZZY_SEARCH);
         wrapper.like(LmUtils.isNotBlank(fuzzySearch), ${table.entityName}::get${condition.propertyName?cap_first}, fuzzySearch);
@@ -85,9 +85,10 @@ public class ${table.controllerName} {
         <#if condition.orderBy?? && condition.orderBy>
         Object prop = params.get(Constant.PROP);
         Object order = params.get(Constant.ORDER);
-        boolean condition = LmUtils.isNotBlank(prop) && LmUtils.isNotBlank(order);
-        boolean isAsc = "ascending".equals(order);
-        wrapper.orderBy(condition, isAsc, ${table.entityName}::get${condition.propertyName?cap_first});
+        if (LmUtils.isNotBlank(prop) && LmUtils.isNotBlank(order)) {
+            boolean isAsc = "ascending".equals(order);
+            wrapper.orderBy(true, isAsc, prop.toString());
+        }
         </#if>
         </#list>
         return Result.ok().add(${table.serviceName?substring(1)?uncap_first}.page(page, wrapper));

@@ -1,5 +1,7 @@
 package top.longmarch.core.generator;
 
+import cn.hutool.db.Db;
+import cn.hutool.db.Entity;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
@@ -10,15 +12,24 @@ import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import top.longmarch.sys.entity.Generator;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class CodeGeneratorOpen {
 
-    //    public static final String projectPath = System.getProperty("user.dir") + "/soundcode";
-//    public static final String projectPath = System.getProperty("java.io.tmpdir") + "/soundcode";
-//    public static final String projectPath = "D:/soundcode";
+
+    public static void main(String[] args) throws SQLException {
+        String tableName = "cms_tag";
+        CodeGeneratorOpen codeGeneratorOpen = new CodeGeneratorOpen();
+        Entity entity = Db.use().get("sys_generator", "table_name", tableName);
+        Generator generator = codeGeneratorOpen.getGenerator(entity);
+        List<Generator> generatorList = new ArrayList<>();
+        generatorList.add(generator);
+        codeGeneratorOpen.setProjectPath("D:/" + tableName);
+        codeGeneratorOpen.buildAutoGenerator("cms", "cms_tag", generatorList).execute();
+    }
 
     private String projectPath;
 
@@ -48,7 +59,6 @@ public class CodeGeneratorOpen {
 
     private TemplateConfig buildTemplateConfig() {
         TemplateConfig templateConfig = new TemplateConfig();
-        templateConfig.setEntity("/generator/entity.java");
         templateConfig.setController("/generator/controller.java");
         return templateConfig;
     }
@@ -113,11 +123,6 @@ public class CodeGeneratorOpen {
         return injectionConfig;
     }
 
-//    public static void main(String[] args) {
-//        String format = String.format("%s/sql/%s.sql", projectPath, "tableName");
-//        System.out.println(format);
-//    }
-
     private PackageConfig buildPackageConfig(String moduleName) {
         PackageConfig packageConfig = new PackageConfig();
         packageConfig.setModuleName(moduleName);
@@ -145,6 +150,58 @@ public class CodeGeneratorOpen {
         globalConfig.setMapperName("%sDao");
         globalConfig.setDateType(DateType.ONLY_DATE);
         return globalConfig;
+    }
+
+    public Generator getGenerator(Entity entity) {
+        Generator generator = new Generator();
+        for (String fieldName : entity.getFieldNames()) {
+            if ("id".equals(fieldName)) {
+                generator.setId(entity.getLong(fieldName));
+            }
+            if ("table_name".equals(fieldName)) {
+                generator.setTableName(entity.getStr(fieldName));
+            }
+            if ("column_name".equals(fieldName)) {
+                generator.setColumnName(entity.getStr(fieldName));
+            }
+            if ("column_type".equals(fieldName)) {
+                generator.setColumnType(entity.getStr(fieldName));
+            }
+            if ("property_name".equals(fieldName)) {
+                generator.setPropertyName(entity.getStr(fieldName));
+            }
+            if ("remark".equals(fieldName)) {
+                generator.setRemark(entity.getStr(fieldName));
+            }
+            if ("not_null".equals(fieldName)) {
+                generator.setNotNull(entity.getBool(fieldName));
+            }
+            if ("list_show".equals(fieldName)) {
+                generator.setListShow(entity.getBool(fieldName));
+            }
+            if ("form_show".equals(fieldName)) {
+                generator.setFormShow(entity.getBool(fieldName));
+            }
+            if ("form_type".equals(fieldName)) {
+                generator.setFormType(entity.getStr(fieldName));
+            }
+            if ("query_type".equals(fieldName)) {
+                generator.setQueryType(entity.getStr(fieldName));
+            }
+            if ("order_by".equals(fieldName)) {
+                generator.setOrderBy(entity.getBool(fieldName));
+            }
+            if ("parameter".equals(fieldName)) {
+                generator.setParameter(entity.getBool(fieldName));
+            }
+            if ("default_value".equals(fieldName)) {
+                generator.setDefaultValue(entity.getStr(fieldName));
+            }
+            if ("dict_code".equals(fieldName)) {
+                generator.setDictCode(entity.getStr(fieldName));
+            }
+        }
+        return generator;
     }
 
 }

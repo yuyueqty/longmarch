@@ -1,6 +1,7 @@
 package top.longmarch.cms.controller;
 
 
+import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -16,6 +17,7 @@ import top.longmarch.cms.entity.Category;
 import top.longmarch.cms.entity.vo.CategoryTree;
 import top.longmarch.cms.service.IArticleService;
 import top.longmarch.cms.service.ICategoryService;
+import top.longmarch.cms.service.ITagService;
 import top.longmarch.core.annotation.Log;
 import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.common.Result;
@@ -44,6 +46,8 @@ public class ArticleController {
     private IArticleService articleService;
     @Autowired
     private ICategoryService categoryService;
+    @Autowired
+    private ITagService tagService;
 
     @ApiOperation(value = "搜索文章")
     @PostMapping("/search")
@@ -83,6 +87,7 @@ public class ArticleController {
     public Result show(@PathVariable("id") Long id) {
         List<Long> pIds = new ArrayList<>();
         Article article = articleService.getById(id);
+        article.setTags(tagService.getTagNames(article.getTags()));
         pIds.add(article.getCategoryId());
         if (article.getCategoryId() > 0) {
             Category category = categoryService.getById(article.getCategoryId());
@@ -140,7 +145,7 @@ public class ArticleController {
     @PostMapping("/delete")
     public Result delete(@RequestBody Long[] ids) {
         log.info("删除文章, ids={}", ids);
-        articleService.removeByIds(Arrays.asList(ids));
+        articleService.removeArticleByIds(Arrays.asList(ids));
         return Result.ok();
     }
 
@@ -155,7 +160,8 @@ public class ArticleController {
             return tree;
         }).collect(Collectors.toList());
         List<CategoryTree> categoryTree = TreeUtil.list2Tree(categoryTreeList);
-        return Result.ok().add(categoryTree);
+        List<JSONObject> hotTags = tagService.getHotTag(100);
+        return Result.ok().add(categoryTree).add("hotTags", hotTags);
     }
 
 }

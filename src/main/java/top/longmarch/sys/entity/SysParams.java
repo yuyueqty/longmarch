@@ -6,6 +6,7 @@ public class SysParams implements Serializable {
 
     private String title;
     private String headImgUrl;
+    private String defaultNickname;
 
     public String getTitle() {
         return title;
@@ -21,5 +22,13 @@ public class SysParams implements Serializable {
 
     public void setHeadImgUrl(String headImgUrl) {
         this.headImgUrl = headImgUrl;
+    }
+
+    public String getDefaultNickname() {
+        return defaultNickname;
+    }
+
+    public void setDefaultNickname(String defaultNickname) {
+        this.defaultNickname = defaultNickname;
     }
 }

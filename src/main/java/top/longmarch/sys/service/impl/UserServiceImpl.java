@@ -78,6 +78,9 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
         }
         SysParams sysParams = JSONUtil.toBean(parameterService.getParameterByName(Constant.SYS_PARAMS).getParamValue(), SysParams.class);
         user.setHeadImgUrl(sysParams.getHeadImgUrl());
+        if (StrUtil.isBlank(user.getNickname())) {
+            user.setNickname(sysParams.getDefaultNickname());
+        }
         this.save(user);
         this.createUserRolesRel(user.getId(), this.str2List(user.getRoleIds()));
     }

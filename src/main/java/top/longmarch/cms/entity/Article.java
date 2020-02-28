@@ -85,8 +85,8 @@ public class Article implements Serializable {
     private Integer recommend;
 
     @ApiModelProperty(value = "文章标签")
-    @TableField("label")
-    private String label;
+    @TableField("tags")
+    private String tags;
 
     @ApiModelProperty(value = "创建者ID")
     @TableField(value = "create_by", fill = FieldFill.INSERT)
@@ -210,11 +210,11 @@ public class Article implements Serializable {
         return createBy;
     }
 
-    public String getLabel() {
-        return label;
+    public String getTags() {
+        return tags;
     }
-    public void setLabel(String label) {
-        this.label = label;
+    public void setTags(String label) {
+        this.tags = label;
     }
 
     public void setCreateBy(Long createBy) {
@@ -276,7 +276,7 @@ public class Article implements Serializable {
                 ", likes=" + likes +
                 ", sort=" + sort +
                 ", recommend=" + recommend +
-                ", label='" + label + '\'' +
+                ", tags='" + tags + '\'' +
                 ", createBy=" + createBy +
                 ", createTime=" + createTime +
                 ", updateBy=" + updateBy +

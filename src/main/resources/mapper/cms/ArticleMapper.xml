@@ -18,7 +18,7 @@
             t1.likes,
             t1.sort,
             t1.recommend,
-            t1.label,
+            t1.tags,
             t1.create_time AS createTime,
             t1.update_time AS updateTime
         FROM cms_article t1

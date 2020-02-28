@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import top.longmarch.cms.entity.Article;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,4 +24,5 @@ public interface IArticleService extends IService<Article> {
 
     void batchPublishArticles();
 
+    void removeArticleByIds(List<Long> ids);
 }

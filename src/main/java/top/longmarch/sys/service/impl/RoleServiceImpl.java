@@ -128,6 +128,14 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements IRole
             insertUserIds = selectUserIds.stream().filter(id -> !dhUserIds.contains(id)).collect(Collectors.toList());
             deleteUserIds = dhUserIds.stream().filter(id -> !selectUserIds.contains(id)).collect(Collectors.toList());
         }
+
+        List<Long> clearCacheUserId = new ArrayList<>();
+        if (deleteUserIds != null && deleteUserIds.size() > 0) {
+            userRoleRelService.remove(new LambdaQueryWrapper<UserRoleRel>()
+                    .eq(UserRoleRel::getRoleId, role.getId()).in(UserRoleRel::getUserId, deleteUserIds));
+            clearCacheUserId.addAll(deleteUserIds);
+        }
+
         if (insertUserIds != null && insertUserIds.size() > 0) {
             List<UserRoleRel> insertUserRoleRelList = new ArrayList<>();
             for (Long userId : insertUserIds) {
@@ -137,15 +145,12 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements IRole
                 insertUserRoleRelList.add(userRoleRel);
             }
             userRoleRelService.saveBatch(insertUserRoleRelList);
+            clearCacheUserId.addAll(insertUserIds);
         }
-        if (deleteUserIds != null && deleteUserIds.size() > 0) {
-            userRoleRelService.remove(new LambdaQueryWrapper<UserRoleRel>()
-                    .eq(UserRoleRel::getRoleId, role.getId()).in(UserRoleRel::getUserId, deleteUserIds));
-        }
-        insertUserIds.addAll(deleteUserIds);
-        if (insertUserIds != null && insertUserIds.size() > 0) {
+
+        if (insertUserIds.size() > 0) {
             List<User> clearCacheUserList = userService.list(new LambdaQueryWrapper<User>()
-                    .eq(User::getStatus, StatusEnum.YES.getValue()).in(User::getId, insertUserIds));
+                    .eq(User::getStatus, StatusEnum.YES.getValue()).in(User::getId, clearCacheUserId));
             for (User user : clearCacheUserList) {
                 // 清除用户权限信息
                 customRealm.clearCache(user.getUsername());
