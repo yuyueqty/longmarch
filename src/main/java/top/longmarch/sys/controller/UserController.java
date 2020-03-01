@@ -84,7 +84,7 @@ public class UserController {
         return Result.ok().add(user);
     }
 
-    @Log
+    @Log(noSaveFields = {"password"})
     @ApiOperation(value="创建用户信息")
     @RequiresPermissions("sys:user:create")
     @PostMapping("/create")
@@ -96,7 +96,7 @@ public class UserController {
         return Result.ok().add(user);
     }
 
-    @Log
+    @Log(noSaveFields = {"password"})
     @ApiOperation(value="更新用户信息")
     @RequiresPermissions("sys:user:update")
     @PostMapping("/update")

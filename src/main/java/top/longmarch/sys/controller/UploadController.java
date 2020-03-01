@@ -14,7 +14,9 @@ import top.longmarch.core.common.Constant;
 import top.longmarch.core.common.Result;
 import top.longmarch.core.utils.upload.QiniuUpload;
 import top.longmarch.core.utils.upload.UploadConfig;
+import top.longmarch.core.utils.upload.UploadResult;
 import top.longmarch.sys.entity.Parameter;
+import top.longmarch.sys.service.IImageService;
 import top.longmarch.sys.service.IParameterService;
 
 import java.io.IOException;
@@ -26,6 +28,8 @@ public class UploadController {
 
     @Autowired
     private IParameterService parameterService;
+    @Autowired
+    private IImageService iImageService;
 
     @ApiOperation(value = "图片上传")
     @PostMapping("/upload")
@@ -36,7 +40,9 @@ public class UploadController {
         Parameter parameter = parameterService.getParameterByName(Constant.QINIU_UPLOAD);
         UploadConfig uploadConfig = JSONUtil.toBean(parameter.getParamValue(), UploadConfig.class);
         try {
-            return Result.ok().add(QiniuUpload.upload(file.getInputStream(), uploadConfig));
+            UploadResult uploadResult = QiniuUpload.upload(file.getInputStream(), uploadConfig);
+            iImageService.saveImage(uploadResult, file);
+            return Result.ok().add(uploadResult);
         } catch (IOException e) {
             e.printStackTrace();
         }

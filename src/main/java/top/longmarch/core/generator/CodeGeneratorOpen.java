@@ -2,6 +2,7 @@ package top.longmarch.core.generator;
 
 import cn.hutool.db.Db;
 import cn.hutool.db.Entity;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
@@ -21,14 +22,13 @@ public class CodeGeneratorOpen {
 
 
     public static void main(String[] args) throws SQLException {
-        String tableName = "cms_tag";
+        String moduleName = "test";
+        String tableName = "test_member";
         CodeGeneratorOpen codeGeneratorOpen = new CodeGeneratorOpen();
-        Entity entity = Db.use().get("sys_generator", "table_name", tableName);
-        Generator generator = codeGeneratorOpen.getGenerator(entity);
-        List<Generator> generatorList = new ArrayList<>();
-        generatorList.add(generator);
+        List<Entity> entityList = Db.use().findAll(Entity.create("sys_generator").set("table_name", tableName));
+        List<Generator> generatorList = codeGeneratorOpen.getGenerator(entityList);
         codeGeneratorOpen.setProjectPath("D:/" + tableName);
-        codeGeneratorOpen.buildAutoGenerator("cms", "cms_tag", generatorList).execute();
+        codeGeneratorOpen.buildAutoGenerator(moduleName, tableName, generatorList).execute();
     }
 
     private String projectPath;
@@ -152,56 +152,60 @@ public class CodeGeneratorOpen {
         return globalConfig;
     }
 
-    public Generator getGenerator(Entity entity) {
-        Generator generator = new Generator();
-        for (String fieldName : entity.getFieldNames()) {
-            if ("id".equals(fieldName)) {
-                generator.setId(entity.getLong(fieldName));
+    public List<Generator> getGenerator(List<Entity> entityList) {
+        List<Generator> generatorList = new ArrayList<>();
+        for (Entity entity : entityList) {
+            Generator generator = new Generator();
+            for (String fieldName : entity.getFieldNames()) {
+                if ("id".equals(fieldName)) {
+                    generator.setId(entity.getLong(fieldName));
+                }
+                if ("table_name".equals(fieldName)) {
+                    generator.setTableName(entity.getStr(fieldName));
+                }
+                if ("column_name".equals(fieldName)) {
+                    generator.setColumnName(entity.getStr(fieldName));
+                }
+                if ("column_type".equals(fieldName)) {
+                    generator.setColumnType(entity.getStr(fieldName));
+                }
+                if ("property_name".equals(fieldName)) {
+                    generator.setPropertyName(entity.getStr(fieldName));
+                }
+                if ("remark".equals(fieldName)) {
+                    generator.setRemark(entity.getStr(fieldName));
+                }
+                if ("not_null".equals(fieldName)) {
+                    generator.setNotNull(entity.getBool(fieldName));
+                }
+                if ("list_show".equals(fieldName)) {
+                    generator.setListShow(entity.getBool(fieldName));
+                }
+                if ("form_show".equals(fieldName)) {
+                    generator.setFormShow(entity.getBool(fieldName));
+                }
+                if ("form_type".equals(fieldName)) {
+                    generator.setFormType(entity.getStr(fieldName));
+                }
+                if ("query_type".equals(fieldName)) {
+                    generator.setQueryType(entity.getStr(fieldName));
+                }
+                if ("order_by".equals(fieldName)) {
+                    generator.setOrderBy(entity.getBool(fieldName));
+                }
+                if ("parameter".equals(fieldName)) {
+                    generator.setParameter(entity.getBool(fieldName));
+                }
+                if ("default_value".equals(fieldName)) {
+                    generator.setDefaultValue(entity.getStr(fieldName));
+                }
+                if ("dict_code".equals(fieldName)) {
+                    generator.setDictCode(entity.getStr(fieldName));
+                }
             }
-            if ("table_name".equals(fieldName)) {
-                generator.setTableName(entity.getStr(fieldName));
-            }
-            if ("column_name".equals(fieldName)) {
-                generator.setColumnName(entity.getStr(fieldName));
-            }
-            if ("column_type".equals(fieldName)) {
-                generator.setColumnType(entity.getStr(fieldName));
-            }
-            if ("property_name".equals(fieldName)) {
-                generator.setPropertyName(entity.getStr(fieldName));
-            }
-            if ("remark".equals(fieldName)) {
-                generator.setRemark(entity.getStr(fieldName));
-            }
-            if ("not_null".equals(fieldName)) {
-                generator.setNotNull(entity.getBool(fieldName));
-            }
-            if ("list_show".equals(fieldName)) {
-                generator.setListShow(entity.getBool(fieldName));
-            }
-            if ("form_show".equals(fieldName)) {
-                generator.setFormShow(entity.getBool(fieldName));
-            }
-            if ("form_type".equals(fieldName)) {
-                generator.setFormType(entity.getStr(fieldName));
-            }
-            if ("query_type".equals(fieldName)) {
-                generator.setQueryType(entity.getStr(fieldName));
-            }
-            if ("order_by".equals(fieldName)) {
-                generator.setOrderBy(entity.getBool(fieldName));
-            }
-            if ("parameter".equals(fieldName)) {
-                generator.setParameter(entity.getBool(fieldName));
-            }
-            if ("default_value".equals(fieldName)) {
-                generator.setDefaultValue(entity.getStr(fieldName));
-            }
-            if ("dict_code".equals(fieldName)) {
-                generator.setDictCode(entity.getStr(fieldName));
-            }
+            generatorList.add(generator);
         }
-        return generator;
+        return generatorList;
     }
 
 }

@@ -22,8 +22,8 @@ public class LogServiceImpl implements LogService {
 
     @Override
     public void saveOperateLog(Object object) {
-        OperateLog OperateLog = JSONUtil.toBean(JSONUtil.toJsonStr(object), OperateLog.class);
-        operateLogService.save(OperateLog);
+        OperateLog operateLog = JSONUtil.toBean(JSONUtil.toJsonStr(object), OperateLog.class);
+        operateLogService.save(operateLog);
     }
 
     @Transactional

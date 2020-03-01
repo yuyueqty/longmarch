@@ -41,8 +41,7 @@ public class PermissionController {
     @ApiOperation(value = "权限树")
     @PostMapping("/tree")
     public Result tree() {
-        Map<String, Object> tree = permissionService.getPermissionTree();
-        return Result.ok().add(tree);
+        return Result.ok().add(permissionService.getPermissionTree());
     }
 
     @ApiOperation(value = "搜索权限信息")
@@ -64,7 +63,7 @@ public class PermissionController {
     }
 
     @Log
-    @ApiOperation(value="修改权限状态")
+    @ApiOperation(value = "修改权限状态")
     @RequiresPermissions("sys:permission:update")
     @PostMapping("/changeStatus")
     public Result changeStatus(@RequestBody ChangeStatusDTO changeStatusDTO) {

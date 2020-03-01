@@ -9,6 +9,13 @@ public @interface Log {
 
     String value() default "";
 
+    /**
+     * 字段过大时，可设置该字段为空，不保存
+     * flag = no
+     * @return
+     */
+    String[] noSaveFields() default {};
+
     LogType type() default LogType.OPERATE;
     
     enum LogType {

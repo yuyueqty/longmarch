@@ -8,6 +8,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableAsync;
 import top.longmarch.core.config.CrossDomainFilter;
 
 import java.net.InetAddress;
@@ -15,6 +16,7 @@ import java.net.UnknownHostException;
 
 @SpringBootApplication
 @EnableCaching
+@EnableAsync
 public class LongmarchApplication {
 
     public final static Logger log = LoggerFactory.getLogger(LongmarchApplication.class);

@@ -3,6 +3,8 @@ package top.longmarch.core.aspect;
 import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -50,7 +52,7 @@ public class RecordLogAspect implements AspectApi {
             Log.LogType type = log.type();
             switch (type) {
                 case OPERATE:
-                    saveOperateLog(api, apiOperation, operationDetail);
+                    saveOperateLog(api, apiOperation, operationDetail, log);
                     break;
                 case LOGIN:
                     saveLoginLog(operationDetail);
@@ -80,7 +82,7 @@ public class RecordLogAspect implements AspectApi {
                 context, String.class);
     }
 
-    private void saveOperateLog(Api api, ApiOperation apiOperation, String operationDetail) {
+    private void saveOperateLog(Api api, ApiOperation apiOperation, String operationDetail, Log _log) {
         ThreadUtil.execute(new Runnable() {
             @Override
             public void run() {
@@ -89,13 +91,32 @@ public class RecordLogAspect implements AspectApi {
                 log.put("operateTime", new Date());
                 log.put("busType", api != null ? api.value() : "");
                 log.put("operateType", apiOperation != null ? apiOperation.value() : "");
-                log.put("operateDetail", operationDetail);
+                log.put("operateDetail", buildOperationDetail(operationDetail, _log));
                 log.put("userId", UserUtil.loginUser().getId());
                 log.put("userName", UserUtil.loginUser().getUsername());
                 logService.saveOperateLog(log);
                 logger.debug("操作日志：" + log);
             }
         });
+    }
+
+    private String buildOperationDetail(String operationDetail, Log log) {
+        if (log.noSaveFields().length > 0 && StrUtil.isNotBlank(operationDetail)) {
+            JSONArray jsonArray = new JSONArray();
+            JSONArray args = JSONUtil.parseArray(operationDetail);
+            for (Object arg : args) {
+                JSONObject jsonObject = JSONUtil.parseObj(arg);
+                for (String field : log.noSaveFields()) {
+                    if (StrUtil.isNotBlank(jsonObject.get(field)+"")) {
+                        jsonObject.put(field, "***");
+                        break;
+                    }
+                }
+                jsonArray.add(jsonObject);
+            }
+            operationDetail = jsonArray.toString();
+        }
+        return operationDetail;
     }
 
     /**

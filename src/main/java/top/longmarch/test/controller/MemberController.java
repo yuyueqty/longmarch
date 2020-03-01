@@ -12,11 +12,12 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import top.longmarch.core.common.Constant;
 import top.longmarch.core.annotation.Log;
+import top.longmarch.core.common.Constant;
 import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.common.Result;
 import top.longmarch.core.utils.LmUtils;
+import top.longmarch.sys.entity.OperateLog;
 import top.longmarch.sys.entity.vo.ChangeStatusDTO;
 import top.longmarch.test.entity.Member;
 import top.longmarch.test.service.IMemberService;
@@ -25,16 +26,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.web.bind.annotation.RestController;
-
 /**
  * <p>
  * 会员 前端控制器
  * </p>
  *
  * @author YuYue
- * @since 2020-01-12
-*/
+ * @since 2020-02-29
+ */
 @Api(value = "会员模块", tags = "会员模块接口")
 @RestController
 @RequestMapping("/test/member")
@@ -49,18 +48,39 @@ public class MemberController {
     public Result search(@RequestBody(required = false) Map<String, Object> params) {
         IPage<Member> page = PageFactory.getInstance(params);
         LambdaQueryWrapper<Member> wrapper = new LambdaQueryWrapper<>();
-        Object prop = params.get(Constant.PROP);
-        Object order = params.get(Constant.ORDER);
-        boolean condition = LmUtils.isNotBlank(prop) && LmUtils.isNotBlank(order);
-        boolean isAsc = "ascending".equals(order);
-        wrapper.orderBy(condition, isAsc, Member::getId);
-        Object fuzzySearch = params.get(Constant.FUZZY_SEARCH);
-        wrapper.like(LmUtils.isNotBlank(fuzzySearch), Member::getName, fuzzySearch);
         wrapper.eq(LmUtils.isNotBlank(params.get("sex")), Member::getSex, params.get("sex"));
         wrapper.eq(LmUtils.isNotBlank(params.get("status")), Member::getStatus, params.get("status"));
+
+        Object fuzzySearch = params.get(Constant.FUZZY_SEARCH);
+        wrapper.and(LmUtils.isNotBlank(fuzzySearch), p -> p.like(Member::getName, fuzzySearch)
+                .or().like(Member::getNickname, fuzzySearch));
+
         if (LmUtils.isNotBlank(params.get("createTime"))) {
             List<Object> createTime = (List<Object>) params.get("createTime");
             wrapper.between(Member::getCreateTime, createTime.get(0), createTime.get(1));
+        }
+        if (LmUtils.isNotBlank(params.get("loginTime"))) {
+            List<Object> loginTime = (List<Object>) params.get("loginTime");
+            wrapper.between(Member::getLoginTime, loginTime.get(0), loginTime.get(1));
+        }
+
+        Object id = params.get(Constant.PROP);
+        Object idOrder = params.get(Constant.ORDER);
+        if (LmUtils.isNotBlank(id) && LmUtils.isNotBlank(idOrder)) {
+            boolean isAsc = "ascending".equals(idOrder);
+            wrapper.orderBy(true, isAsc, Member::getId);
+        }
+        Object sex = params.get(Constant.PROP);
+        Object sexOrder = params.get(Constant.ORDER);
+        if (LmUtils.isNotBlank(sex) && LmUtils.isNotBlank(sexOrder)) {
+            boolean isAsc = "ascending".equals(sexOrder);
+            wrapper.orderBy(true, isAsc, Member::getSex);
+        }
+        Object createTime = params.get(Constant.PROP);
+        Object createTimeOrder = params.get(Constant.ORDER);
+        if (LmUtils.isNotBlank(createTime) && LmUtils.isNotBlank(createTimeOrder)) {
+            boolean isAsc = "ascending".equals(createTimeOrder);
+            wrapper.orderBy(true, isAsc, Member::getCreateTime);
         }
         return Result.ok().add(memberService.page(page, wrapper));
     }
@@ -68,7 +88,7 @@ public class MemberController {
     @ApiOperation(value = "查看会员")
     @RequiresPermissions("test:member:show")
     @GetMapping("/show/{id}")
-    public Result show(@PathVariable("id")Long id) {
+    public Result show(@PathVariable("id") Long id) {
         Member member = memberService.getById(id);
         return Result.ok().add(member);
     }

@@ -1,7 +1,7 @@
 package ${package.Controller};
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -66,28 +66,50 @@ public class ${table.controllerName} {
     @PostMapping("/search")
     public Result search(@RequestBody(required = false) Map<String, Object> params) {
         IPage<${entity}> page = PageFactory.getInstance(params);
-        QueryWrapper<${entity}> wrapper = new QueryWrapper<>();
+        LambdaQueryWrapper<${entity}> wrapper = new LambdaQueryWrapper<>();
         <#list fieldGenerationConditionList as condition>
-        <#if condition.queryType??>
-        <#if condition.queryType == "eq">
-        wrapper.lambda().eq(LmUtils.isNotBlank(params.get("${condition.propertyName}")), ${table.entityName}::get${condition.propertyName?cap_first}, params.get("${condition.propertyName}"));
-        <#elseif condition.queryType == "like">
+        <#if condition.queryType?? && condition.queryType == "eq">
+        wrapper.eq(LmUtils.isNotBlank(params.get("${condition.propertyName}")), ${table.entityName}::get${condition.propertyName?cap_first}, params.get("${condition.propertyName}"));
+        </#if>
+        </#list>
+
+        <#assign newList = [] />
+        <#list fieldGenerationConditionList as condition>
+        <#if condition.queryType?? && condition.queryType == "like">
+        <#assign newList = newList + [condition] />
+        </#if>
+        </#list>
+        <#if newList?size == 1>
         Object fuzzySearch = params.get(Constant.FUZZY_SEARCH);
-        wrapper.like(LmUtils.isNotBlank(fuzzySearch), ${table.entityName}::get${condition.propertyName?cap_first}, fuzzySearch);
-        <#elseif condition.queryType == "date">
-        if (LmUtils.isNotBlank(params.get("${condition.propertyName}"))) {
-            List<Object> createTime = (List<Object>) params.get("${condition.propertyName}");
-            wrapper.between(Member::getCreateTime, ${condition.propertyName}.get(0), ${condition.propertyName}.get(1));
-        }
+        wrapper.like(LmUtils.isNotBlank(fuzzySearch), ${entity}::get${newList[0].propertyName?cap_first}, fuzzySearch);
+        </#if>
+        <#if newList?size gt 1>
+        Object fuzzySearch = params.get(Constant.FUZZY_SEARCH);
+        wrapper.and(LmUtils.isNotBlank(fuzzySearch), p -> p.like(${entity}::get${newList[0].propertyName?cap_first}, fuzzySearch)
+        <#list newList as condition>
+        <#if condition_index gt 0>
+        .or().like(${entity}::get${condition.propertyName?cap_first}, fuzzySearch)<#if !condition_has_next>);</#if>
         <#else>
         </#if>
+        </#list>
         </#if>
+
+        <#list fieldGenerationConditionList as condition>
+        <#if condition.queryType?? && condition.queryType == "date">
+        if (LmUtils.isNotBlank(params.get("${condition.propertyName}"))) {
+        List<Object> ${condition.propertyName} = (List<Object>) params.get("${condition.propertyName}");
+            wrapper.between(${entity}::get${condition.propertyName?cap_first}, ${condition.propertyName}.get(0), ${condition.propertyName}.get(1));
+        }
+        </#if>
+        </#list>
+
+        <#list fieldGenerationConditionList as condition>
         <#if condition.orderBy?? && condition.orderBy>
-        Object prop = params.get(Constant.PROP);
-        Object order = params.get(Constant.ORDER);
-        if (LmUtils.isNotBlank(prop) && LmUtils.isNotBlank(order)) {
-            boolean isAsc = "ascending".equals(order);
-            wrapper.orderBy(true, isAsc, prop.toString());
+        Object ${condition.propertyName} = params.get(Constant.PROP);
+        Object ${condition.propertyName}Order = params.get(Constant.ORDER);
+        if (LmUtils.isNotBlank(${condition.propertyName}) && LmUtils.isNotBlank(${condition.propertyName}Order)) {
+            boolean isAsc = "ascending".equals(${condition.propertyName}Order);
+            wrapper.orderBy(true, isAsc, ${entity}::get${condition.propertyName?cap_first});
         }
         </#if>
         </#list>

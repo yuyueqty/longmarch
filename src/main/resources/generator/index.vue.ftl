@@ -7,9 +7,10 @@
             <el-input v-model="listQuery.fuzzySearch" clearable :placeholder="$t('table.fuzzySearch')" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
           </el-form-item>
           <#list fieldGenerationConditionList as condition>
-          <#if condition.queryType?? && condition.queryType == "eq" && condition.dictCode??>
+          <#if condition.queryType?? && condition.queryType == "eq">
+          <#if condition.dictCode??>
           <el-form-item class="postInfo-container-item">
-            <el-select v-model="listQuery.${condition.propertyName}" clearable placeholder="请选择${condition.remark}">
+            <el-select v-model="listQuery.${condition.propertyName}" clearable placeholder="请选择">
               <el-option
                 v-for="item in dictionary.${condition.dictCode}"
                 :key="item.value"
@@ -18,6 +19,9 @@
               />
             </el-select>
           </el-form-item>
+          <#else>
+          <el-input v-model="listQuery.${condition.propertyName}" />
+          </#if>
           <#elseif condition.queryType?? && condition.queryType == "date">
           <el-form-item class="postInfo-container-item">
             <el-date-picker
@@ -89,22 +93,43 @@
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="right" label-width="80px" style="width: 500px; margin-left:50px;">
         <#list fieldGenerationConditionList as condition>
-        <#if condition.formShow>
+        <#if condition.formShow?? && condition.formShow>
         <el-form-item :label="$t('${entity}.${condition.propertyName}')">
-          <#if condition.dictCode??>
-          <el-radio-group v-model="temp.${condition.propertyName}">
-            <el-radio-button v-for="item in dictionary.${condition.dictCode}" :key="item.value" :label="item.value">{{ item.label }}</el-radio-button>
-          </el-radio-group>
-          <#else>
           <#if condition.formType?? && condition.formType == "input">
           <el-input v-model="temp.${condition.propertyName}" />
           <#elseif condition.formType?? && condition.formType == "textarea">
           <el-input v-model="temp.${condition.propertyName}" type="textarea" :rows="2" placeholder="请输入内容" />
           <#elseif condition.formType?? && condition.formType == "radio">
+          <#if condition.dictCode??>
+          <el-radio-group v-model="temp.${condition.propertyName}">
+            <el-radio-button v-for="item in dictionary.${condition.dictCode}" :key="item.value" :label="item.value">{{ item.label }}</el-radio-button>
+          </el-radio-group>
+          <#else>
           <el-radio v-model="temp.${condition.propertyName}" label="1">备选项1</el-radio>
           <el-radio v-model="temp.${condition.propertyName}" label="2">备选项2</el-radio>
+          </#if>
+          <#elseif condition.formType?? && condition.formType == "option">
+          <#if condition.dictCode??>
+          <el-select v-model="temp.${condition.propertyName}" clearable placeholder="请选择">
+            <el-option
+              v-for="item in dictionary.${condition.dictCode}"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+          <#else>
+          <el-select v-model="temp.${condition.propertyName}" clearable placeholder="请选择">
+            <el-option
+              v-for="item in optionData"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+          </#if>
           <#elseif condition.formType?? && condition.formType == "checkbox">
-
+          <el-checkbox v-model="temp.${condition.propertyName}" :true-label="1" :false-label="0" />
           <#elseif condition.formType?? && condition.formType == "date">
           <el-date-picker
             v-model="temp.${condition.propertyName}"
@@ -113,8 +138,19 @@
             placeholder="选择日期"
             :picker-options="pickerOptions"
           />
+          <#elseif condition.formType?? && condition.formType == "uplaod">
+          <el-upload
+            class="avatar-uploader"
+            :action="process.env.VUE_APP_BASE_API + '/file/upload'"
+            :show-file-list="false"
+            :with-credentials="true"
+            :on-success="handlePictureCardPreview"
+          >
+            <img v-if="temp.${condition.propertyName}" style="margin-top: 6px;border-radius: 100px;width: 60px; height: 60px" :src="temp.${condition.propertyName}" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon" />
+          </el-upload>
           <#else>
-          </#if>
+          <el-input v-model="temp.${condition.propertyName}" />
           </#if>
         </el-form-item>
         </#if>
@@ -165,9 +201,7 @@ export default {
       },
       temp: {
       <#list fieldGenerationConditionList as condition>
-      <#if condition.parameter>
-        ${condition.propertyName}: null<#if condition_has_next>,</#if>
-      </#if>
+        ${condition.propertyName}: undefined<#if condition_has_next>,</#if>
       </#list>
       },
       dialogFormVisible: false,
@@ -254,9 +288,7 @@ export default {
     resetTemp() {
       this.temp = {
       <#list fieldGenerationConditionList as condition>
-       <#if condition.parameter>
-        ${condition.propertyName}: <#if condition.defaultValue??>${condition.defaultValue}<#else>null</#if><#if condition_has_next>,</#if>
-       </#if>
+        ${condition.propertyName}: <#if condition.defaultValue??>${condition.defaultValue}<#else>undefined</#if><#if condition_has_next>,</#if>
        </#list>
       }
     },
@@ -354,6 +386,15 @@ export default {
         })
       })
     },
+    <#list fieldGenerationConditionList as condition>
+    <#if condition.formType?? && condition.formType == "uplaod">
+    /** 上传事件 **/
+    handlePictureCardPreview(response, file, fileList) {
+      this.temp.${condition.propertyName} = response.data.url
+    },
+    <#break>
+    </#if>
+    </#list>
     /** 多选触发操作 **/
     handleSelectionChange(selectionIds) {
       this.ids = selectionIds

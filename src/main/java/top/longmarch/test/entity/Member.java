@@ -16,7 +16,7 @@ import io.swagger.annotations.ApiModelProperty;
  * </p>
  *
  * @author YuYue
- * @since 2020-02-19
+ * @since 2020-02-29
  */
 @TableName("test_member")
 @ApiModel(value="Member对象", description="会员")
@@ -32,6 +32,14 @@ public class Member implements Serializable {
     @TableField("name")
     private String name;
 
+    @ApiModelProperty(value = "会员昵称")
+    @TableField("nickname")
+    private String nickname;
+
+    @ApiModelProperty(value = "头像")
+    @TableField("head_img")
+    private String headImg;
+
     @ApiModelProperty(value = "性别（1 男 2 女 3 未知）")
     @TableField("sex")
     private Integer sex;
@@ -39,6 +47,10 @@ public class Member implements Serializable {
     @ApiModelProperty(value = "状态")
     @TableField("status")
     private Integer status;
+
+    @ApiModelProperty(value = "登录时间")
+    @TableField("login_time")
+    private Date loginTime;
 
     @ApiModelProperty(value = "创建时间")
     @TableField(value = "create_time", fill = FieldFill.INSERT)
@@ -58,6 +70,20 @@ public class Member implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+    public String getHeadImg() {
+        return headImg;
+    }
+
+    public void setHeadImg(String headImg) {
+        this.headImg = headImg;
+    }
     public Integer getSex() {
         return sex;
     }
@@ -72,6 +98,13 @@ public class Member implements Serializable {
     public void setStatus(Integer status) {
         this.status = status;
     }
+    public Date getLoginTime() {
+        return loginTime;
+    }
+
+    public void setLoginTime(Date loginTime) {
+        this.loginTime = loginTime;
+    }
     public Date getCreateTime() {
         return createTime;
     }
@@ -85,8 +118,11 @@ public class Member implements Serializable {
         return "Member{" +
             "id=" + id +
             ", name=" + name +
+            ", nickname=" + nickname +
+            ", headImg=" + headImg +
             ", sex=" + sex +
             ", status=" + status +
+            ", loginTime=" + loginTime +
             ", createTime=" + createTime +
         "}";
     }

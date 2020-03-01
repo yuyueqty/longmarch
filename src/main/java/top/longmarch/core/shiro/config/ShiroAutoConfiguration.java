@@ -93,12 +93,6 @@ public class ShiroAutoConfiguration {
         return defaultSecurityManager;
     }
 
-//    public SessionDAO sessionDAO() {
-//        EnterpriseCacheSessionDAO enterpriseCacheSessionDAO = new EnterpriseCacheSessionDAO();
-//
-//        return enterpriseCacheSessionDAO;
-//    }
-
     @Bean
     public DefaultWebSessionManager sessionManager(CacheManager cacheManager) {
         DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();

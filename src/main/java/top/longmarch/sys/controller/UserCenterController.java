@@ -37,6 +37,7 @@ public class UserCenterController {
         Department department = departmentService.getById(user.getDeptId());
         Map<String, Object> userInfo = new HashMap<>();
         userInfo.put("username", user.getUsername());
+        userInfo.put("nickname", user.getNickname());
         userInfo.put("phone", user.getPhone());
         userInfo.put("headImgUrl", user.getHeadImgUrl());
         userInfo.put("loginCount", user.getLoginCount());
@@ -53,6 +54,7 @@ public class UserCenterController {
         User updateUser = new User();
         updateUser.setId(UserUtil.getUserId());
         updateUser.setPhone(user.getPhone());
+        updateUser.setNickname(user.getNickname());
         updateUser.setHeadImgUrl(user.getHeadImgUrl());
         userService.updateById(updateUser);
         return Result.ok().add(updateUser);

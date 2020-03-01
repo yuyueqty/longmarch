@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ehcache>
-    <diskStore path="java.io.tmpdir" />
-    
+    <diskStore path="java.io.tmpdir"/>
+
     <defaultCache
             maxElementsInMemory="10000"
             eternal="false"
@@ -19,27 +19,27 @@
     <!-- overflowToDisk:缓存数据数量超过maxElementsInMemory限制后是否缓存到磁盘上，这里设为true确保数据不丢失 -->
     <!-- eternal:是否是永恒数据，这里设为true确保数据不丢失，清扫任务交由程序逻辑 -->
     <!-- statistics:开启命中统计 -->
-    
+
     <!-- 活跃的SESSION缓存 -->
-    <cache  name="shiro-activeSessionCache" 
-            maxEntriesLocalHeap="2000"
-            overflowToDisk="true" 
-            eternal="true"
-            statistics="true">
+    <cache name="shiro-activeSessionCache"
+           maxEntriesLocalHeap="2000"
+           overflowToDisk="true"
+           eternal="true"
+           statistics="true">
     </cache>
     <!-- 密码重试次数缓存 -->
-    <cache  name="shiro-passwordRetryCache" 
-            maxEntriesLocalHeap="2000"
-            overflowToDisk="true" 
-            eternal="true"
-            statistics="true">
+    <cache name="shiro-passwordRetryCache"
+           maxEntriesLocalHeap="2000"
+           overflowToDisk="true"
+           eternal="true"
+           statistics="true">
     </cache>
     <!-- 保持账号唯一用户登陆缓存 -->
-    <cache  name="__keepOneUserCache__"
-            maxEntriesLocalHeap="2000"
-            overflowToDisk="true" 
-            eternal="true"
-            statistics="true">
+    <cache name="__keepOneUserCache__"
+           maxEntriesLocalHeap="2000"
+           overflowToDisk="true"
+           eternal="true"
+           statistics="true">
     </cache>
     <!-- 认证数据缓存 ，最后一次访问后一小时失效 -->
     <cache name="__authenticationCache__"
@@ -105,7 +105,7 @@
            timeToLiveSeconds="3600"
            statistics="true">
     </cache>
-    <!-- 系统部门缓存 -->
+    <!-- 系统权限缓存 -->
     <cache name="PermissionService"
            maxEntriesLocalHeap="2000"
            overflowToDisk="true"
@@ -113,4 +113,5 @@
            timeToLiveSeconds="3600"
            statistics="true">
     </cache>
+
 </ehcache>

@@ -6,6 +6,4 @@ public interface UserIRolePermissionCacheService {
 
     Map<String, Object> getActivityUserInfo(Long userId);
 
-    void cleanActivityUserInfo(Long userId);
-
 }
