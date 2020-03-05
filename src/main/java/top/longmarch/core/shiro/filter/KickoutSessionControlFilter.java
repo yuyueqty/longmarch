@@ -8,6 +8,7 @@ import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
 import org.apache.shiro.web.util.WebUtils;
+import top.longmarch.core.common.Constant;
 import top.longmarch.core.utils.ResponseUtil;
 import top.longmarch.sys.entity.User;
 
@@ -51,7 +52,7 @@ public class KickoutSessionControlFilter extends AccessControlFilter {
     }
 
     public void setCacheManager(CacheManager cacheManager) {
-        this.cache = cacheManager.getCache("__keepOneUserCache__");
+        this.cache = cacheManager.getCache(Constant.KEEP_ONE_USER_CACHE);
     }
 
     @Override

@@ -42,6 +42,18 @@ public class LMCacheManage {
         cache.remove(username);
     }
 
+    public void cleanCacheSession(String sessionId) {
+        Cache cache = cacheManager.getCache(Constant.KEEP_ONE_USER_CACHE);
+        List keys = cache.getKeys();
+        for (Object key : keys) {
+            String _sessionId = JSONUtil.parseObj(cache.get(key).getValue()).getStr("last");
+            if (sessionId.equals(_sessionId)) {
+                cache.remove(key);
+                break;
+            }
+        }
+    }
+
     public List<Object> getOnlineUsers() {
         List<Object> onlineUsers = new ArrayList<>();
         Cache cache = cacheManager.getCache(Constant.KEEP_ONE_USER_CACHE);
@@ -49,14 +61,18 @@ public class LMCacheManage {
         for (Object key : keys) {
             Map<String, Object> user = new HashMap<>();
             String sessionId = JSONUtil.parseObj(cache.get(key).getValue()).getStr("last");
-            Session session = sessionManager.getSession(new DefaultSessionKey(sessionId));
-            user.put("username", key);
-            user.put("sessionId", session.getId());
-            user.put("host", session.getHost());
-            user.put("startTimestamp", session.getStartTimestamp());
-            user.put("lastAccessTime", session.getLastAccessTime());
-            user.put("timeout", TimeUnit.MILLISECONDS.toHours(session.getTimeout()));
-            onlineUsers.add(user);
+            try {
+                Session session = sessionManager.getSession(new DefaultSessionKey(sessionId));
+                user.put("username", key);
+                user.put("sessionId", session.getId());
+                user.put("host", session.getHost());
+                user.put("startTimestamp", session.getStartTimestamp());
+                user.put("lastAccessTime", session.getLastAccessTime());
+                user.put("timeout", TimeUnit.MILLISECONDS.toHours(session.getTimeout()));
+                onlineUsers.add(user);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
         }
         return onlineUsers;
     }

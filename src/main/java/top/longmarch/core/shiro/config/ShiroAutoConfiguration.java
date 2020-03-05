@@ -5,6 +5,7 @@ import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.codec.Base64;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -16,6 +17,7 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import top.longmarch.core.common.Constant;
 import top.longmarch.core.shiro.filter.KickoutSessionControlFilter;
 import top.longmarch.core.shiro.filter.LMFormAuthenticationFilter;
 import top.longmarch.core.shiro.filter.LMPathMatchingFilter;
@@ -31,18 +33,11 @@ import java.util.Map;
 @Configuration
 public class ShiroAutoConfiguration {
 
-//    @Bean
-//    public CacheManager cacheManager() {
-//        MemoryConstrainedCacheManager memoryConstrainedCacheManager = new MemoryConstrainedCacheManager();
-//        return memoryConstrainedCacheManager;
-//    }
-
     @Bean(name = "ehCacheManager")
     public CacheManager ehCacheManager(net.sf.ehcache.CacheManager cacheManager) {
         EhCacheManager ehCacheManager = new EhCacheManager();
         //将ehcacheManager转换成shiro包装后的ehcacheManager对象
         ehCacheManager.setCacheManager(cacheManager);
-//        ehCacheManager.setCacheManagerConfigFile("classpath:ehcache.xml");
         return ehCacheManager;
     }
 
@@ -69,14 +64,6 @@ public class ShiroAutoConfiguration {
         filterChainDefinitionMap.put("/logout", "cross,anon");
         //对外暴露API接口
         filterChainDefinitionMap.put("/api/**", "cross,anon");
-        filterChainDefinitionMap.put("/css/**", "anon");
-        filterChainDefinitionMap.put("/bootstrap/**", "anon");
-        filterChainDefinitionMap.put("/font-awesome/**", "anon");
-        filterChainDefinitionMap.put("/highlight/**", "anon");
-        filterChainDefinitionMap.put("/img/**", "anon");
-        filterChainDefinitionMap.put("/jquery/**", "anon");
-        filterChainDefinitionMap.put("/temporary-img/**", "anon");
-        filterChainDefinitionMap.put("/view/**", "anon");
         //主要这行代码必须放在所有权限设置的最后，不然会导致所有 url 都被拦截 剩余的都需要认证
         filterChainDefinitionMap.put("/**", "cross,Kickout,authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
@@ -103,8 +90,19 @@ public class ShiroAutoConfiguration {
         // 默认SESSION超时时间：1小时=3600000毫秒(ms)
         long timeout = 1000 * 60 * 60 * 24;
         sessionManager.setGlobalSessionTimeout(timeout);
+        // Session Listeners 负责清理缓存中的用户信息
         sessionManager.setSessionListeners(Arrays.asList(new LongmarchSessionListener()));
         sessionManager.setCacheManager(cacheManager);
+        // 会话过期时是否删除过期的会话
+        sessionManager.setDeleteInvalidSessions(true);
+        // 是否开启会话验证器
+        sessionManager.setSessionValidationSchedulerEnabled(true);
+        // 设置会话验证调度器
+        ExecutorServiceSessionValidationScheduler scheduler = new ExecutorServiceSessionValidationScheduler();
+        scheduler.setSessionManager(sessionManager);
+        // 10分钟清理一次失效的Session
+        scheduler.setInterval(1000 * 60 * 10);
+        sessionManager.setSessionValidationScheduler(scheduler);
         return sessionManager;
     }
 
@@ -130,11 +128,11 @@ public class ShiroAutoConfiguration {
         //启用身份验证缓存，即缓存AuthenticationInfo信息，默认false
         customRealm.setAuthenticationCachingEnabled(true);
         //缓存AuthenticationInfo信息的缓存名称 在ehcache-shiro.xml中有对应缓存的配置
-        customRealm.setAuthenticationCacheName("__authenticationCache__");
+        customRealm.setAuthenticationCacheName(Constant.AUTHENTICATION_CACHE);
         //启用授权缓存，即缓存AuthorizationInfo信息，默认false
         customRealm.setAuthorizationCachingEnabled(true);
         //缓存AuthorizationInfo信息的缓存名称  在ehcache-shiro.xml中有对应缓存的配置
-        customRealm.setAuthorizationCacheName("__authorizationCache__");
+        customRealm.setAuthorizationCacheName(Constant.AUTHORIZATION_CACHE);
         return customRealm;
     }
 

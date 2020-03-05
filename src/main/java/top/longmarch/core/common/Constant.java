@@ -29,6 +29,8 @@ public class Constant {
 
     // Cache
     public static final String KEEP_ONE_USER_CACHE = "__keepOneUserCache__";
+    public static final String AUTHENTICATION_CACHE = "__authenticationCache__";
+    public static final String AUTHORIZATION_CACHE = "__authorizationCache__";
     public static final String USER_PERMISSION_CACHE = "UserIRolePermissionCacheService";
     public static final String ACTIVITY_USER_INFO_KEY = "activity_user_info_%s";
 
