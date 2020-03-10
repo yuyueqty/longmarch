@@ -1,19 +1,20 @@
 package top.longmarch.sys.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
+import org.apache.shiro.cache.Cache;
+import org.apache.shiro.cache.CacheManager;
+import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.DefaultSessionKey;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.longmarch.core.common.Constant;
+import top.longmarch.core.shiro.cache.LMRedisCacheManager;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -26,7 +27,7 @@ public class LMCacheManage {
     private SessionManager sessionManager;
 
     public int getOnlineUsersCount() {
-        return cacheManager.getCache(Constant.KEEP_ONE_USER_CACHE).getSize();
+        return cacheManager.getCache(Constant.KEEP_ONE_USER_CACHE).size();
     }
 
     public void cleanActivityUserInfo(Long userId) {
@@ -35,20 +36,26 @@ public class LMCacheManage {
 
     public void removeOnlineUser(String username) {
         Cache cache = cacheManager.getCache(Constant.KEEP_ONE_USER_CACHE);
-        String sessionId = JSONUtil.parseObj(cache.get(username).getValue()).getStr("last");
-        DefaultSessionKey serializable = new DefaultSessionKey(sessionId);
-        Session session = sessionManager.getSession(serializable);
-        session.setTimeout(0);
-        cache.remove(username);
+        Cache<Object, Object> sessionCache = cacheManager.getCache(Constant.ACTIVE_SESSION_CACHE);
+        String sessionId = JSONUtil.parseObj(cache.get(username)).getStr("last");
+        if (StrUtil.isNotBlank(sessionId)) {
+            DefaultSessionKey serializable = new DefaultSessionKey(sessionId);
+            Session session = sessionManager.getSession(serializable);
+            session.setTimeout(0);
+            cache.remove(username);
+            sessionCache.remove(serializable);
+        }
     }
 
     public void cleanCacheSession(String sessionId) {
         Cache cache = cacheManager.getCache(Constant.KEEP_ONE_USER_CACHE);
-        List keys = cache.getKeys();
+        Cache<Object, Object> sessionCache = cacheManager.getCache(Constant.ACTIVE_SESSION_CACHE);
+        Set keys = cache.keys();
         for (Object key : keys) {
-            String _sessionId = JSONUtil.parseObj(cache.get(key).getValue()).getStr("last");
+            String _sessionId = JSONUtil.parseObj(cache.get(key)).getStr("last");
             if (sessionId.equals(_sessionId)) {
                 cache.remove(key);
+                sessionCache.remove(key);
                 break;
             }
         }
@@ -57,11 +64,12 @@ public class LMCacheManage {
     public List<Object> getOnlineUsers() {
         List<Object> onlineUsers = new ArrayList<>();
         Cache cache = cacheManager.getCache(Constant.KEEP_ONE_USER_CACHE);
-        List keys = cache.getKeys();
-        for (Object key : keys) {
-            Map<String, Object> user = new HashMap<>();
-            String sessionId = JSONUtil.parseObj(cache.get(key).getValue()).getStr("last");
-            try {
+        for (Object key : cache.keys()) {
+            String sessionId = JSONUtil.parseObj(cache.get(key)).getStr("last");
+            if (StrUtil.isBlank(sessionId)) {
+                cleanCacheSession(sessionId);
+            } else {
+                Map<String, Object> user = new HashMap<>();
                 Session session = sessionManager.getSession(new DefaultSessionKey(sessionId));
                 user.put("username", key);
                 user.put("sessionId", session.getId());
@@ -70,8 +78,6 @@ public class LMCacheManage {
                 user.put("lastAccessTime", session.getLastAccessTime());
                 user.put("timeout", TimeUnit.MILLISECONDS.toHours(session.getTimeout()));
                 onlineUsers.add(user);
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
             }
         }
         return onlineUsers;
@@ -79,21 +85,31 @@ public class LMCacheManage {
 
     public List<Object> getAllCache() {
         List<Object> cacheManageList = new ArrayList<>();
-        String[] cacheNames = cacheManager.getCacheNames();
-        for (String cacheName : cacheNames) {
-            Map<String, Object> cacheManageMap = new HashMap<>();
-            cacheManageMap.put("cacheName", cacheName);
-            List<Map<String, Object>> cacheList = new ArrayList<>();
-            Cache cache = cacheManager.getCache(cacheName);
-            List keys = cache.getKeys();
-            for (Object key : keys) {
-                Map<String, Object> cacheMap = new HashMap<>();
-                cacheMap.put("key", key);
-                cacheMap.put("value", cache.get(key));
-                cacheList.add(cacheMap);
+        if (cacheManager instanceof LMRedisCacheManager) {
+            LMRedisCacheManager redisCacheManager = (LMRedisCacheManager) cacheManager;
+            ConcurrentMap<String, Cache> caches = redisCacheManager.getCaches();
+            for (String cacheName : caches.keySet()) {
+                Cache cache = caches.get(cacheName);
+                for (Object key : cache.keys()) {
+                    Map<String, Object> cacheMap = new HashMap<>();
+                    cacheMap.put("key", cacheName + key);
+                    cacheMap.put("value", cache.get(key));
+                    cacheManageList.add(cacheMap);
+                }
             }
-            cacheManageMap.put("cache", cacheList);
-            cacheManageList.add(cacheManageMap);
+        } else if (cacheManager instanceof EhCacheManager) {
+            EhCacheManager ehCacheManager = (EhCacheManager) cacheManager;
+            net.sf.ehcache.CacheManager cacheManager = ehCacheManager.getCacheManager();
+            String[] cacheNames = cacheManager.getCacheNames();
+            for (String cacheName : cacheNames) {
+                net.sf.ehcache.Cache cache = cacheManager.getCache(cacheName);
+                for (Object key : cache.getKeys()) {
+                    Map<String, Object> cacheMap = new HashMap<>();
+                    cacheMap.put("key", cacheName + key);
+                    cacheMap.put("value", cache.get(key));
+                    cacheManageList.add(cacheMap);
+                }
+            }
         }
         return cacheManageList;
     }

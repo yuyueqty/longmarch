@@ -21,7 +21,7 @@
     <!-- statistics:开启命中统计 -->
 
     <!-- 活跃的SESSION缓存 -->
-    <cache name="shiro-activeSessionCache"
+    <cache name="__activeSessionCache__"
            maxEntriesLocalHeap="2000"
            overflowToDisk="true"
            eternal="true"

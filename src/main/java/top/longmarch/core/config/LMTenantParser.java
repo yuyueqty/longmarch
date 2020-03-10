@@ -32,7 +32,7 @@ import net.sf.jsqlparser.statement.select.SubSelect;
  * @author yuxiaobin
  * @date 2019/8/1
  */
-public class MyTenantParser extends TenantSqlParser {
+public class LMTenantParser extends TenantSqlParser {
 
     @Override
     public void processInsert(Insert insert) {

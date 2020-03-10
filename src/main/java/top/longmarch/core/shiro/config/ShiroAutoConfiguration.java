@@ -2,7 +2,6 @@ package top.longmarch.core.shiro.config;
 
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.CacheManager;
-import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.codec.Base64;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler;
@@ -14,10 +13,13 @@ import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import top.longmarch.core.common.Constant;
+import top.longmarch.core.shiro.cache.CacheManagerBuilder;
 import top.longmarch.core.shiro.filter.KickoutSessionControlFilter;
 import top.longmarch.core.shiro.filter.LMFormAuthenticationFilter;
 import top.longmarch.core.shiro.filter.LMPathMatchingFilter;
@@ -33,12 +35,11 @@ import java.util.Map;
 @Configuration
 public class ShiroAutoConfiguration {
 
-    @Bean(name = "ehCacheManager")
-    public CacheManager ehCacheManager(net.sf.ehcache.CacheManager cacheManager) {
-        EhCacheManager ehCacheManager = new EhCacheManager();
-        //将ehcacheManager转换成shiro包装后的ehcacheManager对象
-        ehCacheManager.setCacheManager(cacheManager);
-        return ehCacheManager;
+    @Bean(name = "LMCacheManager")
+    public CacheManager cacheManager(ObjectProvider<org.springframework.cache.CacheManager> springCacheManagerPvd,
+                                     RedisConnectionFactory redisConnectionFactory) {
+        CacheManagerBuilder cacheManagerBuilder = new CacheManagerBuilder(springCacheManagerPvd, redisConnectionFactory);
+        return cacheManagerBuilder.build();
     }
 
     @Bean
@@ -87,9 +88,8 @@ public class ShiroAutoConfiguration {
         simpleCookie.setHttpOnly(true);
         simpleCookie.setMaxAge(-1);
         sessionManager.setSessionIdCookie(simpleCookie);
-        // 默认SESSION超时时间：1小时=3600000毫秒(ms)
-        long timeout = 1000 * 60 * 60 * 24;
-        sessionManager.setGlobalSessionTimeout(timeout);
+
+        sessionManager.setGlobalSessionTimeout(Constant.SESSION_TIMEOUT);
         // Session Listeners 负责清理缓存中的用户信息
         sessionManager.setSessionListeners(Arrays.asList(new LongmarchSessionListener()));
         sessionManager.setCacheManager(cacheManager);
@@ -100,9 +100,9 @@ public class ShiroAutoConfiguration {
         // 设置会话验证调度器
         ExecutorServiceSessionValidationScheduler scheduler = new ExecutorServiceSessionValidationScheduler();
         scheduler.setSessionManager(sessionManager);
-        // 10分钟清理一次失效的Session
-        scheduler.setInterval(1000 * 60 * 10);
+        scheduler.setInterval(Constant.SESSION_CLEAR_TILE);
         sessionManager.setSessionValidationScheduler(scheduler);
+        sessionManager.setSessionDAO(new LMSessionDAO(cacheManager));
         return sessionManager;
     }
 

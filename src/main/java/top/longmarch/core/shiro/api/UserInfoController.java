@@ -3,6 +3,7 @@ package top.longmarch.core.shiro.api;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +20,15 @@ public class UserInfoController {
     private UserIRolePermissionCacheService userIRolePermissionCacheService;
     @Autowired
     private LMCacheManage lmCacheManage;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    @ApiOperation(value = "Redis Test")
+    @GetMapping("/redis")
+    public Result redis() {
+        String aaa = stringRedisTemplate.opsForValue().get("aaa");
+        return Result.ok().add(aaa);
+    }
 
     @ApiOperation(value = "用户信息")
     @GetMapping("/info")
