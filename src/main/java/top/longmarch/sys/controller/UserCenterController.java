@@ -34,7 +34,6 @@ public class UserCenterController {
     @GetMapping("/loadPersonalInfo")
     public Result loadPersonalInfo() {
         User user = userService.getById(UserUtil.getUserId());
-        Department department = departmentService.getById(user.getDeptId());
         Map<String, Object> userInfo = new HashMap<>();
         userInfo.put("username", user.getUsername());
         userInfo.put("nickname", user.getNickname());
@@ -42,7 +41,10 @@ public class UserCenterController {
         userInfo.put("headImgUrl", user.getHeadImgUrl());
         userInfo.put("loginCount", user.getLoginCount());
         userInfo.put("lastLoginTime", user.getLastLoginTime());
-        userInfo.put("dept", department.getDeptName());
+        if (user.getDeptId() != null && user.getDeptId() > 0) {
+            Department department = departmentService.getById(user.getDeptId());
+            userInfo.put("dept", department.getDeptName());
+        }
         return Result.ok().add(userInfo);
     }
 

@@ -2,6 +2,7 @@ package top.longmarch.core.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
+import top.longmarch.core.shiro.model.Commons;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,6 +14,7 @@ public class ResponseUtil {
 
     public static void respondJson(HttpServletRequest request,
             HttpServletResponse response, Integer code, String message) {
+        Commons.setCORS(request, response);
         respondJson(response, code, message, null);
     }
 

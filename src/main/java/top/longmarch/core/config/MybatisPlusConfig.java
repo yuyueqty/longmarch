@@ -70,7 +70,7 @@ public class MybatisPlusConfig {
                 //如果是where，可以追加多租户多个条件in，不是where的情况：比如当insert时，
                 // 不能insert into user(name, tenant_id) values('test', tenant_id IN (1, 2));
                 //自己判断是单个tenantId还是需要多个id in(1,2,3)
-                final boolean multipleTenantIds = UserUtil.loginUser().getType() == Constant.MORE_USER;
+                final boolean multipleTenantIds = Constant.MORE_USER.equals(UserUtil.loginUser().getType());
                 if (where && multipleTenantIds) {
                     //演示如何实现tenant_id in (1,2)
                     return multipleTenantIdCondition();
@@ -81,7 +81,7 @@ public class MybatisPlusConfig {
             }
 
             private Expression singleTenantIdCondition() {
-                if (UserUtil.loginUser().getType() == Constant.ONE_USER) {
+                if (Constant.ONE_USER.equals(UserUtil.loginUser().getType())) {
                     return new LongValue(UserUtil.loginUser().getId());
                 }
                 return new LongValue(0);//ID自己想办法获取到
@@ -92,7 +92,7 @@ public class MybatisPlusConfig {
                 inExpression.setLeftExpression(new Column(getTenantIdColumn()));
                 final ExpressionList itemsList = new ExpressionList();
                 final List<Expression> inValues = new ArrayList<>(UserUtil.loginUser().getUserIdSet().size());
-                if (UserUtil.loginUser().getType() == Constant.MORE_USER) {
+                if (Constant.MORE_USER.equals(UserUtil.loginUser().getType())) {
                     for (Long deptId : UserUtil.loginUser().getUserIdSet()) {
                         inValues.add(new LongValue(deptId));
                     }
@@ -110,7 +110,7 @@ public class MybatisPlusConfig {
             @Override
             public boolean doTableFilter(String tableName) {
                 // 这里可以判断是否过滤表
-                if (tableList.contains(tableName) && UserUtil.loginUser().getType() != Constant.All_USER) {
+                if (tableList.contains(tableName) && !Constant.All_USER.equals(UserUtil.loginUser().getType())) {
                     return false;
                 }
                 return true;
