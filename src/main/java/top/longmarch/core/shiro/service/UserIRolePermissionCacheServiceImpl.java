@@ -17,7 +17,7 @@ public class UserIRolePermissionCacheServiceImpl implements UserIRolePermissionC
     @Autowired
     private UserIRolePermissionService userIRolePermissionService;
 
-    @Cacheable(key = "'activity_user_info_' + #userId")
+//    @Cacheable(key = "'activity_user_info_' + #userId")
     @Override
     public Map<String, Object> getActivityUserInfo(Long userId) {
         return userIRolePermissionService.getActivityUserInfo(userId);

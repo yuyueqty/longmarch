@@ -4,7 +4,6 @@ server:
     uri-encoding: UTF-8
   servlet:
     context-path: /lmapi
-
 spring:
   mvc:
     date-format: yyyy-MM-dd HH:mm:ss
