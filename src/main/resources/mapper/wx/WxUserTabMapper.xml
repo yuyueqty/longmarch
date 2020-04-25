@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.longmarch.wx.dao.GzhUserDao">
+
+    <resultMap id="UserAndTagsResultMap" type="top.longmarch.wx.entity.export.UserExportV2">
+        <result property="openId" column="open_id" />
+        <result property="nickname" column="nickname" />
+        <result property="headImgUrl" column="head_img_url" />
+        <result property="sexDesc" column="sex_desc" />
+        <result property="country" column="country" />
+        <result property="province" column="province" />
+        <result property="city" column="city" />
+
+        <collection property="tags" ofType="top.longmarch.wx.entity.export.TagExportV2">
+            <result property="name" column="name" />
+            <result property="content" column="content" />
+            <result property="rank" column="rank" />
+            <result property="score" column="score" />
+        </collection>
+    </resultMap>
+
+    <select id="selectUserAndTags" parameterType="top.longmarch.wx.entity.export.SearchDTO" resultMap="UserAndTagsResultMap">
+        SELECT
+            t1.open_id, t1.nickname, t1.head_img_url, t1.sex_desc, t1.country, t1.province, t1.city,
+            t2.name, t2.content, t2.rank, t2.score
+        FROM wx_gzh_user t1
+        LEFT JOIN wx_gzh_fenwei_tag t2
+        ON t1.gzh_id = t2.gzh_id AND t1.open_id = t2.open_id
+        WHERE t1.create_by = t2.create_by AND t1.create_by = #{createBy} AND t1.gzh_id = #{gzhId}
+        AND t2.field_id = #{fieldId}
+    </select>
+
+</mapper>

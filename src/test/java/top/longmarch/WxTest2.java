@@ -7,6 +7,7 @@ import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
+import me.chanjar.weixin.mp.bean.result.WxMpUserList;
 import me.chanjar.weixin.mp.config.impl.WxMpDefaultConfigImpl;
 import top.longmarch.wx.entity.FwTagDTO;
 import top.longmarch.wx.entity.GzhUser;
@@ -17,6 +18,31 @@ public class WxTest2 {
 
 
     public static void main(String[] args) throws Exception {
+        fun();
+    }
+
+    public static void fun() throws WxErrorException {
+        WxMpDefaultConfigImpl config = new WxMpDefaultConfigImpl();
+        config.setAppId("wxaeeab59bae7d0deb");
+        config.setSecret("0c95e460f74fc1e3c4e56a825c8a385e");
+        WxMpService wxMpService = new WxMpServiceImpl();
+        wxMpService.setWxMpConfigStorage(config);
+        WxMpUserList userList = wxMpService.getUserService().userList(null);
+        String nextOpenid = userList.getNextOpenid();
+//        List<String> openidList = (List<String>) userList
+//        System.out.println(openidList);
+
+//        String openid = openidList.get(openidList.size()-3);
+        getUser(wxMpService, nextOpenid);
+    }
+
+    private static void getUser(WxMpService wxMpService, String openid) throws WxErrorException {
+        WxMpUser wxMpUser = wxMpService.getUserService().userInfo(openid);
+        System.out.println(wxMpUser.getNickname());
+    }
+
+
+    private static void fun2() {
         GzhUser user = new GzhUser();
         user.setHeadImgUrl("http://thirdwx.qlogo.cn/mmopen/LIUI5tJGiauBPicodTwI8aZAibGbeCdc0zZYSJzlYyhprZoE2gfL7smHp18txEOqTWdP3IiaQvjnAzDhvJ8QFHxesQ/132");
         user.setNickname("王奕 Aviva");
