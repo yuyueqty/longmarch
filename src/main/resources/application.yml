@@ -12,7 +12,7 @@ spring:
     time-zone: GMT+8
   datasource:
     druid:
-      url: jdbc:mysql://122.51.244.159:3306/longmarch?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true
+      url: jdbc:mysql://localhost:3306/longmarch?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true
       username: longmarch
       password: pfbNKZmkcZ7CDhSf
       #      url: jdbc:mysql://192.168.1.115:3306/longmarch?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true
@@ -64,7 +64,7 @@ spring:
 
   redis:
    database: 0
-   host: 122.51.244.159
+   host: localhost
    port: 6537
 #   password: 'wktWKT!!!'
    timeout: 5000

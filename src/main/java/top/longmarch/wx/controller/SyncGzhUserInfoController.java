@@ -1,5 +1,7 @@
 package top.longmarch.wx.controller;
 
+import cn.hutool.core.util.PageUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,6 +25,7 @@ import top.longmarch.wx.entity.GzhUser;
 import top.longmarch.wx.service.IGzhAccountService;
 import top.longmarch.wx.service.IGzhUserService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +38,7 @@ public class SyncGzhUserInfoController {
     private IGzhAccountService gzhAccountService;
     @Autowired
     private IGzhUserService gzhUserService;
+    private static final Integer pageSize = 100;
 
     @ApiOperation(value = "同步微信用户信息")
     @GetMapping("/syncWxUserInfo")
@@ -69,12 +73,33 @@ public class SyncGzhUserInfoController {
             nextOpenid = null;
         }
         List<String> openidList = userService.userList(nextOpenid).getOpenids();
+
         if (!CollectionUtils.isEmpty(openidList)) {
-            batchDeleteOldWxUserInfo(gzhAccount, openidList);
-            List<WxMpUser> userInfoList = userService.userInfoList(openidList);
-            batchSaveWxUserInfo(gzhAccount, userInfoList);
+            if (openidList.size() <= pageSize) {
+                batchDeleteOldWxUserInfo(gzhAccount, openidList);
+                List<WxMpUser> userInfoList = userService.userInfoList(openidList);
+                batchSaveWxUserInfo(gzhAccount, userInfoList);
+            } else {
+                batchSyncWxUserInfo(gzhAccount, openidList, userService);
+            }
         }
         return openidList.size();
+    }
+
+    private void batchSyncWxUserInfo(GzhAccount gzhAccount, List<String> openidList, WxMpUserService userService) throws WxErrorException {
+        int pages = PageUtil.totalPage(openidList.size(), pageSize);
+        for (int i = 0; i < pages; i++) {
+            int start = i * pageSize;
+            List<String> subOpenidList = null;
+            if (i == (pages-1)) {
+                subOpenidList = openidList.subList(start, openidList.size());
+            } else {
+                subOpenidList = openidList.subList(start, pageSize + start);
+            }
+            batchDeleteOldWxUserInfo(gzhAccount, subOpenidList);
+            List<WxMpUser> userInfoList = userService.userInfoList(subOpenidList);
+            batchSaveWxUserInfo(gzhAccount, userInfoList);
+        }
     }
 
     private void batchDeleteOldWxUserInfo(GzhAccount gzhAccount, List<String> openidList) {
@@ -94,6 +119,5 @@ public class SyncGzhUserInfoController {
         }).collect(Collectors.toList());
         gzhUserService.saveBatch(gzhUserList);
     }
-
 
 }

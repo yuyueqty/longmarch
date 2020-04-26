@@ -45,22 +45,22 @@ public class AnalyseGzhUserTagController {
     @GetMapping("/analyseUserTag")
     public Result analyseUserTag() {
         GzhAccount gzhAccount = gzhAccountService.getOne(new LambdaQueryWrapper<GzhAccount>()
-                .eq(GzhAccount::getCreateBy, UserUtil.getUserId())
-                .eq(GzhAccount::getDefaultAccount, 1));
+                .eq(GzhAccount::getDefaultAccount, 1)
+                .eq(GzhAccount::getCreateBy, UserUtil.getUserId()));
         if (gzhAccount == null) {
             return Result.fail("未设置默认公众号");
         }
-
         if (StrUtil.isBlank(gzhAccount.getFwAppid()) || StrUtil.isBlank(gzhAccount.getFwAppsecret())) {
             return Result.fail("分维OpenID授权密钥错误");
         }
-
         String lock = "analyse_lock_" + gzhAccount.getId() + "_" + gzhAccount.getCreateBy();
         if (!syncLock.lock(lock)) {
             return Result.fail("正在解析中，请稍等...");
         }
-
-        List<GzhUser> gzhUserList = gzhUserService.list();
+        LambdaQueryWrapper<GzhUser> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(GzhUser::getGzhId, gzhAccount.getId());
+        wrapper.eq(GzhUser::getCreateBy, UserUtil.getUserId());
+        List<GzhUser> gzhUserList = gzhUserService.list(wrapper);
         ThreadUtil.execute(new Runnable() {
             @Override
             public void run() {
@@ -80,7 +80,6 @@ public class AnalyseGzhUserTagController {
 
     private void analyseGzhUserTag(GzhUser user, GzhAccount gzhAccount) {
         String url = String.format(OPENID_URL, gzhAccount.getFwAppid(), gzhAccount.getFwAppsecret(), gzhAccount.getFeeType());
-        System.out.println(url);
         JSONObject requestBody = new JSONObject();
         requestBody.put("image_url", user.getHeadImgUrl());
         requestBody.put("nickname", user.getNickname());
@@ -93,7 +92,6 @@ public class AnalyseGzhUserTagController {
         requestBody.put("field", gzhAccount.getFwField());
 
         String post = HttpUtil.post(url, requestBody.toString());
-        System.out.println(post);
         FwTagDTO fwTagDTO = JSONUtil.toBean(post, FwTagDTO.class);
         if (fwTagDTO.getCode() == 200) {
             saveFwTag(fwTagDTO.getResult(), user, gzhAccount.getFwField());

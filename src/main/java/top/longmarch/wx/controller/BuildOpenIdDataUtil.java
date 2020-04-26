@@ -9,20 +9,15 @@ public class BuildOpenIdDataUtil {
 
     private static final Map<String, List<String>> field_tag = new HashMap<>();
     private static final List<String> tags_1 = Arrays.asList("抗压", "执行力", "主动性", "创造性", "追求自我提升", "多线程处理", "偏好合作", "自信", "自我认同");
-    private static final List<String> tags_2 = Arrays.asList("抗压", "执行力", "主动性", "创造性", "追求自我提升", "多线程处理", "偏好合作", "自信", "自我认同");
-    private static final List<String> tags_3 = Arrays.asList("抗压", "执行力", "主动性", "创造性", "追求自我提升", "多线程处理", "偏好合作", "自信", "自我认同");
-    private static final List<String> tags_4 = Arrays.asList("抗压", "执行力", "主动性", "创造性", "追求自我提升", "多线程处理", "偏好合作", "自信", "自我认同");
+    private static final List<String> tags_2 = Arrays.asList("风险偏好指数", "银行产品信任指数", "认同权威指数", "付费意愿指数", "社交活跃指数", "思维激进指数", "亲密关系指数", "激励响应指数");
+    private static final List<String> tags_3 = Arrays.asList("愿意付出成本去降低风险", "喜欢提前规划未来", "关注自己的身体健康", "做决定较慢", "购买时关注价格", "倾向于听从权威的建议", "倾向于参考别人的选择", "决策谨慎，喜欢进行客观全面的评估");
+    private static final List<String> tags_4 = Arrays.asList("日常情绪的积极程度高", "善于建立与维护人际关系", "善于推陈出新", "喜欢对事情作出评价", "做事情倾向关注整体");
 
     static {
         field_tag.put("1", tags_1);
         field_tag.put("2", tags_2);
         field_tag.put("3", tags_3);
         field_tag.put("4", tags_4);
-    }
-
-    public static void main(String[] args) {
-        String a = "抗压";
-        System.out.println(a.length());
     }
 
     private static List<String> getFieldList(String field) {

@@ -12,8 +12,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import top.longmarch.core.common.Constant;
 import top.longmarch.core.annotation.Log;
+import top.longmarch.core.common.Constant;
 import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.common.Result;
 import top.longmarch.core.utils.LmUtils;
@@ -25,10 +25,7 @@ import top.longmarch.wx.service.IGzhAccountService;
 import top.longmarch.wx.service.IGzhUserService;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
-
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -37,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author YuYue
  * @since 2020-04-18
-*/
+ */
 @Api(value = "粉丝表模块", tags = "粉丝表模块接口")
 @RestController
 @RequestMapping("/wx/gzh-user")
@@ -62,6 +59,11 @@ public class GzhUserController {
         } else {
             wrapper.eq(GzhUser::getGzhId, gzhAccount.getId());
         }
+        wrapper.eq(GzhUser::getCreateBy, UserUtil.getUserId());
+        wrapper.eq(LmUtils.isNotBlank(params.get("sex")), GzhUser::getSex, params.get("sex"));
+        wrapper.eq(LmUtils.isNotBlank(params.get("country")), GzhUser::getCountry, params.get("country"));
+        wrapper.eq(LmUtils.isNotBlank(params.get("province")), GzhUser::getProvince, params.get("province"));
+        wrapper.eq(LmUtils.isNotBlank(params.get("city")), GzhUser::getCity, params.get("city"));
         Object fuzzySearch = params.get(Constant.FUZZY_SEARCH);
         wrapper.like(LmUtils.isNotBlank(fuzzySearch), GzhUser::getNickname, fuzzySearch);
 
@@ -71,7 +73,7 @@ public class GzhUserController {
     @ApiOperation(value = "查看粉丝表")
     @RequiresPermissions("wx:gzhUser:show")
     @GetMapping("/show/{id}")
-    public Result show(@PathVariable("id")Long id) {
+    public Result show(@PathVariable("id") Long id) {
         GzhUser gzhUser = gzhUserService.getById(id);
         return Result.ok().add(gzhUser);
     }

@@ -27,8 +27,8 @@ public class WxTest2 {
         config.setSecret("0c95e460f74fc1e3c4e56a825c8a385e");
         WxMpService wxMpService = new WxMpServiceImpl();
         wxMpService.setWxMpConfigStorage(config);
-        WxMpUserList userList = wxMpService.getUserService().userList(null);
-        String nextOpenid = userList.getNextOpenid();
+        WxMpUserList userList = wxMpService.getUserService().userList("oG-Lc1E8kMH--SxsdhJzzcfrT73M");
+        String nextOpenid = userList.getOpenids().get(userList.getOpenids().size() - 1);
 //        List<String> openidList = (List<String>) userList
 //        System.out.println(openidList);
 
@@ -42,7 +42,7 @@ public class WxTest2 {
     }
 
 
-    private static void fun2() {
+    private static void fun2() throws Exception {
         GzhUser user = new GzhUser();
         user.setHeadImgUrl("http://thirdwx.qlogo.cn/mmopen/LIUI5tJGiauBPicodTwI8aZAibGbeCdc0zZYSJzlYyhprZoE2gfL7smHp18txEOqTWdP3IiaQvjnAzDhvJ8QFHxesQ/132");
         user.setNickname("王奕 Aviva");
@@ -54,23 +54,46 @@ public class WxTest2 {
         String appId = "619125947727085568";
         String appKey = "5a85862f532c43d0b089c81b4c296a07";
         String feeType = "0";
-        getTag(user, appId, appKey, feeType);
+//        getTag(user, appId, appKey, feeType);
+
+        syncWxUser();
     }
 
-    public static void syncWxUser() throws WxErrorException {
+    public static void syncWxUser() throws Exception {
         WxMpDefaultConfigImpl config = new WxMpDefaultConfigImpl();
-        config.setAppId("wx61649ec50fe75470");
-        config.setSecret("e278ec217c0f6a0366b3c1cc39324bec");
+//        config.setAppId("wx61649ec50fe75470");
+//        config.setSecret("e278ec217c0f6a0366b3c1cc39324bec");
+
+        config.setAppId("wxaeeab59bae7d0deb");
+        config.setSecret("0c95e460f74fc1e3c4e56a825c8a385e");
 
         WxMpService wxMpService = new WxMpServiceImpl();
         wxMpService.setWxMpConfigStorage(config);
 
-        List<String> openidList = wxMpService.getUserService().userList(null).getOpenids();
-        List<WxMpUser> userInfoList = wxMpService.getUserService().userInfoList(openidList);
+//        List<String> openidList = wxMpService.getUserService().userList(null).getOpenids();
+//        List<WxMpUser> userInfoList = wxMpService.getUserService().userInfoList(openidList);
 
-        for (WxMpUser wxMpUser : userInfoList) {
-            System.out.println(JSONUtil.toJsonStr(wxMpUser));
-        }
+//        for (WxMpUser wxMpUser : userInfoList) {
+//            System.out.println(JSONUtil.toJsonStr(wxMpUser));
+//        }
+
+//        String nextOpenid = wxMpService.getUserService().userList(null).getNextOpenid();
+//        System.out.println(nextOpenid);
+//        WxMpUser wxMpUser = wxMpService.getUserService().userInfo(nextOpenid);
+//        System.out.println(wxMpUser.getNickname());
+
+        List<String> openids = wxMpService.getUserService().userList("oG-Lc1MMP2uRwJ4yxP0r3Xi5-RiI").getOpenids();
+        System.out.println(openids);
+
+
+//        List<String> nextOpenid = wxMpService.getUserService().userList(null).getOpenids();
+//        System.out.println(nextOpenid.get(0));
+//        WxMpUser wxMpUser = wxMpService.getUserService().userInfo(nextOpenid.get(0));
+//        System.out.println(wxMpUser.getNickname());
+
+//        WxMpUserList wxMpUserList = wxMpService.getUserService().userList(nextOpenid.get(0));
+//        List<String> openids = wxMpUserList.getOpenids();
+//        System.out.println(openids);
     }
 
     public static void getTag(GzhUser user, String appId, String appKey, String feeType) {
