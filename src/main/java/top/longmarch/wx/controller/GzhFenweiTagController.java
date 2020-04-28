@@ -18,7 +18,9 @@ import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.common.Result;
 import top.longmarch.core.utils.LmUtils;
 import top.longmarch.core.utils.UserUtil;
+import top.longmarch.sys.entity.Dictionary;
 import top.longmarch.sys.entity.vo.ChangeStatusDTO;
+import top.longmarch.sys.service.IDictionaryService;
 import top.longmarch.wx.entity.GzhAccount;
 import top.longmarch.wx.entity.GzhFenweiTag;
 import top.longmarch.wx.entity.GzhUser;
@@ -26,10 +28,12 @@ import top.longmarch.wx.service.IGzhAccountService;
 import top.longmarch.wx.service.IGzhFenweiTagService;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.web.bind.annotation.RestController;
+import top.longmarch.wx.service.IGzhUserService;
 
 /**
  * <p>
@@ -49,6 +53,17 @@ public class GzhFenweiTagController {
     private IGzhFenweiTagService gzhFenweiTagService;
     @Autowired
     private IGzhAccountService gzhAccountService;
+    @Autowired
+    private IGzhUserService gzhUserService;
+    @Autowired
+    private IDictionaryService dictionaryService;
+    private static final Map<Integer, String> FW_FIELD = new HashMap<>();
+    static {
+        FW_FIELD.put(1, "HR");
+        FW_FIELD.put(2, "HR");
+        FW_FIELD.put(3, "HR");
+        FW_FIELD.put(4, "HR");
+    }
 
     @ApiOperation(value = "搜索公众号粉丝分维解析标签")
     @PostMapping("/search")
@@ -64,10 +79,20 @@ public class GzhFenweiTagController {
         } else {
             wrapper.eq(GzhFenweiTag::getGzhId, gzhAccount.getId()).eq(GzhFenweiTag::getFieldId, gzhAccount.getFwField());
         }
-
         wrapper.eq(LmUtils.isNotBlank(params.get("openId")), GzhFenweiTag::getOpenId, params.get("openId"));
+        LambdaQueryWrapper<GzhUser> wrapper1 = new LambdaQueryWrapper<GzhUser>()
+                .eq(GzhUser::getCreateBy, UserUtil.getUserId())
+                .eq(GzhUser::getGzhId, gzhAccount.getId())
+                .eq(GzhUser::getOpenId, params.get("openId"));
+        GzhUser gzhUser = gzhUserService.getOne(wrapper1);
 
-        return Result.ok().add(gzhFenweiTagService.page(page, wrapper));
+        Dictionary dict = dictionaryService.getOne(new LambdaQueryWrapper<Dictionary>()
+                .eq(Dictionary::getCode, "fw_field_dict")
+                .eq(Dictionary::getValue, gzhAccount.getFwField()));
+        String diqu = String.format("%s-%s-%s", gzhUser.getCountry(), gzhUser.getProvince(), gzhUser.getCity());
+        String info = String.format("用户：%s 性别：%s 地区：%s 行业：%s",
+                gzhUser.getNickname(), gzhUser.getSexDesc(), diqu, dict.getLabel());
+        return Result.ok().add(gzhFenweiTagService.page(page, wrapper)).add("info", info);
     }
 
     @ApiOperation(value = "查看公众号粉丝分维解析标签")

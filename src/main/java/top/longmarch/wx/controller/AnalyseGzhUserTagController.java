@@ -64,17 +64,16 @@ public class AnalyseGzhUserTagController {
         ThreadUtil.execute(new Runnable() {
             @Override
             public void run() {
-                batchAnalyseGzhUserTag(gzhUserList, gzhAccount);
+                batchAnalyseGzhUserTag(gzhUserList, gzhAccount, lock);
             }
         });
         return Result.ok().add(gzhUserList.size());
     }
 
-    private void batchAnalyseGzhUserTag(List<GzhUser> gzhUserList, GzhAccount gzhAccount) {
+    private void batchAnalyseGzhUserTag(List<GzhUser> gzhUserList, GzhAccount gzhAccount, String lock) {
         for (GzhUser gzhUser : gzhUserList) {
             analyseGzhUserTag(gzhUser, gzhAccount);
         }
-        String lock = "analyse_lock_" + gzhAccount.getId() + "_" + gzhAccount.getCreateBy();
         syncLock.unlock(lock);
     }
 
