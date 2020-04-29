@@ -14,13 +14,11 @@ import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import me.chanjar.weixin.mp.bean.result.WxMpUserList;
 import me.chanjar.weixin.mp.config.impl.WxMpDefaultConfigImpl;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.longmarch.core.common.Result;
 import top.longmarch.core.utils.UserUtil;
 import top.longmarch.wx.entity.GzhAccount;
@@ -29,6 +27,7 @@ import top.longmarch.wx.service.IGzhAccountService;
 import top.longmarch.wx.service.IGzhUserService;
 import top.longmarch.wx.service.impl.SyncLock;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,9 +47,30 @@ public class SyncGzhUserInfoV2Controller {
     private static final Integer pageSize = 100;
     private static final Integer syncNum = 10000;
 
+    @ApiOperation(value = "选择同步微信用户信息")
+    @RequiresPermissions("wx:gzhuser:sync")
+    @PostMapping("/syncMore")
+    public Result syncMoreWxUserInfo(@RequestBody Long[] ids) {
+        GzhAccount gzhAccount = gzhAccountService.getOne(new LambdaQueryWrapper<GzhAccount>()
+                .eq(GzhAccount::getCreateBy, UserUtil.getUserId())
+                .eq(GzhAccount::getDefaultAccount, 1));
+        if (gzhAccount == null) {
+            return Result.fail("未设置默认公众号");
+        }
+        List<GzhUser> gzhUsers = gzhUserService.listByIds(Arrays.asList(ids));
+        List<String> openIdList = gzhUsers.stream().map(u -> u.getOpenId()).collect(Collectors.toList());
+        try {
+            batchSyncWxUserInfoOne(gzhAccount, getWxMpService(gzhAccount).getUserService(), openIdList);
+        } catch (WxErrorException e) {
+            return Result.fail(e.getError().getErrorMsg());
+        }
+        return Result.ok();
+    }
+
     @ApiOperation(value = "同步微信用户信息")
+    @RequiresPermissions("wx:gzhuser:sync")
     @GetMapping("/syncWxUserInfo")
-    public Result syncWxUserInfo(@RequestParam(required = false, defaultValue = "false") Boolean batchSync) throws Exception {
+    public Result syncWxUserInfo(@RequestParam(required = false, defaultValue = "false") Boolean batchSync) {
         GzhAccount gzhAccount = gzhAccountService.getOne(new LambdaQueryWrapper<GzhAccount>()
                 .eq(GzhAccount::getCreateBy, UserUtil.getUserId())
                 .eq(GzhAccount::getDefaultAccount, 1));
@@ -65,7 +85,12 @@ public class SyncGzhUserInfoV2Controller {
         WxMpService wxMpService = getWxMpService(gzhAccount);
 
         WxMpUserService userService = wxMpService.getUserService();
-        WxMpUserList wxMpUserList = userService.userList(null);
+        WxMpUserList wxMpUserList = null;
+        try {
+            wxMpUserList = userService.userList(null);
+        } catch (WxErrorException e) {
+            return Result.fail(e.getError().getErrorMsg());
+        }
         int count = run(gzhAccount, userService, wxMpUserList, lock);
         return Result.ok().add(count);
     }

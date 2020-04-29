@@ -8,11 +8,10 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.longmarch.core.common.Result;
 import top.longmarch.core.utils.UserUtil;
 import top.longmarch.wx.entity.*;
@@ -21,6 +20,7 @@ import top.longmarch.wx.service.IGzhFenweiTagService;
 import top.longmarch.wx.service.IGzhUserService;
 import top.longmarch.wx.service.impl.SyncLock;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,8 +40,27 @@ public class AnalyseGzhUserTagController {
 
     private static final String OPENID_URL = "http://api.unidt.com/api/fractal/openid/report?app_id=%s&app_key=%s&fee_type=%s";
 
+    @ApiOperation(value = "选择解析用户标签")
+    @RequiresPermissions("wx:gzhuser:analyse")
+    @PostMapping("/analyseMore")
+    public Result analyseMore(@RequestBody Long[] ids) {
+        GzhAccount gzhAccount = gzhAccountService.getOne(new LambdaQueryWrapper<GzhAccount>()
+                .eq(GzhAccount::getCreateBy, UserUtil.getUserId())
+                .eq(GzhAccount::getDefaultAccount, 1));
+        if (gzhAccount == null) {
+            return Result.fail("未设置默认公众号");
+        }
+        List<GzhUser> gzhUsers = gzhUserService.listByIds(Arrays.asList(ids));
+        String lock = "analyse_lock_" + gzhAccount.getId() + "_" + gzhAccount.getCreateBy();
+        if (!syncLock.lock(lock)) {
+            return Result.fail("正在解析中，请稍等...");
+        }
+        batchAnalyseGzhUserTag(gzhUsers, gzhAccount, lock);
+        return Result.ok().add(gzhUsers.size());
+    }
 
     @ApiOperation(value = "解析用户标签")
+    @RequiresPermissions("wx:gzhuser:analyse")
     @GetMapping("/analyseUserTag")
     public Result analyseUserTag() {
         GzhAccount gzhAccount = gzhAccountService.getOne(new LambdaQueryWrapper<GzhAccount>()
