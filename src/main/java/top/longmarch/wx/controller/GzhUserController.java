@@ -2,6 +2,7 @@ package top.longmarch.wx.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -50,22 +51,30 @@ public class GzhUserController {
     @PostMapping("/search")
     public Result search(@RequestBody(required = false) Map<String, Object> params) {
         IPage<GzhUser> page = PageFactory.getInstance(params);
-        LambdaQueryWrapper<GzhUser> wrapper = new LambdaQueryWrapper<>();
+        QueryWrapper<GzhUser> wrapper = new QueryWrapper<>();
+        Object prop = params.get(Constant.PROP);
+        Object order = params.get(Constant.ORDER);
+        if (LmUtils.isNotBlank(prop) && LmUtils.isNotBlank(order)) {
+            boolean isAsc = "ascending".equals(order);
+            wrapper.orderBy(true, isAsc, prop.toString());
+        }
+
         GzhAccount gzhAccount = gzhAccountService.getOne(new LambdaQueryWrapper<GzhAccount>()
                 .eq(GzhAccount::getDefaultAccount, 1)
                 .eq(GzhAccount::getCreateBy, UserUtil.getUserId()));
         if (gzhAccount == null) {
-            wrapper.eq(GzhUser::getGzhId, -1);
+            wrapper.lambda().eq(GzhUser::getGzhId, -1);
         } else {
-            wrapper.eq(GzhUser::getGzhId, gzhAccount.getId());
+            wrapper.lambda().eq(GzhUser::getGzhId, gzhAccount.getId());
         }
-        wrapper.eq(GzhUser::getCreateBy, UserUtil.getUserId());
-        wrapper.eq(LmUtils.isNotBlank(params.get("sex")), GzhUser::getSex, params.get("sex"));
-        wrapper.eq(LmUtils.isNotBlank(params.get("country")), GzhUser::getCountry, params.get("country"));
-        wrapper.eq(LmUtils.isNotBlank(params.get("province")), GzhUser::getProvince, params.get("province"));
-        wrapper.eq(LmUtils.isNotBlank(params.get("city")), GzhUser::getCity, params.get("city"));
+
+        wrapper.lambda().eq(GzhUser::getCreateBy, UserUtil.getUserId());
+        wrapper.lambda().eq(LmUtils.isNotBlank(params.get("sex")), GzhUser::getSex, params.get("sex"));
+        wrapper.lambda().eq(LmUtils.isNotBlank(params.get("country")), GzhUser::getCountry, params.get("country"));
+        wrapper.lambda().eq(LmUtils.isNotBlank(params.get("province")), GzhUser::getProvince, params.get("province"));
+        wrapper.lambda().eq(LmUtils.isNotBlank(params.get("city")), GzhUser::getCity, params.get("city"));
         Object fuzzySearch = params.get(Constant.FUZZY_SEARCH);
-        wrapper.like(LmUtils.isNotBlank(fuzzySearch), GzhUser::getNickname, fuzzySearch);
+        wrapper.lambda().like(LmUtils.isNotBlank(fuzzySearch), GzhUser::getNickname, fuzzySearch);
 
         return Result.ok().add(gzhUserService.page(page, wrapper));
     }

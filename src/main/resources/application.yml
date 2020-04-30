@@ -10,6 +10,10 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 1000MB
   datasource:
     druid:
       url: jdbc:mysql://122.51.244.159:3306/longmarch?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true

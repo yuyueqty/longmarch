@@ -107,7 +107,7 @@ public class GzhAccountController {
 
     @Log
     @ApiOperation(value = "设置默认公众号")
-    @RequiresPermissions("wx:gzhAccount:update")
+    @RequiresPermissions("wx:gzhAccount:setting")
     @GetMapping("/changeDefault/{gzh_id}")
     public Result changeDefault(@PathVariable Long gzh_id) {
         log.info("修改默认公众号, 入参：{}", gzh_id);
