@@ -26,7 +26,8 @@ public class CodeGeneratorUtil {
 //        codeGenerator.run("sys2", Arrays.asList("sys_user","sys_role","sys_permission","sys_user_role_rel","sys_role_permission_rel","sys_dictionary", "sys_login_log", "sys_operate_log", "sys_parameter"));
 //        codeGenerator.run("cms", Arrays.asList("cms_article","cms_category"));
 //        codeGenerator.run("sys", Arrays.asList("sys_department_user_rel"));
-        codeGenerator.run("test", Arrays.asList("test_member"));
+//        codeGenerator.run("fwt", Arrays.asList("fw_field","fw_tag","fw_user_tag","wx_user","wx_tag","wx_fw_tag_item","wx_tag_item_rel","wx_user_tag_rel"));
+        codeGenerator.run("wx", Arrays.asList("wx_gzh_tag","wx_gzh_tag_rule"));
     }
 
     public void run(String moduleName, List<String> tableNameList) {
@@ -203,7 +204,7 @@ public class CodeGeneratorUtil {
 
     private TemplateConfig buildTemplateConfig() {
         TemplateConfig templateConfig = new TemplateConfig();
-        templateConfig.setEntity("/generator/entity.java");
+//        templateConfig.setEntity("/generator/entity.java");
         templateConfig.setController("/generator/controller.java");
         return templateConfig;
     }

@@ -89,6 +89,7 @@ public class SyncGzhUserInfoV2Controller {
         try {
             wxMpUserList = userService.userList(null);
         } catch (WxErrorException e) {
+            syncLock.unlock(lock);
             return Result.fail(e.getError().getErrorMsg());
         }
         int count = run(gzhAccount, userService, wxMpUserList, lock);
@@ -126,8 +127,8 @@ public class SyncGzhUserInfoV2Controller {
                 oneHandle(gzhAccount, userService, openidList, lock);
                 moreHandle(gzhAccount, userService, wxMpUserList.getOpenids(), nextOpenid, lock);
             } catch (WxErrorException e) {
-                log.error("微信同步失败：", e.getError().getErrorMsg());
                 syncLock.unlock(lock);
+                log.error("微信同步失败：", e.getError().getErrorMsg());
             }
         }
     }
@@ -141,8 +142,8 @@ public class SyncGzhUserInfoV2Controller {
                     batchSyncWxUserInfoOne(gzhAccount, userService, openidList);
                 }
             } catch (WxErrorException e) {
-                log.error("微信同步失败：", e.getError().getErrorMsg());
                 syncLock.unlock(lock);
+                log.error("微信同步失败：", e.getError().getErrorMsg());
             }
         }
     }

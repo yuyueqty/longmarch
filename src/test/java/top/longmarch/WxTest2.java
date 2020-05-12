@@ -1,15 +1,12 @@
 package top.longmarch;
 
-import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import me.chanjar.weixin.mp.bean.result.WxMpUserList;
 import me.chanjar.weixin.mp.config.impl.WxMpDefaultConfigImpl;
-import top.longmarch.wx.entity.FwTagDTO;
 import top.longmarch.wx.entity.GzhUser;
 
 import java.util.List;
@@ -109,10 +106,10 @@ public class WxTest2 {
         requestBody.put("image", "base64");
         requestBody.put("field", feeType);
 
-        String post = HttpUtil.post(url, requestBody.toString());
-        FwTagDTO fwTagDTO = JSONUtil.toBean(post, FwTagDTO.class);
-        System.out.println(fwTagDTO.getResult());
-        System.out.println(JSONUtil.toJsonStr(fwTagDTO));
+//        String post = HttpUtil.post(url, requestBody.toString());
+//        FwTagDTO fwTagDTO = JSONUtil.toBean(post, FwTagDTO.class);
+//        System.out.println(fwTagDTO.getResult());
+//        System.out.println(JSONUtil.toJsonStr(fwTagDTO));
     }
 
 }

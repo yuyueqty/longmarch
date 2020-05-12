@@ -21,14 +21,11 @@ import top.longmarch.core.utils.UserUtil;
 import top.longmarch.sys.entity.Dictionary;
 import top.longmarch.sys.entity.vo.ChangeStatusDTO;
 import top.longmarch.sys.service.IDictionaryService;
-import top.longmarch.wx.entity.GzhAccount;
-import top.longmarch.wx.entity.GzhFenweiTag;
-import top.longmarch.wx.entity.GzhUser;
-import top.longmarch.wx.service.IGzhAccountService;
-import top.longmarch.wx.service.IGzhFenweiTagService;
-import top.longmarch.wx.service.IGzhUserService;
+import top.longmarch.wx.entity.*;
+import top.longmarch.wx.service.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -52,6 +49,12 @@ public class GzhFenweiTagController {
     private IGzhUserService gzhUserService;
     @Autowired
     private IDictionaryService dictionaryService;
+    @Autowired
+    private IFwtagRuleService fwtagRuleService;
+    @Autowired
+    private IGzhTagService gzhTagService;
+    @Autowired
+    private IGzhTagRuleService gzhTagRuleService;
     private static final String blank = " ";
 
 
@@ -113,17 +116,11 @@ public class GzhFenweiTagController {
             list2.add(m);
         });
 
-        String tag = getTag(gzhFenweiTagList);
-        if (StrUtil.isNotBlank(tag)) {
-            list3.add(tag);
-        }
-
+        String newTag = getTag(gzhAccount.getId(), gzhFenweiTagList);
         StringBuffer sb = new StringBuffer();
-        sb.append("行业：").append(dict.getLabel()).append(blank)
-                .append("用户：").append(gzhUser.getNickname()).append(blank)
-                .append("新标签：");
-        for (String s : list3) {
-            sb.append(s).append(blank);
+        sb.append("行业：").append(dict.getLabel()).append(blank).append("用户：").append(gzhUser.getNickname()).append(blank);
+        if (StrUtil.isNotBlank(newTag)) {
+            sb.append("新标签：").append(newTag);
         }
         Map<String, Object> map = new HashMap<>();
         map.put("info", sb.toString());
@@ -133,30 +130,38 @@ public class GzhFenweiTagController {
         return Result.ok().add(map);
     }
 
-    public String getTag(List<GzhFenweiTag> tags) {
-        String tag = "优秀员工";
-        Map<String, Integer> map = new HashMap<>();
-        map.put("r2309", 60);
-        map.put("tb100", 60);
-        map.put("r5100", 60);
-        map.put("b404", 60);
-        map.put("b966", 60);
-        map.put("r2207", 60);
-        map.put("b174", 60);
-
-        for (String key : map.keySet()) {
-            Integer threshold = map.get(key);
-            for (GzhFenweiTag gzhFenweiTag : tags) {
-                String name = gzhFenweiTag.getName();
-                Integer score = gzhFenweiTag.getScore();
-                if (key.equals(name) && score < threshold) {
-                    return null;
-                }
+    public String getTag(Long gzhId, List<GzhFenweiTag> tags) {
+        StringBuffer sb = new StringBuffer();
+        List<GzhTagRule> gzhTagRuleList = gzhTagRuleService.list(new LambdaQueryWrapper<GzhTagRule>().eq(GzhTagRule::getCreateBy, UserUtil.getUserId()).eq(GzhTagRule::getGzhId, gzhId));
+        Map<Long, List<GzhTagRule>> collect = gzhTagRuleList.stream().collect(Collectors.groupingBy(GzhTagRule::getTagId, Collectors.toList()));
+        for (Map.Entry<Long, List<GzhTagRule>> entry : collect.entrySet()) {
+            List<GzhTagRule> list = entry.getValue();
+            Map<String, Integer> ruleMap = list.stream().collect(Collectors.toMap(GzhTagRule::getRid, GzhTagRule::getScore));
+            Map<String, Integer> userMap = tags.stream().collect(Collectors.toMap(GzhFenweiTag::getName, GzhFenweiTag::getScore));
+            boolean present = ruleMap.keySet().stream().findFirst().filter(k -> ruleMap.get(k) > (userMap.get(k) == null ? 0 : userMap.get(k))).isPresent();
+            if (!present) {
+                GzhTag gzhTag = gzhTagService.getById(entry.getKey());
+                sb.append(gzhTag.getName()).append(",");
             }
         }
-        return tag;
+        return sb.toString();
     }
 
+    public String getTag_bak(Long gzhId, List<GzhFenweiTag> tags) {
+        StringBuffer sb = new StringBuffer();
+        List<FwtagRule> fwtagRuleList = fwtagRuleService.list(new LambdaQueryWrapper<FwtagRule>().eq(FwtagRule::getCreateBy, UserUtil.getUserId()).eq(FwtagRule::getGzhId, gzhId));
+        Map<String, List<FwtagRule>> collect = fwtagRuleList.stream().collect(Collectors.groupingBy(FwtagRule::getNewTag, Collectors.toList()));
+        for (Map.Entry<String, List<FwtagRule>> entry : collect.entrySet()) {
+            List<FwtagRule> list = entry.getValue();
+            Map<String, Integer> ruleMap = list.stream().collect(Collectors.toMap(FwtagRule::getRid, FwtagRule::getScore));
+            Map<String, Integer> userMap = tags.stream().collect(Collectors.toMap(GzhFenweiTag::getName, GzhFenweiTag::getScore));
+            boolean present = ruleMap.keySet().stream().findFirst().filter(k -> ruleMap.get(k) > (userMap.get(k) == null ? 0 : userMap.get(k))).isPresent();
+            if (!present) {
+                sb.append(entry.getKey()).append(",");
+            }
+        }
+        return sb.toString();
+    }
 
     @ApiOperation(value = "查看公众号粉丝分维解析标签")
     @RequiresPermissions("wx:gzhFenweiTag:show")

@@ -12,12 +12,14 @@ public class BuildOpenIdDataUtil {
     private static final List<String> tags_2 = Arrays.asList("风险偏好指数", "银行产品信任指数", "认同权威指数", "付费意愿指数", "社交活跃指数", "思维激进指数", "亲密关系指数", "激励响应指数");
     private static final List<String> tags_3 = Arrays.asList("愿意付出成本去降低风险", "喜欢提前规划未来", "关注自己的身体健康", "做决定较慢", "购买时关注价格", "倾向于听从权威的建议", "倾向于参考别人的选择", "决策谨慎，喜欢进行客观全面的评估");
     private static final List<String> tags_4 = Arrays.asList("日常情绪的积极程度高", "善于建立与维护人际关系", "善于推陈出新", "喜欢对事情作出评价", "做事情倾向关注整体");
+    private static final List<String> tags_5 = Arrays.asList("风险规避", "计划未来", "担心健康", "容易焦虑", "信任陌生人", "敌意", "互惠", "友善", "爱交际", "决策慢", "选择困难", "相信权威", "从众", "不喜欢做决定", "理性", "怕麻烦", "品牌忠诚", "价格敏感");
 
     static {
         field_tag.put("1", tags_1);
         field_tag.put("2", tags_2);
         field_tag.put("3", tags_3);
         field_tag.put("4", tags_4);
+        field_tag.put("5", tags_5);
     }
 
     private static List<String> getFieldList(String field) {

@@ -3,6 +3,7 @@ package top.longmarch.wx.controller;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -110,16 +111,20 @@ public class AnalyseGzhUserTagController {
         requestBody.put("field", gzhAccount.getFwField());
 
         String post = HttpUtil.post(url, requestBody.toString());
-        FwTagDTO fwTagDTO = JSONUtil.toBean(post, FwTagDTO.class);
-        if (fwTagDTO.getCode() == 200) {
-            saveFwTag(fwTagDTO.getResult(), user, gzhAccount.getFwField());
+        JSONObject json = JSONUtil.parseObj(post);
+        if (json.getInt("code") == 200) {
+            saveFwTag(json.getJSONArray("result"), user, gzhAccount.getFwField());
         }
     }
 
-    private void saveFwTag(List<FwTag> fwTagList, GzhUser user, Integer fwField) {
-        List<GzhFenweiTag> gzhFenweiTagList = fwTagList.stream().map(fwTag -> {
+    private void saveFwTag(JSONArray fwTagList, GzhUser user, Integer fwField) {
+        List<GzhFenweiTag> gzhFenweiTagList = fwTagList.stream().map(o -> {
+            JSONObject json = (JSONObject) o;
             GzhFenweiTag gzhFenweiTag = new GzhFenweiTag();
-            BeanUtils.copyProperties(fwTag, gzhFenweiTag);
+            gzhFenweiTag.setName(json.getStr("name"));
+            gzhFenweiTag.setContent(json.getStr("content"));
+            gzhFenweiTag.setRank(json.getStr("rank"));
+            gzhFenweiTag.setScore(json.getInt("score"));
             gzhFenweiTag.setGzhId(user.getGzhId());
             gzhFenweiTag.setOpenId(user.getOpenId());
             gzhFenweiTag.setFieldId(fwField);
