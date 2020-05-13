@@ -3,6 +3,7 @@ package top.longmarch.wx.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -86,12 +87,12 @@ public class GzhFenweiTagController {
             return Result.fail("未设置默认公众号");
         }
 
-        LambdaQueryWrapper<GzhFenweiTag> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(GzhFenweiTag::getGzhId, gzhAccount.getId())
-                .eq(GzhFenweiTag::getCreateBy, UserUtil.getUserId())
-                .eq(GzhFenweiTag::getFieldId, gzhAccount.getFwField())
-                .eq(GzhFenweiTag::getOpenId, openId);
-        List<GzhFenweiTag> gzhFenweiTagList = gzhFenweiTagService.list(wrapper);
+        List<GzhFenweiTag> gzhFenweiTagList = gzhFenweiTagService.list(new QueryWrapper<GzhFenweiTag>()
+                .select("distinct `name`, score, content")
+                .eq("create_by", UserUtil.getUserId())
+                .eq("gzh_id", gzhAccount.getId())
+                .eq("open_id", openId)
+                .groupBy("name"));
 
         LambdaQueryWrapper<GzhUser> userWrapper = new LambdaQueryWrapper<GzhUser>()
                 .eq(GzhUser::getCreateBy, UserUtil.getUserId())
@@ -130,9 +131,11 @@ public class GzhFenweiTagController {
         return Result.ok().add(map);
     }
 
-    public String getTag(Long gzhId, List<GzhFenweiTag> tags) {
-        StringBuffer sb = new StringBuffer();
-        List<GzhTagRule> gzhTagRuleList = gzhTagRuleService.list(new LambdaQueryWrapper<GzhTagRule>().eq(GzhTagRule::getCreateBy, UserUtil.getUserId()).eq(GzhTagRule::getGzhId, gzhId));
+    private String getTag(Long gzhId, List<GzhFenweiTag> tags) {
+        List<String> tagNewList = new ArrayList<>();
+        List<GzhTagRule> gzhTagRuleList = gzhTagRuleService.list(new LambdaQueryWrapper<GzhTagRule>()
+                .eq(GzhTagRule::getCreateBy, UserUtil.getUserId())
+                .eq(GzhTagRule::getGzhId, gzhId));
         Map<Long, List<GzhTagRule>> collect = gzhTagRuleList.stream().collect(Collectors.groupingBy(GzhTagRule::getTagId, Collectors.toList()));
         for (Map.Entry<Long, List<GzhTagRule>> entry : collect.entrySet()) {
             List<GzhTagRule> list = entry.getValue();
@@ -141,26 +144,10 @@ public class GzhFenweiTagController {
             boolean present = ruleMap.keySet().stream().findFirst().filter(k -> ruleMap.get(k) > (userMap.get(k) == null ? 0 : userMap.get(k))).isPresent();
             if (!present) {
                 GzhTag gzhTag = gzhTagService.getById(entry.getKey());
-                sb.append(gzhTag.getName()).append(",");
+                tagNewList.add(gzhTag.getName());
             }
         }
-        return sb.toString();
-    }
-
-    public String getTag_bak(Long gzhId, List<GzhFenweiTag> tags) {
-        StringBuffer sb = new StringBuffer();
-        List<FwtagRule> fwtagRuleList = fwtagRuleService.list(new LambdaQueryWrapper<FwtagRule>().eq(FwtagRule::getCreateBy, UserUtil.getUserId()).eq(FwtagRule::getGzhId, gzhId));
-        Map<String, List<FwtagRule>> collect = fwtagRuleList.stream().collect(Collectors.groupingBy(FwtagRule::getNewTag, Collectors.toList()));
-        for (Map.Entry<String, List<FwtagRule>> entry : collect.entrySet()) {
-            List<FwtagRule> list = entry.getValue();
-            Map<String, Integer> ruleMap = list.stream().collect(Collectors.toMap(FwtagRule::getRid, FwtagRule::getScore));
-            Map<String, Integer> userMap = tags.stream().collect(Collectors.toMap(GzhFenweiTag::getName, GzhFenweiTag::getScore));
-            boolean present = ruleMap.keySet().stream().findFirst().filter(k -> ruleMap.get(k) > (userMap.get(k) == null ? 0 : userMap.get(k))).isPresent();
-            if (!present) {
-                sb.append(entry.getKey()).append(",");
-            }
-        }
-        return sb.toString();
+        return String.join(",", tagNewList);
     }
 
     @ApiOperation(value = "查看公众号粉丝分维解析标签")

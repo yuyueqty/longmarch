@@ -28,6 +28,10 @@ public class GzhTag implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
+    @ApiModelProperty(value = "微信公众号标签ID")
+    @TableField(value = "wx_tag_id")
+    private Long wxTagId;
+
     @ApiModelProperty(value = "新标签名称")
     @TableField("name")
     private String name;
@@ -102,10 +106,19 @@ public class GzhTag implements Serializable {
         this.updateTime = updateTime;
     }
 
+    public Long getWxTagId() {
+        return wxTagId;
+    }
+
+    public void setWxTagId(Long wxTagId) {
+        this.wxTagId = wxTagId;
+    }
+
     @Override
     public String toString() {
         return "GzhTag{" +
             "id=" + id +
+            "wxTagId=" + wxTagId +
             ", name=" + name +
             ", description=" + description +
             ", createBy=" + createBy +
