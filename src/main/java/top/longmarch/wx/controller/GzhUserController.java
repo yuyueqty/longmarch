@@ -6,6 +6,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import me.chanjar.weixin.common.error.WxErrorException;
+import me.chanjar.weixin.mp.api.WxMpService;
+import me.chanjar.weixin.mp.api.WxMpUserTagService;
+import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
+import me.chanjar.weixin.mp.config.impl.WxMpDefaultConfigImpl;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,54 +84,36 @@ public class GzhUserController {
         return Result.ok().add(gzhUserService.page(page, wrapper));
     }
 
-    @ApiOperation(value = "查看粉丝表")
-    @RequiresPermissions("wx:gzhUser:show")
-    @GetMapping("/show/{id}")
-    public Result show(@PathVariable("id") Long id) {
-        GzhUser gzhUser = gzhUserService.getById(id);
-        return Result.ok().add(gzhUser);
-    }
-
     @Log
-    @ApiOperation(value = "创建粉丝表")
-    @RequiresPermissions("wx:gzhUser:create")
-    @PostMapping("/create")
-    public Result create(@Validated @RequestBody GzhUser gzhUser) {
-        log.info("创建粉丝表, 入参：{}", gzhUser);
-        gzhUserService.save(gzhUser);
-        return Result.ok().add(gzhUser);
-    }
-
-    @Log
-    @ApiOperation(value = "更新粉丝表")
+    @ApiOperation(value = "修改用户备注")
     @RequiresPermissions("wx:gzhUser:update")
-    @PostMapping("/update")
-    public Result update(@Validated @RequestBody GzhUser gzhUser) {
-        log.info("更新粉丝表, 入参：{}", gzhUser);
+    @PostMapping("/remarkModify")
+    public Result remarkModify(@RequestBody GzhUser gzhUser) {
+        log.info("修改粉丝表状态, 入参：{}", gzhUser);
+        try {
+            getWxMpService(getGzhAccount()).getUserService().userUpdateRemark(gzhUser.getOpenId(), gzhUser.getRemark());
+        } catch (WxErrorException e) {
+            return Result.fail(e.getError().getErrorMsg());
+        }
         gzhUserService.updateById(gzhUser);
         return Result.ok().add(gzhUser);
     }
 
-    @Log
-    @ApiOperation(value = "删除粉丝表")
-    @RequiresPermissions("wx:gzhUser:delete")
-    @PostMapping("/delete")
-    public Result delete(@RequestBody Long[] ids) {
-        log.info("删除粉丝表, ids={}", ids);
-        gzhUserService.removeByIds(Arrays.asList(ids));
-        return Result.ok();
+    private GzhAccount getGzhAccount() {
+        GzhAccount gzhAccount = gzhAccountService.getOne(new LambdaQueryWrapper<GzhAccount>()
+                .eq(GzhAccount::getCreateBy, UserUtil.getUserId())
+                .eq(GzhAccount::getDefaultAccount, 1));
+        return gzhAccount;
     }
 
-    @Log
-    @ApiOperation(value = "修改粉丝表状态")
-    @RequiresPermissions("wx:gzhUser:update")
-    @PostMapping("/changeStatus")
-    public Result changeStatus(@RequestBody ChangeStatusDTO changeStatusDTO) {
-        log.info("修改粉丝表状态, 入参：{}", changeStatusDTO);
-        GzhUser gzhUser = new GzhUser();
-        BeanUtils.copyProperties(changeStatusDTO, gzhUser);
-        gzhUserService.updateById(gzhUser);
-        return Result.ok().add(gzhUser);
+    private WxMpService getWxMpService(GzhAccount gzhAccount) {
+        WxMpDefaultConfigImpl config = new WxMpDefaultConfigImpl();
+        config.setAppId(gzhAccount.getWeixinAppid());
+        config.setSecret(gzhAccount.getWeixinAppsecret());
+
+        WxMpService wxMpService = new WxMpServiceImpl();
+        wxMpService.setWxMpConfigStorage(config);
+        return wxMpService;
     }
 
 }

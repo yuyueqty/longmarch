@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 @Api(value = "同步公众号用户信息", tags = "同步Api接口")
 @RestController
 @RequestMapping("/wx/gzh-user")
-public class SyncGzhUserInfoV2Controller {
+public class SyncGzhUserInfoController {
 
     @Autowired
     private IGzhAccountService gzhAccountService;

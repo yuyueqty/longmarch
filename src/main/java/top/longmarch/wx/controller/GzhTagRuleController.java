@@ -12,20 +12,18 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import top.longmarch.core.common.Constant;
 import top.longmarch.core.annotation.Log;
 import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.common.Result;
-import top.longmarch.core.utils.LmUtils;
+import top.longmarch.core.utils.UserUtil;
 import top.longmarch.sys.entity.vo.ChangeStatusDTO;
+import top.longmarch.wx.entity.GzhAccount;
 import top.longmarch.wx.entity.GzhTagRule;
+import top.longmarch.wx.service.IGzhAccountService;
 import top.longmarch.wx.service.IGzhTagRuleService;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
-
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -43,14 +41,16 @@ public class GzhTagRuleController {
     private static final Logger log = LoggerFactory.getLogger(GzhTagRuleController.class);
     @Autowired
     private IGzhTagRuleService gzhTagRuleService;
+    @Autowired
+    private IGzhAccountService gzhAccountService;
 
     @ApiOperation(value = "搜索规则")
     @PostMapping("/search")
     public Result search(@RequestBody(required = false) Map<String, Object> params) {
         IPage<GzhTagRule> page = PageFactory.getInstance(params);
         LambdaQueryWrapper<GzhTagRule> wrapper = new LambdaQueryWrapper<>();
-
-
+        GzhAccount gzhAccount = getGzhAccount();
+        wrapper.eq(GzhTagRule::getGzhId, gzhAccount.getId());
 
         return Result.ok().add(gzhTagRuleService.page(page, wrapper));
     }
@@ -69,6 +69,8 @@ public class GzhTagRuleController {
     @PostMapping("/create")
     public Result create(@Validated @RequestBody GzhTagRule gzhTagRule) {
         log.info("创建规则, 入参：{}", gzhTagRule);
+        GzhAccount gzhAccount = getGzhAccount();
+        gzhTagRule.setGzhId(gzhAccount.getId());
         gzhTagRuleService.save(gzhTagRule);
         return Result.ok().add(gzhTagRule);
     }
@@ -103,6 +105,13 @@ public class GzhTagRuleController {
         BeanUtils.copyProperties(changeStatusDTO, gzhTagRule);
         gzhTagRuleService.updateById(gzhTagRule);
         return Result.ok().add(gzhTagRule);
+    }
+
+    private GzhAccount getGzhAccount() {
+        GzhAccount gzhAccount = gzhAccountService.getOne(new LambdaQueryWrapper<GzhAccount>()
+                .eq(GzhAccount::getCreateBy, UserUtil.getUserId())
+                .eq(GzhAccount::getDefaultAccount, 1));
+        return gzhAccount;
     }
 
 }

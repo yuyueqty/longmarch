@@ -46,6 +46,7 @@ public class SyncTagToWxController {
 
     /**
      * 将标签批量同步到微信公众号平台
+     *
      * @param ids
      * @return
      */
@@ -73,6 +74,7 @@ public class SyncTagToWxController {
 
     /**
      * 将指定标签批量打到当前公众号下符合条件的所有用户
+     *
      * @param tagId
      * @return
      */
@@ -119,6 +121,39 @@ public class SyncTagToWxController {
         }
 
         return Result.ok().add(openIdList.size());
+    }
+
+    /**
+     * 批量删除微信公众号标签
+     * @param ids
+     * @return
+     */
+    @PostMapping("/wxTagRemove")
+    public Result wxTagRemove(@RequestBody Long[] ids) {
+        GzhAccount gzhAccount = gzhAccountService.getOne(new LambdaQueryWrapper<GzhAccount>()
+                .eq(GzhAccount::getCreateBy, UserUtil.getUserId())
+                .eq(GzhAccount::getDefaultAccount, 1));
+        if (gzhAccount == null) {
+            return Result.fail("未设置默认公众号");
+        }
+
+        List<GzhTag> updateGzhTagList = new ArrayList<>();
+        List<GzhTag> gzhTags = gzhTagService.listByIds(Arrays.asList(ids));
+        for (GzhTag gzhTag : gzhTags) {
+            try {
+                if (gzhTag.getWxTagId() != null) {
+                    getWxMpService(gzhAccount).getUserTagService().tagDelete(gzhTag.getWxTagId());
+                    gzhTag.setWxTagId(-1L);
+                    updateGzhTagList.add(gzhTag);
+                }
+            } catch (WxErrorException e) {
+                return Result.fail(e.getError().getErrorMsg());
+            }
+        }
+        if (updateGzhTagList.size() > 0) {
+            gzhTagService.updateBatchById(updateGzhTagList);
+        }
+        return Result.ok();
     }
 
     private WxMpService getWxMpService(GzhAccount gzhAccount) {

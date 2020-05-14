@@ -5,6 +5,12 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import me.chanjar.weixin.common.error.WxErrorException;
+import me.chanjar.weixin.mp.api.WxMpService;
+import me.chanjar.weixin.mp.api.WxMpUserTagService;
+import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
+import me.chanjar.weixin.mp.bean.tag.WxUserTag;
+import me.chanjar.weixin.mp.config.impl.WxMpDefaultConfigImpl;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +23,13 @@ import top.longmarch.core.annotation.Log;
 import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.common.Result;
 import top.longmarch.core.utils.LmUtils;
+import top.longmarch.core.utils.UserUtil;
 import top.longmarch.sys.entity.vo.ChangeStatusDTO;
+import top.longmarch.wx.entity.GzhAccount;
 import top.longmarch.wx.entity.GzhTag;
+import top.longmarch.wx.entity.GzhTagRule;
+import top.longmarch.wx.service.IGzhAccountService;
+import top.longmarch.wx.service.IGzhTagRuleService;
 import top.longmarch.wx.service.IGzhTagService;
 
 import java.util.Arrays;
@@ -43,14 +54,40 @@ public class GzhTagController {
     private static final Logger log = LoggerFactory.getLogger(GzhTagController.class);
     @Autowired
     private IGzhTagService gzhTagService;
+    @Autowired
+    private IGzhTagRuleService gzhTagRuleService;
+    @Autowired
+    private IGzhAccountService gzhAccountService;
+
+    @ApiOperation(value = "标签列表")
+    @PostMapping("/list")
+    public Result list(@RequestBody(required = false) Map<String, Object> params) {
+        IPage<GzhTag> page = PageFactory.getInstance(params);
+        LambdaQueryWrapper<GzhTag> wrapper = new LambdaQueryWrapper<>();
+        GzhAccount gzhAccount = getGzhAccount();
+        wrapper.eq(GzhTag::getGzhId, gzhAccount.getId());
+        IPage<GzhTag> gzhTagPageData = gzhTagService.page(page, wrapper);
+        for (GzhTag record : gzhTagPageData.getRecords()) {
+            List<GzhTagRule> list = gzhTagRuleService.list(new LambdaQueryWrapper<GzhTagRule>().eq(GzhTagRule::getTagId, record.getId()));
+            record.setGzhTagRuleList(list);
+        }
+        return Result.ok().add(gzhTagPageData);
+    }
+
+    @ApiOperation(value = "标签规则列表")
+    @GetMapping("/loadRule/{tagId}")
+    public Result loadRule(@PathVariable Long tagId) {
+        List<GzhTagRule> list = gzhTagRuleService.list(new LambdaQueryWrapper<GzhTagRule>().eq(GzhTagRule::getTagId, tagId));
+        return Result.ok().add(list);
+    }
 
     @ApiOperation(value = "搜索微信公众号标签")
     @PostMapping("/search")
     public Result search(@RequestBody(required = false) Map<String, Object> params) {
         IPage<GzhTag> page = PageFactory.getInstance(params);
         LambdaQueryWrapper<GzhTag> wrapper = new LambdaQueryWrapper<>();
-
-
+        GzhAccount gzhAccount = getGzhAccount();
+        wrapper.eq(GzhTag::getGzhId, gzhAccount.getId());
 
         return Result.ok().add(gzhTagService.page(page, wrapper));
     }
@@ -69,6 +106,14 @@ public class GzhTagController {
     @PostMapping("/create")
     public Result create(@Validated @RequestBody GzhTag gzhTag) {
         log.info("创建微信公众号标签, 入参：{}", gzhTag);
+        GzhAccount gzhAccount = getGzhAccount();
+        try {
+            WxUserTag wxUserTag = getWxMpService(gzhAccount).getUserTagService().tagCreate(gzhTag.getName());
+            gzhTag.setWxTagId(wxUserTag.getId());
+            gzhTag.setGzhId(gzhAccount.getId());
+        } catch (WxErrorException e) {
+            return Result.fail(e.getError().getErrorMsg());
+        }
         gzhTagService.save(gzhTag);
         return Result.ok().add(gzhTag);
     }
@@ -79,6 +124,12 @@ public class GzhTagController {
     @PostMapping("/update")
     public Result update(@Validated @RequestBody GzhTag gzhTag) {
         log.info("更新微信公众号标签, 入参：{}", gzhTag);
+        GzhAccount gzhAccount = getGzhAccount();
+        try {
+            getWxMpService(gzhAccount).getUserTagService().tagUpdate(gzhTag.getWxTagId(), gzhTag.getName());
+        } catch (WxErrorException e) {
+            return Result.fail(e.getError().getErrorMsg());
+        }
         gzhTagService.updateById(gzhTag);
         return Result.ok().add(gzhTag);
     }
@@ -89,6 +140,16 @@ public class GzhTagController {
     @PostMapping("/delete")
     public Result delete(@RequestBody Long[] ids) {
         log.info("删除微信公众号标签, ids={}", ids);
+        GzhAccount gzhAccount = getGzhAccount();
+        List<GzhTag> gzhTags = gzhTagService.listByIds(Arrays.asList(ids));
+        try {
+            WxMpUserTagService userTagService = getWxMpService(gzhAccount).getUserTagService();
+            for (GzhTag gzhTag : gzhTags) {
+                userTagService.tagDelete(gzhTag.getWxTagId());
+            }
+        } catch (WxErrorException e) {
+            return Result.fail(e.getError().getErrorMsg());
+        }
         gzhTagService.removeByIds(Arrays.asList(ids));
         return Result.ok();
     }
@@ -103,6 +164,23 @@ public class GzhTagController {
         BeanUtils.copyProperties(changeStatusDTO, gzhTag);
         gzhTagService.updateById(gzhTag);
         return Result.ok().add(gzhTag);
+    }
+
+    private GzhAccount getGzhAccount() {
+        GzhAccount gzhAccount = gzhAccountService.getOne(new LambdaQueryWrapper<GzhAccount>()
+                .eq(GzhAccount::getCreateBy, UserUtil.getUserId())
+                .eq(GzhAccount::getDefaultAccount, 1));
+        return gzhAccount;
+    }
+
+    private WxMpService getWxMpService(GzhAccount gzhAccount) {
+        WxMpDefaultConfigImpl config = new WxMpDefaultConfigImpl();
+        config.setAppId(gzhAccount.getWeixinAppid());
+        config.setSecret(gzhAccount.getWeixinAppsecret());
+
+        WxMpService wxMpService = new WxMpServiceImpl();
+        wxMpService.setWxMpConfigStorage(config);
+        return wxMpService;
     }
 
 }
