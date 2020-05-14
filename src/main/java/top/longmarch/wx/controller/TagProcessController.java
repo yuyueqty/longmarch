@@ -96,19 +96,28 @@ public class TagProcessController {
             boolean flag = false;
             List<String> tagTemp = new ArrayList<>();
             for (Map.Entry<Long, List<GzhTagRule>> entry : rules.entrySet()) {
-                Map<String, Integer> ruleMap = entry.getValue().stream().collect(Collectors.toMap(GzhTagRule::getRid, GzhTagRule::getScore));
                 Map<String, Integer> userMap = gzhFenweiTagList.stream().collect(Collectors.toMap(GzhFenweiTag::getName, GzhFenweiTag::getScore));
-                boolean present = ruleMap.keySet().stream().findFirst().filter(k -> ruleMap.get(k) > (userMap.get(k) == null ? 0 : userMap.get(k))).isPresent();
-                if (!present) {
+
+                Map<String, Integer> ruleGtMap = entry.getValue().stream().filter(k -> "gt".equals(k.getCompute())).collect(Collectors.toMap(GzhTagRule::getRid, GzhTagRule::getScore));
+                boolean gt = ruleGtMap.keySet().stream().findFirst().filter(k -> ruleGtMap.get(k) > (userMap.get(k) == null ? 0 : userMap.get(k))).isPresent();
+                if (!gt) {
                     tagTemp.add(tagMap.get(entry.getKey()));
                     flag = true;
+                    continue;
+                }
+
+                Map<String, Integer> ruleLtMap = entry.getValue().stream().filter(k -> "lt".equals(k.getCompute())).collect(Collectors.toMap(GzhTagRule::getRid, GzhTagRule::getScore));
+                boolean lt = ruleLtMap.keySet().stream().findFirst().filter(k -> ruleLtMap.get(k) > (userMap.get(k) == null ? 0 : userMap.get(k))).isPresent();
+                if (lt) {
+                    tagTemp.add(tagMap.get(entry.getKey()));
+                    flag = true;
+                    continue;
                 }
             }
             if (flag && tagTemp.size() > 0) {
                 gzhUser.setFenWeiTags(String.join(",", tagTemp));
                 updateGzhUserList.add(gzhUser);
             }
-
         }
         if (updateGzhUserList.size() > 0) {
             gzhUserService.updateBatchById(updateGzhUserList);

@@ -86,12 +86,46 @@ public class GzhTagRuleController {
     }
 
     @Log
+    @ApiOperation(value = "更新规则")
+    @RequiresPermissions("wx:gzhTagRule:update")
+    @PostMapping("/save/{tagId}")
+    public Result save(@PathVariable Long tagId, @Validated @RequestBody GzhTagRule gzhTagRule) {
+        log.info("更新规则, 入参：{}", gzhTagRule);
+        if (gzhTagRule.getId() == null) {
+            GzhTagRule one = gzhTagRuleService.getOne(new LambdaQueryWrapper<GzhTagRule>()
+                    .eq(GzhTagRule::getTagId, tagId)
+                    .eq(GzhTagRule::getRid, gzhTagRule.getRid()));
+            if (one != null) {
+                return Result.fail("同一标签下规则名称不能重复");
+            }
+            GzhAccount gzhAccount = getGzhAccount();
+            gzhTagRule.setGzhId(gzhAccount.getId());
+            gzhTagRule.setTagId(tagId);
+            gzhTagRuleService.save(gzhTagRule);
+        } else {
+
+            gzhTagRuleService.updateById(gzhTagRule);
+        }
+        return Result.ok().add(gzhTagRule);
+    }
+
+    @Log
     @ApiOperation(value = "删除规则")
     @RequiresPermissions("wx:gzhTagRule:delete")
     @PostMapping("/delete")
     public Result delete(@RequestBody Long[] ids) {
         log.info("删除规则, ids={}", ids);
         gzhTagRuleService.removeByIds(Arrays.asList(ids));
+        return Result.ok();
+    }
+
+    @Log
+    @ApiOperation(value = "删除规则")
+    @RequiresPermissions("wx:gzhTagRule:delete")
+    @GetMapping("/removeRule/{id}")
+    public Result removeRule(@PathVariable Long id) {
+        log.info("删除规则, id={}", id);
+        gzhTagRuleService.removeById(id);
         return Result.ok();
     }
 

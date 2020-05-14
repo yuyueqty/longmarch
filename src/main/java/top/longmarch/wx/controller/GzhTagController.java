@@ -18,11 +18,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import top.longmarch.core.common.Constant;
 import top.longmarch.core.annotation.Log;
 import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.common.Result;
-import top.longmarch.core.utils.LmUtils;
 import top.longmarch.core.utils.UserUtil;
 import top.longmarch.sys.entity.vo.ChangeStatusDTO;
 import top.longmarch.wx.entity.GzhAccount;
@@ -36,8 +34,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.web.bind.annotation.RestController;
-
 /**
  * <p>
  * 微信公众号标签 前端控制器
@@ -45,7 +41,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author YuYue
  * @since 2020-05-12
-*/
+ */
 @Api(value = "微信公众号标签模块", tags = "微信公众号标签模块接口")
 @RestController
 @RequestMapping("/wx/gzh-tag")
@@ -61,17 +57,12 @@ public class GzhTagController {
 
     @ApiOperation(value = "标签列表")
     @PostMapping("/list")
-    public Result list(@RequestBody(required = false) Map<String, Object> params) {
-        IPage<GzhTag> page = PageFactory.getInstance(params);
-        LambdaQueryWrapper<GzhTag> wrapper = new LambdaQueryWrapper<>();
+    public Result list() {
         GzhAccount gzhAccount = getGzhAccount();
-        wrapper.eq(GzhTag::getGzhId, gzhAccount.getId());
-        IPage<GzhTag> gzhTagPageData = gzhTagService.page(page, wrapper);
-        for (GzhTag record : gzhTagPageData.getRecords()) {
-            List<GzhTagRule> list = gzhTagRuleService.list(new LambdaQueryWrapper<GzhTagRule>().eq(GzhTagRule::getTagId, record.getId()));
-            record.setGzhTagRuleList(list);
-        }
-        return Result.ok().add(gzhTagPageData);
+        List<GzhTag> gzhTagList = gzhTagService.list(new LambdaQueryWrapper<GzhTag>().eq(GzhTag::getGzhId, gzhAccount.getId()));
+        Long id = gzhTagList.get(0).getId();
+        List<GzhTagRule> gzhTagRuleList = gzhTagRuleService.list(new LambdaQueryWrapper<GzhTagRule>().eq(GzhTagRule::getTagId, id));
+        return Result.ok().add(gzhTagList).add("gzhTagRuleList", gzhTagRuleList);
     }
 
     @ApiOperation(value = "标签规则列表")
@@ -95,7 +86,7 @@ public class GzhTagController {
     @ApiOperation(value = "查看微信公众号标签")
     @RequiresPermissions("wx:gzhTag:show")
     @GetMapping("/show/{id}")
-    public Result show(@PathVariable("id")Long id) {
+    public Result show(@PathVariable("id") Long id) {
         GzhTag gzhTag = gzhTagService.getById(id);
         return Result.ok().add(gzhTag);
     }
