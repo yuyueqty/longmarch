@@ -1,11 +1,8 @@
 package top.longmarch.wx.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.util.Date;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -87,11 +84,11 @@ public class GzhUser implements Serializable {
     private Date bindTime;
 
     @ApiModelProperty(value = "标签id")
-    @TableField("tag_ids")
+    @TableField(value = "tag_ids", updateStrategy = FieldStrategy.IGNORED)
     private String tagIds;
 
     @ApiModelProperty(value = "分维标签")
-    @TableField("fen_wei_tags")
+    @TableField(value = "fen_wei_tags", updateStrategy = FieldStrategy.IGNORED)
     private String fenWeiTags;
 
     @ApiModelProperty(value = "省份")

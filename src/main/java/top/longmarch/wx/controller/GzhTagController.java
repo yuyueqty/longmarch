@@ -1,6 +1,7 @@
 package top.longmarch.wx.controller;
 
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
@@ -18,6 +19,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.schema.Collections;
 import top.longmarch.core.annotation.Log;
 import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.common.Result;
@@ -60,8 +62,11 @@ public class GzhTagController {
     public Result list() {
         GzhAccount gzhAccount = getGzhAccount();
         List<GzhTag> gzhTagList = gzhTagService.list(new LambdaQueryWrapper<GzhTag>().eq(GzhTag::getGzhId, gzhAccount.getId()));
-        Long id = gzhTagList.get(0).getId();
-        List<GzhTagRule> gzhTagRuleList = gzhTagRuleService.list(new LambdaQueryWrapper<GzhTagRule>().eq(GzhTagRule::getTagId, id));
+        List<GzhTagRule> gzhTagRuleList = null;
+        if (CollectionUtil.isNotEmpty(gzhTagList)) {
+            Long id = gzhTagList.get(0).getId();
+            gzhTagRuleList = gzhTagRuleService.list(new LambdaQueryWrapper<GzhTagRule>().eq(GzhTagRule::getTagId, id));
+        }
         return Result.ok().add(gzhTagList).add("gzhTagRuleList", gzhTagRuleList);
     }
 
@@ -132,6 +137,12 @@ public class GzhTagController {
     public Result delete(@RequestBody Long[] ids) {
         log.info("删除微信公众号标签, ids={}", ids);
         GzhAccount gzhAccount = getGzhAccount();
+        List<GzhTagRule> gzhTagRuleList = gzhTagRuleService.list(new LambdaQueryWrapper<GzhTagRule>()
+                .eq(GzhTagRule::getGzhId, gzhAccount.getId())
+                .in(GzhTagRule::getTagId, ids));
+        if (CollectionUtil.isNotEmpty(gzhTagRuleList)) {
+            return Result.ok("标签下存在规则，请先删除规则");
+        }
         List<GzhTag> gzhTags = gzhTagService.listByIds(Arrays.asList(ids));
         try {
             WxMpUserTagService userTagService = getWxMpService(gzhAccount).getUserTagService();
@@ -141,6 +152,7 @@ public class GzhTagController {
         } catch (WxErrorException e) {
             return Result.fail(e.getError().getErrorMsg());
         }
+
         gzhTagService.removeByIds(Arrays.asList(ids));
         return Result.ok();
     }

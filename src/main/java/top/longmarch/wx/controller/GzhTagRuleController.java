@@ -87,7 +87,7 @@ public class GzhTagRuleController {
 
     @Log
     @ApiOperation(value = "更新规则")
-    @RequiresPermissions("wx:gzhTagRule:update")
+//    @RequiresPermissions("wx:gzhTagRule:update")
     @PostMapping("/save/{tagId}")
     public Result save(@PathVariable Long tagId, @Validated @RequestBody GzhTagRule gzhTagRule) {
         log.info("更新规则, 入参：{}", gzhTagRule);
@@ -103,7 +103,6 @@ public class GzhTagRuleController {
             gzhTagRule.setTagId(tagId);
             gzhTagRuleService.save(gzhTagRule);
         } else {
-
             gzhTagRuleService.updateById(gzhTagRule);
         }
         return Result.ok().add(gzhTagRule);
@@ -121,7 +120,7 @@ public class GzhTagRuleController {
 
     @Log
     @ApiOperation(value = "删除规则")
-    @RequiresPermissions("wx:gzhTagRule:delete")
+//    @RequiresPermissions("wx:gzhTagRule:delete")
     @GetMapping("/removeRule/{id}")
     public Result removeRule(@PathVariable Long id) {
         log.info("删除规则, id={}", id);
