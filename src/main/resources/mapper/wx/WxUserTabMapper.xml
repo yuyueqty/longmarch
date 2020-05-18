@@ -30,4 +30,84 @@
         AND t2.field_id = #{fieldId}
     </select>
 
+    <select id="getUserNewTags" resultType="top.longmarch.wx.entity.GzhUser" parameterType="top.longmarch.wx.entity.WxParams">
+        SELECT
+        t1.id,
+        t1.gzh_id AS gzhId,
+        t1.open_id AS openId,
+        t1.nickname,
+        t3.`name` AS fenWeiTags,
+        t3.wx_tag_id AS tagIds
+        FROM
+        wx_gzh_user t1
+        LEFT JOIN (
+        SELECT
+        t.open_id,
+        count( t.open_id ) AS openid_count,
+        t.tag_id,
+        t.compute,
+        t.flag,
+        SUM( t.flag ) AS flag_sum
+        FROM
+        (
+        SELECT
+        t1.open_id,
+        t2.tag_id,
+        t2.rid,
+        t1.content,
+        t2.compute,
+        t1.score AS score1,
+        t2.score AS score2,
+        CASE
+        t2.compute
+        WHEN 'gt' THEN
+        t1.score <![CDATA[ >= ]]> t2.score ELSE t1.score <![CDATA[ <= ]]> t2.score
+        END flag
+        FROM
+        (
+        SELECT
+        t1.open_id,
+        t1.`name` AS rid,
+        t1.content,
+        t1.score
+        FROM
+        wx_gzh_fenwei_tag t1
+        LEFT JOIN (
+        SELECT
+        t1.open_id,
+        count( t1.open_id )
+        FROM
+        wx_gzh_fenwei_tag t1
+        LEFT JOIN wx_gzh_tag_rule t2 ON t1.`name` = t2.rid
+        WHERE
+        t1.create_by = #{userId}
+        AND t1.gzh_id = #{gzhId}
+        AND t2.tag_id = #{tagId}
+        GROUP BY
+        t1.open_id
+        HAVING
+        count( t1.open_id ) = #{size}
+        ) t2 ON t1.open_id = t2.open_id
+        WHERE
+        t1.create_by = #{userId}
+        AND t1.gzh_id = #{gzhId}
+        ) t1
+        LEFT JOIN wx_gzh_tag_rule t2 ON t1.rid = t2.rid
+        WHERE
+        t2.tag_id = #{tagId}
+        ORDER BY
+        t1.open_id
+        ) t
+        GROUP BY
+        t.open_id
+        HAVING
+        count( t.open_id ) = SUM( t.flag )
+        ) t2 ON t1.open_id = t2.open_id
+        LEFT JOIN wx_gzh_tag t3 ON t2.tag_id = t3.id
+        WHERE
+        t1.create_by = #{userId}
+        AND t1.gzh_id = #{gzhId}
+        AND t2.tag_id = #{tagId}
+    </select>
+
 </mapper>

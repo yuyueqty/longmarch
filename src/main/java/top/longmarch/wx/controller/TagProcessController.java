@@ -3,6 +3,7 @@ package top.longmarch.wx.controller;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.PageUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -19,13 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.longmarch.core.common.Result;
 import top.longmarch.core.utils.UserUtil;
+import top.longmarch.wx.dao.GzhUserDao;
 import top.longmarch.wx.entity.*;
 import top.longmarch.wx.service.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -52,9 +51,77 @@ public class TagProcessController {
     private IGzhTagRuleService gzhTagRuleService;
     @Autowired
     private IGzhUserService gzhUserService;
+    @Autowired
+    private GzhUserDao gzhUserDao;
 
     @GetMapping("/process")
     public Result process() {
+        GzhAccount gzhAccount = gzhAccountService.getOne(new LambdaQueryWrapper<GzhAccount>()
+                .eq(GzhAccount::getCreateBy, UserUtil.getUserId())
+                .eq(GzhAccount::getDefaultAccount, 1));
+        if (gzhAccount == null) {
+            return Result.fail("未设置默认公众号");
+        }
+        List<GzhTag> gzhTagList = gzhTagService.list(new LambdaQueryWrapper<GzhTag>()
+                .eq(GzhTag::getCreateBy, UserUtil.getUserId())
+                .eq(GzhTag::getGzhId, gzhAccount.getId()));
+
+        List<GzhUser> result = new ArrayList<>();
+        for (GzhTag gzhTag : gzhTagList) {
+            int count = gzhTagRuleService.count(new LambdaQueryWrapper<GzhTagRule>().eq(GzhTagRule::getTagId, gzhTag.getId()));
+            WxParams wxParams = new WxParams();
+            wxParams.setUserId(UserUtil.getUserId());
+            wxParams.setGzhId(gzhAccount.getId());
+            wxParams.setTagId(gzhTag.getId());
+            wxParams.setSize(count);
+            List<GzhUser> userNewTags = gzhUserDao.getUserNewTags(wxParams);
+            result.addAll(userNewTags);
+            List<String> openIdList = userNewTags.stream().map(GzhUser::getOpenId).collect(Collectors.toList());
+            updateRemoteWxTag(gzhTag.getId(), openIdList, getWxMpService(gzhAccount));
+        }
+
+        Map<Long, String> map = new HashMap<>();
+        for (GzhUser gzhUser : result) {
+            Long key = gzhUser.getId();
+            String value_new = gzhUser.getTagIds() + ":" + gzhUser.getFenWeiTags();
+            String value_old = map.get(key);
+            if (StrUtil.isNotBlank(value_old)) {
+                String[] split1 = value_old.split(",");
+                String[] split2 = split1[split1.length - 1].split(":");
+                String tagIds = split2[0];
+                String fenWeiTags = split2[1];
+                gzhUser.setTagIds(tagIds + "," + gzhUser.getTagIds());
+                gzhUser.setFenWeiTags(fenWeiTags + "," + gzhUser.getFenWeiTags());
+                map.put(key, value_old + "," + value_new);
+            } else {
+                map.put(key, gzhUser.getTagIds() + ":" + gzhUser.getFenWeiTags());
+            }
+        }
+
+        List<GzhUser> updateUserList = new ArrayList<>();
+        for (Map.Entry<Long, String> userMap : map.entrySet()) {
+            GzhUser gzhUser = new GzhUser();
+            gzhUser.setId(userMap.getKey());
+            String[] split = userMap.getValue().split(",");
+            List<String> tagIdList = new ArrayList<>();
+            List<String> fenWeiTagList = new ArrayList<>();
+            for (String s : split) {
+                String[] split1 = s.split(":");
+                tagIdList.add(split1[0]);
+                fenWeiTagList.add(split1[1]);
+            }
+            gzhUser.setTagIds(String.join(",", tagIdList));
+            gzhUser.setFenWeiTags(String.join(",", fenWeiTagList));
+            updateUserList.add(gzhUser);
+        }
+        if (CollectionUtil.isNotEmpty(updateUserList)) {
+            gzhUserService.updateBatchById(updateUserList);
+        }
+        return Result.ok().add(updateUserList);
+    }
+
+    @GetMapping("/process_bak")
+    public Result process_bak() {
         GzhAccount gzhAccount = gzhAccountService.getOne(new LambdaQueryWrapper<GzhAccount>()
                 .eq(GzhAccount::getCreateBy, UserUtil.getUserId())
                 .eq(GzhAccount::getDefaultAccount, 1));
@@ -101,7 +168,7 @@ public class TagProcessController {
         WxMpService wxMpService = getWxMpService(gzhAccount);
         for (GzhTag gzhTag : gzhTagList) {
             List<String> openids = gzhUserList.stream().filter(u -> u.getTagIds()
-                    .contains(gzhTag.getWxTagId()+"")).map(u -> u.getOpenId()).collect(Collectors.toList());
+                    .contains(gzhTag.getWxTagId() + "")).map(u -> u.getOpenId()).collect(Collectors.toList());
 
             if (CollectionUtil.isNotEmpty(openids)) {
                 // 每次传入的openid列表个数不能超过50个
