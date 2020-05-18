@@ -77,7 +77,7 @@ public class TagProcessController {
             List<GzhUser> userNewTags = gzhUserDao.getUserNewTags(wxParams);
             result.addAll(userNewTags);
             List<String> openIdList = userNewTags.stream().map(GzhUser::getOpenId).collect(Collectors.toList());
-            updateRemoteWxTag(gzhTag.getId(), openIdList, getWxMpService(gzhAccount));
+            updateRemoteWxTag(gzhTag.getWxTagId(), openIdList, getWxMpService(gzhAccount));
         }
 
         Map<Long, String> map = new HashMap<>();
