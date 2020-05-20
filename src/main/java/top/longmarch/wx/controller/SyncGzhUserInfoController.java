@@ -44,6 +44,7 @@ public class SyncGzhUserInfoController {
     @Autowired
     private SyncLock syncLock;
 
+
     private static final Integer pageSize = 100;
     private static final Integer syncNum = 10000;
 
@@ -51,6 +52,14 @@ public class SyncGzhUserInfoController {
     @RequiresPermissions("wx:gzhuser:sync")
     @PostMapping("/syncMore")
     public Result syncMoreWxUserInfo(@RequestBody Long[] ids) {
+        gzhUserService.syncMoreWxGzhUser(Arrays.asList(ids));
+        return Result.ok();
+    }
+
+    @ApiOperation(value = "选择同步微信用户信息")
+    @RequiresPermissions("wx:gzhuser:sync")
+    @PostMapping("/syncMore_bak")
+    public Result syncMoreWxUserInfo_bak(@RequestBody Long[] ids) {
         GzhAccount gzhAccount = gzhAccountService.getOne(new LambdaQueryWrapper<GzhAccount>()
                 .eq(GzhAccount::getCreateBy, UserUtil.getUserId())
                 .eq(GzhAccount::getDefaultAccount, 1));
@@ -71,9 +80,20 @@ public class SyncGzhUserInfoController {
     @RequiresPermissions("wx:gzhuser:sync")
     @GetMapping("/syncWxUserInfo")
     public Result syncWxUserInfo(@RequestParam(required = false, defaultValue = "false") Boolean batchSync) {
-        GzhAccount gzhAccount = gzhAccountService.getOne(new LambdaQueryWrapper<GzhAccount>()
-                .eq(GzhAccount::getCreateBy, UserUtil.getUserId())
-                .eq(GzhAccount::getDefaultAccount, 1));
+        ThreadUtil.execute(new Runnable() {
+            @Override
+            public void run() {
+                gzhUserService.syncBatchWxGzhUser();
+            }
+        });
+        return Result.ok();
+    }
+
+    @ApiOperation(value = "同步微信用户信息")
+    @RequiresPermissions("wx:gzhuser:sync")
+    @GetMapping("/syncWxUserInfo_bak")
+    public Result syncWxUserInfo_bak(@RequestParam(required = false, defaultValue = "false") Boolean batchSync) {
+        GzhAccount gzhAccount = gzhAccountService.getDefalutGzhAccount();
         if (gzhAccount == null) {
             return Result.fail("未设置默认公众号");
         }
@@ -85,12 +105,13 @@ public class SyncGzhUserInfoController {
         WxMpService wxMpService = getWxMpService(gzhAccount);
 
         WxMpUserService userService = wxMpService.getUserService();
-        WxMpUserList wxMpUserList = null;
-        try {
-            wxMpUserList = userService.userList(null);
-        } catch (WxErrorException e) {
+
+        WxGzhApiWraper wxGzhApiWraper = new WxGzhApiWraper(gzhAccount);
+        WxMpUserList wxMpUserList = wxGzhApiWraper.getWxMpUserList(null);
+
+        if (wxMpUserList == null || wxMpUserList.getOpenids().size() == 0) {
             syncLock.unlock(lock);
-            return Result.fail(e.getError().getErrorMsg());
+            return Result.ok();
         }
         int count = run(gzhAccount, userService, wxMpUserList, lock);
         return Result.ok().add(count);

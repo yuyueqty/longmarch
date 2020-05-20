@@ -60,7 +60,7 @@ public class GzhTagController {
     @ApiOperation(value = "标签列表")
     @PostMapping("/list")
     public Result list() {
-        GzhAccount gzhAccount = getGzhAccount();
+        GzhAccount gzhAccount = gzhAccountService.getDefalutGzhAccount();
         List<GzhTag> gzhTagList = gzhTagService.list(new LambdaQueryWrapper<GzhTag>().eq(GzhTag::getGzhId, gzhAccount.getId()));
         List<GzhTagRule> gzhTagRuleList = null;
         if (CollectionUtil.isNotEmpty(gzhTagList)) {
@@ -82,7 +82,7 @@ public class GzhTagController {
     public Result search(@RequestBody(required = false) Map<String, Object> params) {
         IPage<GzhTag> page = PageFactory.getInstance(params);
         LambdaQueryWrapper<GzhTag> wrapper = new LambdaQueryWrapper<>();
-        GzhAccount gzhAccount = getGzhAccount();
+        GzhAccount gzhAccount = gzhAccountService.getDefalutGzhAccount();
         wrapper.eq(GzhTag::getGzhId, gzhAccount.getId());
 
         return Result.ok().add(gzhTagService.page(page, wrapper));
@@ -102,7 +102,7 @@ public class GzhTagController {
     @PostMapping("/create")
     public Result create(@Validated @RequestBody GzhTag gzhTag) {
         log.info("创建微信公众号标签, 入参：{}", gzhTag);
-        GzhAccount gzhAccount = getGzhAccount();
+        GzhAccount gzhAccount = gzhAccountService.getDefalutGzhAccount();
         try {
             WxUserTag wxUserTag = getWxMpService(gzhAccount).getUserTagService().tagCreate(gzhTag.getName());
             gzhTag.setWxTagId(wxUserTag.getId());
@@ -120,7 +120,7 @@ public class GzhTagController {
     @PostMapping("/update")
     public Result update(@Validated @RequestBody GzhTag gzhTag) {
         log.info("更新微信公众号标签, 入参：{}", gzhTag);
-        GzhAccount gzhAccount = getGzhAccount();
+        GzhAccount gzhAccount = gzhAccountService.getDefalutGzhAccount();
         try {
             getWxMpService(gzhAccount).getUserTagService().tagUpdate(gzhTag.getWxTagId(), gzhTag.getName());
         } catch (WxErrorException e) {
@@ -136,7 +136,7 @@ public class GzhTagController {
     @PostMapping("/delete")
     public Result delete(@RequestBody Long[] ids) {
         log.info("删除微信公众号标签, ids={}", ids);
-        GzhAccount gzhAccount = getGzhAccount();
+        GzhAccount gzhAccount = gzhAccountService.getDefalutGzhAccount();
         List<GzhTagRule> gzhTagRuleList = gzhTagRuleService.list(new LambdaQueryWrapper<GzhTagRule>()
                 .eq(GzhTagRule::getGzhId, gzhAccount.getId())
                 .in(GzhTagRule::getTagId, ids));

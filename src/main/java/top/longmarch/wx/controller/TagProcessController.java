@@ -27,8 +27,8 @@ public class TagProcessController {
     @Autowired
     private IWxGzhApiService wxGzhApiService;
 
-    @GetMapping("/process")
-    public Result process() {
+    @GetMapping("/tagAnalysis")
+    public Result tagAnalysis() {
         ThreadUtil.execute(new Runnable() {
             @Override
             public void run() {
@@ -38,8 +38,8 @@ public class TagProcessController {
         return Result.ok();
     }
 
-    @GetMapping("/wxuserTagRemove")
-    public Result wxuserTagRemove() {
+    @GetMapping("/tagRemove")
+    public Result tagRemove() {
         ThreadUtil.execute(new Runnable() {
             @Override
             public void run() {

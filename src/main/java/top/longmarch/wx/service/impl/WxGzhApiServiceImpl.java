@@ -37,18 +37,26 @@ public class WxGzhApiServiceImpl implements IWxGzhApiService {
     @Override
     public void tagAnalysis() {
         GzhAccount gzhAccount = getGzhAccount();
+        if (gzhAccount == null) return;
         List<GzhTag> gzhTagList = getGzhTagList(gzhAccount);
+        if (CollectionUtil.isEmpty(gzhTagList)) return;
         List<GzhUser> gzhUserList = getGzhUserList(gzhAccount, gzhTagList);
+        if (CollectionUtil.isEmpty(gzhUserList)) return;
         Map<Long, String> userMap = buildGzhUser(gzhUserList);
+        if (CollectionUtil.isEmpty(userMap)) return;
         List<GzhUser> updateGzhUserList = buildUpdateGzhUserList(userMap);
+        if (CollectionUtil.isEmpty(updateGzhUserList)) return;
         updateGzhUser(updateGzhUserList);
     }
 
     @Override
     public void tagRemove() {
         GzhAccount gzhAccount = getGzhAccount();
+        if (gzhAccount == null) return;
         List<GzhTag> gzhTagList = getGzhTagList(gzhAccount);
+        if (CollectionUtil.isEmpty(gzhTagList)) return;
         List<GzhUser> gzhUserTagList = getGzhUserTagList(gzhAccount);
+        if (CollectionUtil.isEmpty(gzhUserTagList)) return;
         removeGzhUserTag(gzhAccount, gzhTagList, gzhUserTagList);
     }
 
@@ -56,7 +64,7 @@ public class WxGzhApiServiceImpl implements IWxGzhApiService {
         WxGzhApiWraper wxGzhApiWraper = new WxGzhApiWraper(gzhAccount);
         for (GzhTag gzhTag : gzhTagList) {
             List<String> openIdList = gzhUserTagList.stream().map(GzhUser::getOpenId).collect(Collectors.toList());
-            wxGzhApiWraper.wxTagRemoveBatch(gzhTag.getWxTagId(), openIdList);
+            wxGzhApiWraper.wxUserTagRemoveBatch(gzhTag.getWxTagId(), openIdList);
         }
         removeGzhUserTag(gzhUserTagList);
     }
@@ -137,7 +145,7 @@ public class WxGzhApiServiceImpl implements IWxGzhApiService {
             List<GzhUser> userNewTags = gzhUserDao.getUserNewTags(wxParams);
             result.addAll(userNewTags);
             List<String> openIdList = userNewTags.stream().map(GzhUser::getOpenId).collect(Collectors.toList());
-            wxGzhApiWraper.wxTagAddBatch(gzhTag.getWxTagId(), openIdList);
+            wxGzhApiWraper.wxUserTagAddBatch(gzhTag.getWxTagId(), openIdList);
         }
         return result;
     }

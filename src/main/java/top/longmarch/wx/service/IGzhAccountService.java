@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IGzhAccountService extends IService<GzhAccount> {
 
+    GzhAccount getDefalutGzhAccount();
 }

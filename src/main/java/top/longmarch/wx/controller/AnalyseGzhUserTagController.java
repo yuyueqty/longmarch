@@ -45,9 +45,7 @@ public class AnalyseGzhUserTagController {
     @RequiresPermissions("wx:gzhuser:analyse")
     @PostMapping("/analyseMore")
     public Result analyseMore(@RequestBody Long[] ids) {
-        GzhAccount gzhAccount = gzhAccountService.getOne(new LambdaQueryWrapper<GzhAccount>()
-                .eq(GzhAccount::getCreateBy, UserUtil.getUserId())
-                .eq(GzhAccount::getDefaultAccount, 1));
+        GzhAccount gzhAccount = gzhAccountService.getDefalutGzhAccount();
         if (gzhAccount == null) {
             return Result.fail("未设置默认公众号");
         }
@@ -64,9 +62,7 @@ public class AnalyseGzhUserTagController {
     @RequiresPermissions("wx:gzhuser:analyse")
     @GetMapping("/analyseUserTag")
     public Result analyseUserTag() {
-        GzhAccount gzhAccount = gzhAccountService.getOne(new LambdaQueryWrapper<GzhAccount>()
-                .eq(GzhAccount::getDefaultAccount, 1)
-                .eq(GzhAccount::getCreateBy, UserUtil.getUserId()));
+        GzhAccount gzhAccount = gzhAccountService.getDefalutGzhAccount();
         if (gzhAccount == null) {
             return Result.fail("未设置默认公众号");
         }
@@ -77,10 +73,7 @@ public class AnalyseGzhUserTagController {
         if (!syncLock.lock(lock)) {
             return Result.fail("正在解析中，请稍等...");
         }
-        LambdaQueryWrapper<GzhUser> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(GzhUser::getGzhId, gzhAccount.getId());
-        wrapper.eq(GzhUser::getCreateBy, UserUtil.getUserId());
-        List<GzhUser> gzhUserList = gzhUserService.list(wrapper);
+        List<GzhUser> gzhUserList = gzhUserService.getGzhUserList(gzhAccount.getId());
         ThreadUtil.execute(new Runnable() {
             @Override
             public void run() {

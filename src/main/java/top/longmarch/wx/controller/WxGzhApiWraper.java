@@ -1,10 +1,13 @@
 package top.longmarch.wx.controller;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.PageUtil;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
+import me.chanjar.weixin.mp.bean.result.WxMpUser;
+import me.chanjar.weixin.mp.bean.result.WxMpUserList;
 import me.chanjar.weixin.mp.config.impl.WxMpDefaultConfigImpl;
 import top.longmarch.wx.entity.GzhAccount;
 
@@ -26,21 +29,21 @@ public class WxGzhApiWraper {
         this.wxMpService = wxMpService;
     }
 
-    public void wxTagAddBatch(Long wxTagId, List<String> openIdList) {
+    public void wxUserTagAddBatch(Long wxTagId, List<String> openIdList) {
         List<List<String>> incise = incise(openIdList, 50);
         for (List<String> list : incise) {
-            wxTagAdd(wxTagId, list);
+            wxUserTagAdd(wxTagId, list);
         }
     }
 
-    public void wxTagRemoveBatch(Long wxTagId, List<String> openIdList) {
+    public void wxUserTagRemoveBatch(Long wxTagId, List<String> openIdList) {
         List<List<String>> incise = incise(openIdList, 50);
         for (List<String> list : incise) {
-            wxTagRemove(wxTagId, list);
+            wxUserTagRemove(wxTagId, list);
         }
     }
 
-    public void wxTagAdd(Long wxTagId, List<String> openIdList) {
+    public void wxUserTagAdd(Long wxTagId, List<String> openIdList) {
         try {
             wxMpService.getUserTagService().batchTagging(wxTagId, openIdList.toArray(new String[openIdList.size()]));
             log.info("批量打标签：wxTagId={}, openIdList={}", wxTagId, openIdList);
@@ -49,13 +52,55 @@ public class WxGzhApiWraper {
         }
     }
 
-    public void wxTagRemove(Long wxTagId, List<String> openIdList) {
+    public void wxUserTagRemove(Long wxTagId, List<String> openIdList) {
         try {
             wxMpService.getUserTagService().batchUntagging(wxTagId, openIdList.toArray(new String[openIdList.size()]));
             log.info("批量取消标签：wxTagId={}, openIdList={}", wxTagId, openIdList);
         } catch (WxErrorException e) {
             log.error(e.getError().getErrorMsg());
         }
+    }
+
+    public WxMpUserList getWxMpUserList(String nextOpenid) {
+        WxMpUserList wxMpUserList = null;
+        try {
+            wxMpUserList = wxMpService.getUserService().userList(nextOpenid);
+        } catch (WxErrorException e) {
+            e.printStackTrace();
+        }
+        return wxMpUserList;
+    }
+
+    public List<WxMpUser> getUserInfoBatchList(List<String> openidList) {
+        List<WxMpUser> userInfoList = new ArrayList<>();
+        List<List<String>> incise = incise(openidList, 100);
+        for (List<String> list : incise) {
+            List<WxMpUser> wxMpUserList = getUserInfoList(list);
+            if (CollectionUtil.isNotEmpty(wxMpUserList)) {
+                userInfoList.addAll(wxMpUserList);
+            }
+        }
+        return userInfoList;
+    }
+
+    public List<WxMpUser> getUserInfoList(List<String> openidList) {
+        List<WxMpUser> userInfoList = null;
+        try {
+            userInfoList = wxMpService.getUserService().userInfoList(openidList);
+        } catch (WxErrorException e) {
+            e.printStackTrace();
+        }
+        return userInfoList;
+    }
+
+    public WxMpUser getUserInfo(String openid) {
+        WxMpUser wxMpUser = null;
+        try {
+            wxMpUser = wxMpService.getUserService().userInfo(openid);
+        } catch (WxErrorException e) {
+            e.printStackTrace();
+        }
+        return wxMpUser;
     }
 
     private List<List<String>> incise(List<String> openIdList, Integer pageSize) {
