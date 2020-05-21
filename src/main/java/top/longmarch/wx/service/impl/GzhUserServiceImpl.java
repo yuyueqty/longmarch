@@ -72,12 +72,7 @@ public class GzhUserServiceImpl extends ServiceImpl<GzhUserDao, GzhUser> impleme
     }
 
     @Override
-    public void syncBatchWxGzhUser() {
-        GzhAccount gzhAccount = gzhAccountService.getDefalutGzhAccount();
-        String lock = lock(gzhAccount);
-        if (!syncLock.lock(lock)) {
-            throw new RuntimeException("正在同步中，请稍等...");
-        }
+    public void syncBatchWxGzhUser(GzhAccount gzhAccount, String lock) {
         try {
             WxGzhApiWraper wxGzhApiWraper = new WxGzhApiWraper(gzhAccount);
             syncStart(wxGzhApiWraper, gzhAccount, null);
@@ -152,10 +147,6 @@ public class GzhUserServiceImpl extends ServiceImpl<GzhUserDao, GzhUser> impleme
         String b = gzhUser.getOpenId() + gzhUser.getNickname() + gzhUser.getHeadImgUrl()
                 + gzhUser.getCountry() + gzhUser.getProvince() + gzhUser.getCity();
         return a.hashCode() == b.hashCode();
-    }
-
-    private String lock(GzhAccount gzhAccount) {
-        return "sync_lock_" + gzhAccount.getId() + "_" + gzhAccount.getFwField() + "_" + gzhAccount.getCreateBy();
     }
 
 }

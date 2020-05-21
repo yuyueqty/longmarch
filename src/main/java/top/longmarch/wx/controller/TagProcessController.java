@@ -8,7 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.longmarch.core.common.Result;
+import top.longmarch.wx.entity.GzhAccount;
+import top.longmarch.wx.service.IGzhAccountService;
 import top.longmarch.wx.service.IWxGzhApiService;
+import top.longmarch.wx.service.impl.SyncLock;
 
 /**
  * <p>
@@ -26,13 +29,22 @@ public class TagProcessController {
 
     @Autowired
     private IWxGzhApiService wxGzhApiService;
+    @Autowired
+    private IGzhAccountService gzhAccountService;
+    @Autowired
+    private SyncLock syncLock;
 
     @GetMapping("/tagAnalysis")
     public Result tagAnalysis() {
+        GzhAccount gzhAccount = gzhAccountService.getDefalutGzhAccount();
+        String lock = syncLock.getSecondlock(gzhAccount);
+        if (!syncLock.lock(lock)) {
+            return Result.fail("正在二次解析中，请稍等...");
+        }
         ThreadUtil.execute(new Runnable() {
             @Override
             public void run() {
-                wxGzhApiService.tagAnalysis();
+                wxGzhApiService.tagAnalysis(gzhAccount, lock);
             }
         });
         return Result.ok();
@@ -40,10 +52,15 @@ public class TagProcessController {
 
     @GetMapping("/tagRemove")
     public Result tagRemove() {
+        GzhAccount gzhAccount = gzhAccountService.getDefalutGzhAccount();
+        String lock = syncLock.getRemovelock(gzhAccount);
+        if (!syncLock.lock(lock)) {
+            return Result.fail("正在批量取消中，请稍等...");
+        }
         ThreadUtil.execute(new Runnable() {
             @Override
             public void run() {
-                wxGzhApiService.tagRemove();
+                wxGzhApiService.tagRemove(gzhAccount, lock);
             }
         });
         return Result.ok();

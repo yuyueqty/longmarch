@@ -8,29 +8,28 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
-import me.chanjar.weixin.mp.api.WxMpUserTagService;
 import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
 import me.chanjar.weixin.mp.config.impl.WxMpDefaultConfigImpl;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import top.longmarch.core.annotation.Log;
 import top.longmarch.core.common.Constant;
 import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.common.Result;
 import top.longmarch.core.utils.LmUtils;
 import top.longmarch.core.utils.UserUtil;
-import top.longmarch.sys.entity.vo.ChangeStatusDTO;
 import top.longmarch.wx.entity.GzhAccount;
 import top.longmarch.wx.entity.GzhUser;
 import top.longmarch.wx.service.IGzhAccountService;
 import top.longmarch.wx.service.IGzhUserService;
+import top.longmarch.wx.service.impl.SyncLock;
 
-import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -51,6 +50,8 @@ public class GzhUserController {
     private IGzhUserService gzhUserService;
     @Autowired
     private IGzhAccountService gzhAccountService;
+    @Autowired
+    private SyncLock syncLock;
 
     @ApiOperation(value = "搜索粉丝表")
     @PostMapping("/search")
@@ -81,7 +82,7 @@ public class GzhUserController {
         Object fuzzySearch = params.get(Constant.FUZZY_SEARCH);
         wrapper.lambda().like(LmUtils.isNotBlank(fuzzySearch), GzhUser::getNickname, fuzzySearch);
 
-        return Result.ok().add(gzhUserService.page(page, wrapper));
+        return Result.ok().add(gzhUserService.page(page, wrapper)).add("lock", syncLock.getAllLock(gzhAccount));
     }
 
     @Log

@@ -33,31 +33,39 @@ public class WxGzhApiServiceImpl implements IWxGzhApiService {
     private IGzhUserService gzhUserService;
     @Autowired
     private GzhUserDao gzhUserDao;
+    @Autowired
+    private SyncLock syncLock;
 
     @Override
-    public void tagAnalysis() {
-        GzhAccount gzhAccount = getGzhAccount();
-        if (gzhAccount == null) return;
-        List<GzhTag> gzhTagList = getGzhTagList(gzhAccount);
-        if (CollectionUtil.isEmpty(gzhTagList)) return;
-        List<GzhUser> gzhUserList = getGzhUserList(gzhAccount, gzhTagList);
-        if (CollectionUtil.isEmpty(gzhUserList)) return;
-        Map<Long, String> userMap = buildGzhUser(gzhUserList);
-        if (CollectionUtil.isEmpty(userMap)) return;
-        List<GzhUser> updateGzhUserList = buildUpdateGzhUserList(userMap);
-        if (CollectionUtil.isEmpty(updateGzhUserList)) return;
-        updateGzhUser(updateGzhUserList);
+    public void tagAnalysis(GzhAccount gzhAccount, String lock) {
+        try {
+            if (gzhAccount == null) return;
+            List<GzhTag> gzhTagList = getGzhTagList(gzhAccount);
+            if (CollectionUtil.isEmpty(gzhTagList)) return;
+            List<GzhUser> gzhUserList = getGzhUserList(gzhAccount, gzhTagList);
+            if (CollectionUtil.isEmpty(gzhUserList)) return;
+            Map<Long, String> userMap = buildGzhUser(gzhUserList);
+            if (CollectionUtil.isEmpty(userMap)) return;
+            List<GzhUser> updateGzhUserList = buildUpdateGzhUserList(userMap);
+            if (CollectionUtil.isEmpty(updateGzhUserList)) return;
+            updateGzhUser(updateGzhUserList);
+        } finally {
+            syncLock.unlock(lock);
+        }
     }
 
     @Override
-    public void tagRemove() {
-        GzhAccount gzhAccount = getGzhAccount();
-        if (gzhAccount == null) return;
-        List<GzhTag> gzhTagList = getGzhTagList(gzhAccount);
-        if (CollectionUtil.isEmpty(gzhTagList)) return;
-        List<GzhUser> gzhUserTagList = getGzhUserTagList(gzhAccount);
-        if (CollectionUtil.isEmpty(gzhUserTagList)) return;
-        removeGzhUserTag(gzhAccount, gzhTagList, gzhUserTagList);
+    public void tagRemove(GzhAccount gzhAccount, String lock) {
+        try {
+            if (gzhAccount == null) return;
+            List<GzhTag> gzhTagList = getGzhTagList(gzhAccount);
+            if (CollectionUtil.isEmpty(gzhTagList)) return;
+            List<GzhUser> gzhUserTagList = getGzhUserTagList(gzhAccount);
+            if (CollectionUtil.isEmpty(gzhUserTagList)) return;
+            removeGzhUserTag(gzhAccount, gzhTagList, gzhUserTagList);
+        } finally {
+            syncLock.unlock(lock);
+        }
     }
 
     private void removeGzhUserTag(GzhAccount gzhAccount, List<GzhTag> gzhTagList, List<GzhUser> gzhUserTagList) {

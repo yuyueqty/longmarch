@@ -10,12 +10,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import top.longmarch.core.common.Result;
 import top.longmarch.core.utils.UserUtil;
-import top.longmarch.wx.entity.*;
+import top.longmarch.wx.entity.GzhAccount;
+import top.longmarch.wx.entity.GzhFenweiTag;
+import top.longmarch.wx.entity.GzhUser;
 import top.longmarch.wx.service.IGzhAccountService;
 import top.longmarch.wx.service.IGzhFenweiTagService;
 import top.longmarch.wx.service.IGzhUserService;
@@ -50,7 +51,7 @@ public class AnalyseGzhUserTagController {
             return Result.fail("未设置默认公众号");
         }
         List<GzhUser> gzhUsers = gzhUserService.listByIds(Arrays.asList(ids));
-        String lock = "analyse_lock_" + gzhAccount.getId() + "_" + gzhAccount.getCreateBy();
+        String lock = syncLock.getAnalyselock(gzhAccount);
         if (!syncLock.lock(lock)) {
             return Result.fail("正在解析中，请稍等...");
         }
@@ -69,7 +70,7 @@ public class AnalyseGzhUserTagController {
         if (StrUtil.isBlank(gzhAccount.getFwAppid()) || StrUtil.isBlank(gzhAccount.getFwAppsecret())) {
             return Result.fail("分维OpenID授权密钥错误");
         }
-        String lock = "analyse_lock_" + gzhAccount.getId() + "_" + gzhAccount.getCreateBy();
+        String lock = syncLock.getAnalyselock(gzhAccount);
         if (!syncLock.lock(lock)) {
             return Result.fail("正在解析中，请稍等...");
         }

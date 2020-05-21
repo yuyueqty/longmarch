@@ -1,5 +1,6 @@
 package top.longmarch.wx.service;
 
+import top.longmarch.wx.entity.GzhAccount;
 import top.longmarch.wx.entity.GzhUser;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -19,7 +20,7 @@ public interface IGzhUserService extends IService<GzhUser> {
 
     List<GzhUser> getGzhUserList(Long gzhId);
 
-    void syncBatchWxGzhUser();
+    void syncBatchWxGzhUser(GzhAccount gzhAccount, String lock);
 
     void syncMoreWxGzhUser(List<Long> ids);
 
