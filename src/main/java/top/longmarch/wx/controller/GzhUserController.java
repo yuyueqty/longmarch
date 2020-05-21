@@ -14,10 +14,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.longmarch.core.annotation.Log;
 import top.longmarch.core.common.Constant;
 import top.longmarch.core.common.PageFactory;
@@ -54,6 +51,12 @@ public class GzhUserController {
     private SyncLock syncLock;
 
     @ApiOperation(value = "搜索粉丝表")
+    @GetMapping("/refresh")
+    public Result refresh() {
+        return Result.ok().add(syncLock.getAllLock(gzhAccountService.getDefalutGzhAccount()));
+    }
+
+    @ApiOperation(value = "搜索粉丝表")
     @PostMapping("/search")
     public Result search(@RequestBody(required = false) Map<String, Object> params) {
         IPage<GzhUser> page = PageFactory.getInstance(params);
@@ -65,9 +68,7 @@ public class GzhUserController {
             wrapper.orderBy(true, isAsc, prop.toString());
         }
 
-        GzhAccount gzhAccount = gzhAccountService.getOne(new LambdaQueryWrapper<GzhAccount>()
-                .eq(GzhAccount::getDefaultAccount, 1)
-                .eq(GzhAccount::getCreateBy, UserUtil.getUserId()));
+        GzhAccount gzhAccount = gzhAccountService.getDefalutGzhAccount();
         if (gzhAccount == null) {
             wrapper.lambda().eq(GzhUser::getGzhId, -1);
         } else {

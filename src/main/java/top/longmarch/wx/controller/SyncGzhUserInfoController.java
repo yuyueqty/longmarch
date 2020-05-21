@@ -40,9 +40,9 @@ public class SyncGzhUserInfoController {
     @ApiOperation(value = "同步微信用户信息")
     @RequiresPermissions("wx:gzhuser:sync")
     @GetMapping("/syncWxUserInfo")
-    public Result syncWxUserInfo(@RequestParam(required = false, defaultValue = "false") Boolean batchSync) {
+    public Result syncWxUserInfo() {
         GzhAccount gzhAccount = gzhAccountService.getDefalutGzhAccount();
-        String lock = syncLock.getAnalyselock(gzhAccount);
+        String lock = syncLock.getSynclock(gzhAccount);
         if (!syncLock.lock(lock)) {
             return Result.fail("正在同步中，请稍等...");
         }

@@ -14,17 +14,17 @@ public class SyncLock {
 
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
-    private static final String lock = "lock";
+    private static final String LOCK_VALUE = "lock";
 
-    private String key(String key) {
+    private String getValue(String key) {
         return redisTemplate.opsForValue().get(key);
     }
 
-    public synchronized boolean lock(String lock) {
-        if (StrUtil.isNotBlank(key(lock))) {
+    public synchronized boolean lock(String key) {
+        if (StrUtil.isNotBlank(getValue(key))) {
             return false;
         }
-        redisTemplate.opsForValue().set(lock, lock);
+        redisTemplate.opsForValue().set(key, LOCK_VALUE);
         return true;
     }
 
@@ -50,10 +50,10 @@ public class SyncLock {
 
     public synchronized Map<String, String> getAllLock(GzhAccount gzhAccount) {
         Map<String, String> map = new HashMap<>();
-        map.put("lock1", getSynclock(gzhAccount));
-        map.put("lock2", getAnalyselock(gzhAccount));
-        map.put("lock3", getSecondlock(gzhAccount));
-        map.put("lock4", getRemovelock(gzhAccount));
+        map.put("lock1", getValue(getSynclock(gzhAccount)));
+        map.put("lock2", getValue(getAnalyselock(gzhAccount)));
+        map.put("lock3", getValue(getSecondlock(gzhAccount)));
+        map.put("lock4", getValue(getRemovelock(gzhAccount)));
         return map;
     }
 
