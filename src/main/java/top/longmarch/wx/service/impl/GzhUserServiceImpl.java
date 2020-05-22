@@ -129,6 +129,8 @@ public class GzhUserServiceImpl extends ServiceImpl<GzhUserDao, GzhUser> impleme
                 BeanUtils.copyProperties(wxMpUser, gzhUser);
                 gzhUser.setGzhId(gzhAccount.getId());
                 gzhUser.setJwid(gzhAccount.getJwid());
+                Integer subscribe = wxMpUser.getSubscribe()?1:0;
+                gzhUser.setSubscribe(subscribe);
                 insertGzhUserList.add(gzhUser);
             } else {
                 if (!comparison(wxMpUser, gzhUser)) {

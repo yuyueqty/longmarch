@@ -1,6 +1,9 @@
 package top.longmarch;
 
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
@@ -13,8 +16,27 @@ import java.util.List;
 
 public class WxTest2 {
 
+    public static void main(String[] args) throws WxErrorException {
+//        WxMpDefaultConfigImpl config = new WxMpDefaultConfigImpl();
+//        config.setAppId("wxaeeab59bae7d0deb");
+//        config.setSecret("0c95e460f74fc1e3c4e56a825c8a385e");
+//        WxMpService wxMpService = new WxMpServiceImpl();
+//        wxMpService.setWxMpConfigStorage(config);
+//
+//        String accessToken = wxMpService.getAccessToken();
+//        String url = "https://mp.weixin.qq.com/cgi-bin/settingpage?t=setting/index&action=index&token="+accessToken+"&lang=zh_CN&f=json";
+//
+//        String s = wxMpService.get(url, null);
+//        System.out.println(s);
 
-    public static void main(String[] args) throws Exception {
+        fun();
+
+        String time = "1574066601";
+        DateTime date = DateUtil.date(Long.valueOf(time));
+        System.out.println(date);
+    }
+
+    public static void fun4() throws Exception {
         fun();
     }
 
@@ -35,7 +57,7 @@ public class WxTest2 {
 
     private static void getUser(WxMpService wxMpService, String openid) throws WxErrorException {
         WxMpUser wxMpUser = wxMpService.getUserService().userInfo(openid);
-        System.out.println(wxMpUser.getNickname());
+        System.out.println(JSONUtil.toJsonStr(wxMpUser));
     }
 
 
