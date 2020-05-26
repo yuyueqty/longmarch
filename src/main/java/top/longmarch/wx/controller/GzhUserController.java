@@ -95,7 +95,8 @@ public class GzhUserController {
         try {
             getWxMpService(getGzhAccount()).getUserService().userUpdateRemark(gzhUser.getOpenId(), gzhUser.getRemark());
         } catch (WxErrorException e) {
-            return Result.fail(e.getError().getErrorMsg());
+//            return Result.fail(e.getError().getErrorMsg());
+            log.error(e.getError().getErrorMsg());
         }
         gzhUserService.updateById(gzhUser);
         return Result.ok().add(gzhUser);

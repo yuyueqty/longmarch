@@ -8,6 +8,7 @@ import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import me.chanjar.weixin.mp.bean.result.WxMpUserList;
+import me.chanjar.weixin.mp.bean.tag.WxUserTag;
 import me.chanjar.weixin.mp.config.impl.WxMpDefaultConfigImpl;
 import top.longmarch.wx.entity.GzhAccount;
 
@@ -27,6 +28,41 @@ public class WxGzhApiWraper {
         WxMpService wxMpService = new WxMpServiceImpl();
         wxMpService.setWxMpConfigStorage(config);
         this.wxMpService = wxMpService;
+    }
+
+    public void tagDeleteBatch(List<Long> tagIds) {
+        for (Long tagId : tagIds) {
+            tagDelete(tagId);
+        }
+    }
+
+    public void tagDelete(Long tagId) {
+        try {
+            wxMpService.getUserTagService().tagDelete(tagId);
+            log.info("删除标签：tagId={}", tagId);
+        } catch (WxErrorException e) {
+            log.warn(e.getError().getErrorMsg());
+        }
+    }
+
+    public WxUserTag tagCreate(String tagName) {
+        WxUserTag wxUserTag = null;
+        try {
+            wxUserTag = wxMpService.getUserTagService().tagCreate(tagName);
+            log.info("创建标签：tagName={}", tagName);
+        } catch (WxErrorException e) {
+            log.warn(e.getError().getErrorMsg());
+        }
+        return wxUserTag;
+    }
+
+    public void tagUpdate(Long tagId, String tagName) {
+        try {
+            wxMpService.getUserTagService().tagUpdate(tagId, tagName);
+            log.info("修改标签：tagId={}, tagName={}", tagId, tagName);
+        } catch (WxErrorException e) {
+            log.warn(e.getError().getErrorMsg());
+        }
     }
 
     public void wxUserTagAddBatch(Long wxTagId, List<String> openIdList) {

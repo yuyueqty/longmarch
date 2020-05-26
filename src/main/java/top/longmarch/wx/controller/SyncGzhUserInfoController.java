@@ -37,8 +37,8 @@ public class SyncGzhUserInfoController {
         return Result.ok();
     }
 
-    @ApiOperation(value = "同步微信用户信息")
-    @RequiresPermissions("wx:gzhuser:sync")
+    @ApiOperation(value = "同步所有微信用户信息")
+    @RequiresPermissions("wx:gzhuser:sync:all")
     @GetMapping("/syncWxUserInfo")
     public Result syncWxUserInfo() {
         GzhAccount gzhAccount = gzhAccountService.getDefalutGzhAccount();

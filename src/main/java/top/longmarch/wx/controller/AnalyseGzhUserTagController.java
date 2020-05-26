@@ -59,8 +59,8 @@ public class AnalyseGzhUserTagController {
         return Result.ok().add(gzhUsers.size());
     }
 
-    @ApiOperation(value = "解析用户标签")
-    @RequiresPermissions("wx:gzhuser:analyse")
+    @ApiOperation(value = "解析所有用户标签")
+    @RequiresPermissions("wx:gzhuser:analyse:all")
     @GetMapping("/analyseUserTag")
     public Result analyseUserTag() {
         GzhAccount gzhAccount = gzhAccountService.getDefalutGzhAccount();
