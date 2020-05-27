@@ -110,4 +110,8 @@
         AND t2.tag_id = #{tagId}
     </select>
 
+    <select id="getFenweiTagList" resultType="Map">
+        SELECT `name` as value, field_id as fieldId, content as label FROM wx_gzh_fenwei_tag GROUP BY `name` ORDER BY field_id
+    </select>
+
 </mapper>

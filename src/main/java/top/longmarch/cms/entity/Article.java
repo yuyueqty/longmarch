@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 /**
  * <p>
@@ -18,6 +19,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @author YuYue
  * @since 2020-01-30
  */
+@Data
 @TableName("cms_article")
 @ApiModel(value="Article对象", description="文章")
 public class Article implements Serializable {
@@ -108,179 +110,4 @@ public class Article implements Serializable {
     @TableField(exist = false)
     private String categoryName;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public Long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
-    }
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-    public String getSummary() {
-        return summary;
-    }
-
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-    public String getSourceUrl() {
-        return sourceUrl;
-    }
-
-    public void setSourceUrl(String sourceUrl) {
-        this.sourceUrl = sourceUrl;
-    }
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-    public Date getPublishTime() {
-        return publishTime;
-    }
-
-    public void setPublishTime(Date publishTime) {
-        this.publishTime = publishTime;
-    }
-    public Integer getPublishStatus() {
-        return publishStatus;
-    }
-
-    public void setPublishStatus(Integer publishStatus) {
-        this.publishStatus = publishStatus;
-    }
-    public Integer getClicks() {
-        return clicks;
-    }
-
-    public void setClicks(Integer clicks) {
-        this.clicks = clicks;
-    }
-    public Integer getLikes() {
-        return likes;
-    }
-
-    public void setLikes(Integer likes) {
-        this.likes = likes;
-    }
-    public Integer getSort() {
-        return sort;
-    }
-
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
-    public Integer getRecommend() {
-        return recommend;
-    }
-
-    public void setRecommend(Integer recommend) {
-        this.recommend = recommend;
-    }
-    public Long getCreateBy() {
-        return createBy;
-    }
-
-    public String getTags() {
-        return tags;
-    }
-    public void setTags(String label) {
-        this.tags = label;
-    }
-
-    public void setCreateBy(Long createBy) {
-        this.createBy = createBy;
-    }
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-    public Long getUpdateBy() {
-        return updateBy;
-    }
-
-    public void setUpdateBy(Long updateBy) {
-        this.updateBy = updateBy;
-    }
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public String getCategoryName() {
-        return categoryName;
-    }
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
-
-    public Integer getAutoPublishStatus() {
-        return autoPublishStatus;
-    }
-
-    public void setAutoPublishStatus(Integer autoPublishStatus) {
-        this.autoPublishStatus = autoPublishStatus;
-    }
-
-    @Override
-    public String toString() {
-        return "Article{" +
-                "id=" + id +
-                ", categoryId=" + categoryId +
-                ", categoryName=" + categoryName +
-                ", title='" + title + '\'' +
-                ", summary='" + summary + '\'' +
-                ", content='" + content + '\'' +
-                ", sourceUrl='" + sourceUrl + '\'' +
-                ", imageUrl='" + imageUrl + '\'' +
-                ", author='" + author + '\'' +
-                ", publishTime=" + publishTime +
-                ", publishStatus=" + publishStatus +
-                ", autoPublishStatus=" + autoPublishStatus +
-                ", clicks=" + clicks +
-                ", likes=" + likes +
-                ", sort=" + sort +
-                ", recommend=" + recommend +
-                ", tags='" + tags + '\'' +
-                ", createBy=" + createBy +
-                ", createTime=" + createTime +
-                ", updateBy=" + updateBy +
-                ", updateTime=" + updateTime +
-                '}';
-    }
 }

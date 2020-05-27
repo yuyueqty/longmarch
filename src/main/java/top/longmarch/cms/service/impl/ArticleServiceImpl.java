@@ -112,4 +112,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleDao, Article> impleme
         }
     }
 
+    @Override
+    public Article getArticleById(Long id) {
+        return articleDao.getArticleById(id);
+    }
+
 }

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="referrer" content="no-referrer" />
+    <link rel="stylesheet" type="text/css" th:href="@{/static/css/index.css}" />
+    <script th:src="@{/static/mavon-editor.js}"></script>
+    <title>文章详情</title>
+</head>
+
+<body>
+<div class="item mb-5">
+    <div class="media">
+        <div class="media-body">
+            <h3 class="title mb-1" th:text="${article.title}">标题</h3>
+            <div class="meta mb-1">
+                <span th:utext="${article.content}">文章内容</span>
+            </div>
+            <br>
+            <div class="meta mb-1">
+                <span class="date" th:text="'创建事件：'+${article.createTime}">创建时间</span>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

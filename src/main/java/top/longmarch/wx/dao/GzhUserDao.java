@@ -25,4 +25,6 @@ public interface GzhUserDao extends BaseMapper<GzhUser> {
 
     @SqlParser(filter=true)
     List<GzhUser> getUserNewTags(WxParams param);
+
+    List<Map<String, Object>> getFenweiTagList();
 }

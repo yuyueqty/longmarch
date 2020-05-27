@@ -25,4 +25,6 @@ public interface IArticleService extends IService<Article> {
     void batchPublishArticles();
 
     void removeArticleByIds(List<Long> ids);
+
+    Article getArticleById(Long id);
 }
