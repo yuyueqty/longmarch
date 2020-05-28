@@ -31,9 +31,7 @@ public class WxTest2 {
 
         fun();
 
-        String time = "1574066601";
-        DateTime date = DateUtil.date(Long.valueOf(time));
-        System.out.println(date);
+
     }
 
     public static void fun4() throws Exception {
@@ -42,11 +40,11 @@ public class WxTest2 {
 
     public static void fun() throws WxErrorException {
         WxMpDefaultConfigImpl config = new WxMpDefaultConfigImpl();
-        config.setAppId("wxaeeab59bae7d0deb");
-        config.setSecret("0c95e460f74fc1e3c4e56a825c8a385e");
+        config.setAppId("wxb7f34de8f008212f");
+        config.setSecret("2a91bb6d113d0449c8a8b07db28eac7a");
         WxMpService wxMpService = new WxMpServiceImpl();
         wxMpService.setWxMpConfigStorage(config);
-        WxMpUserList userList = wxMpService.getUserService().userList("oG-Lc1E8kMH--SxsdhJzzcfrT73M");
+        WxMpUserList userList = wxMpService.getUserService().userList(null);
         String nextOpenid = userList.getOpenids().get(userList.getOpenids().size() - 1);
 //        List<String> openidList = (List<String>) userList
 //        System.out.println(openidList);

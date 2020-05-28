@@ -148,7 +148,7 @@ public class WxGzhApiWraper {
                 if (i == (pages - 1)) {
                     openIdSubList = openIdList.subList(i * pageSize + 1, (openIdList.size() - 1));
                 } else {
-                    openIdSubList = openIdList.subList(i * pageSize + 1, i * i * pageSize + pageSize);
+                    openIdSubList = openIdList.subList(i * pageSize + 1, i * pageSize + pageSize);
                 }
                 list.add(openIdSubList);
             }

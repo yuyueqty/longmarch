@@ -74,6 +74,7 @@ public class GzhUserServiceImpl extends ServiceImpl<GzhUserDao, GzhUser> impleme
     @Override
     public void syncBatchWxGzhUser(GzhAccount gzhAccount, String lock) {
         try {
+            log.info("开始同步公众号【{}】数据", gzhAccount.getJwid());
             WxGzhApiWraper wxGzhApiWraper = new WxGzhApiWraper(gzhAccount);
             syncStart(wxGzhApiWraper, gzhAccount, null);
         } catch (Exception e) {
@@ -85,12 +86,17 @@ public class GzhUserServiceImpl extends ServiceImpl<GzhUserDao, GzhUser> impleme
 
     private void syncStart(WxGzhApiWraper wxGzhApiWraper, GzhAccount gzhAccount, String nextOpenid) {
         WxMpUserList wxMpUserList = wxGzhApiWraper.getWxMpUserList(nextOpenid);
+        log.info("粉丝总数量：count={}, openids={}", wxMpUserList.getCount(), wxMpUserList.getOpenids().size());
         if (wxMpUserList.getOpenids().size() > 0) {
             List<WxMpUser> userInfoList = wxGzhApiWraper.getUserInfoBatchList(wxMpUserList.getOpenids());
             List<GzhUser> insertGzhUserList = new ArrayList<>();
             List<GzhUser> updateGzhUserList = new ArrayList<>();
             bulidInsertOrUpdateGzhUserList(insertGzhUserList, updateGzhUserList, gzhAccount, userInfoList);
-            insertOrUpdateGzhUserList(insertGzhUserList, updateGzhUserList);
+            try {
+                insertOrUpdateGzhUserList(insertGzhUserList, updateGzhUserList);
+            } catch (Exception e) {
+                log.warn("数据异常：{}", e.getMessage());
+            }
             if (StrUtil.isNotBlank(wxMpUserList.getNextOpenid())) {
                 syncStart(wxGzhApiWraper, gzhAccount, wxMpUserList.getNextOpenid());
             }
@@ -98,6 +104,7 @@ public class GzhUserServiceImpl extends ServiceImpl<GzhUserDao, GzhUser> impleme
     }
 
     private void insertOrUpdateGzhUserList(List<GzhUser> insertGzhUserList, List<GzhUser> updateGzhUserList) {
+        log.info("同步数量：insert={}, update={}", insertGzhUserList.size(), updateGzhUserList.size());
         if (CollectionUtil.isNotEmpty(insertGzhUserList)) {
             this.saveBatch(insertGzhUserList);
             insertGzhUserHistoryList(insertGzhUserList);
@@ -125,6 +132,7 @@ public class GzhUserServiceImpl extends ServiceImpl<GzhUserDao, GzhUser> impleme
         for (WxMpUser wxMpUser : userInfoList) {
             GzhUser gzhUser = getGzhUser(wxMpUser.getOpenId(), gzhAccount.getId());
             if (gzhUser == null) {
+                log.info("新增用户信息：openid={}, nickname={}", wxMpUser.getOpenId(), wxMpUser.getNickname());
                 gzhUser = new GzhUser();
                 BeanUtils.copyProperties(wxMpUser, gzhUser);
                 gzhUser.setGzhId(gzhAccount.getId());
@@ -134,6 +142,7 @@ public class GzhUserServiceImpl extends ServiceImpl<GzhUserDao, GzhUser> impleme
                 insertGzhUserList.add(gzhUser);
             } else {
                 if (!comparison(wxMpUser, gzhUser)) {
+                    log.info("更新用户信息：openid={}, nickname={}", gzhUser.getOpenId(), gzhUser.getNickname());
                     BeanUtils.copyProperties(wxMpUser, gzhUser);
                     gzhUser.setGzhId(gzhAccount.getId());
                     gzhUser.setJwid(gzhAccount.getJwid());
