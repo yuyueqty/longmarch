@@ -12,7 +12,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.longmarch.core.annotation.Log;
 import top.longmarch.core.common.Result;
-import top.longmarch.core.utils.UserUtil;
 import top.longmarch.wx.entity.GzhAccount;
 import top.longmarch.wx.entity.GzhTagRule;
 import top.longmarch.wx.service.IGzhAccountService;
@@ -43,7 +42,7 @@ public class GzhTagRuleController {
     @PostMapping("/create")
     public Result create(@Validated @RequestBody GzhTagRule gzhTagRule) {
         log.info("创建规则, 入参：{}", gzhTagRule);
-        GzhAccount gzhAccount = getGzhAccount();
+        GzhAccount gzhAccount = gzhAccountService.getDefalutGzhAccount();
         gzhTagRule.setGzhId(gzhAccount.getId());
         gzhTagRuleService.save(gzhTagRule);
         return Result.ok().add(gzhTagRule);
@@ -62,7 +61,7 @@ public class GzhTagRuleController {
             if (one != null) {
                 return Result.fail("同一标签下规则名称不能重复");
             }
-            GzhAccount gzhAccount = getGzhAccount();
+            GzhAccount gzhAccount = gzhAccountService.getDefalutGzhAccount();
             gzhTagRule.setGzhId(gzhAccount.getId());
             gzhTagRule.setTagId(tagId);
             gzhTagRuleService.save(gzhTagRule);
@@ -80,13 +79,6 @@ public class GzhTagRuleController {
         log.info("删除规则, id={}", id);
         gzhTagRuleService.removeById(id);
         return Result.ok();
-    }
-
-    private GzhAccount getGzhAccount() {
-        GzhAccount gzhAccount = gzhAccountService.getOne(new LambdaQueryWrapper<GzhAccount>()
-                .eq(GzhAccount::getCreateBy, UserUtil.getUserId())
-                .eq(GzhAccount::getDefaultAccount, 1));
-        return gzhAccount;
     }
 
 }

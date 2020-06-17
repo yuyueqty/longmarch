@@ -103,6 +103,7 @@ public class AnalyseGzhUserTagController {
         requestBody.put("url_used", "1");
         requestBody.put("image", "base64");
         requestBody.put("field", gzhAccount.getFwField());
+        requestBody.put("app_id", gzhAccount.getFwAppid());
 
         String post = HttpUtil.post(url, requestBody.toString());
         JSONObject json = JSONUtil.parseObj(post);

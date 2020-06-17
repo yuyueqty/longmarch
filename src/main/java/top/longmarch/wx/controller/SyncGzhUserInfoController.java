@@ -42,6 +42,9 @@ public class SyncGzhUserInfoController {
     @GetMapping("/syncWxUserInfo")
     public Result syncWxUserInfo() {
         GzhAccount gzhAccount = gzhAccountService.getDefalutGzhAccount();
+        if (gzhAccount == null) {
+            return Result.fail("未设置默认公众号");
+        }
         String lock = syncLock.getSynclock(gzhAccount);
         if (!syncLock.lock(lock)) {
             return Result.fail("正在同步中，请稍等...");

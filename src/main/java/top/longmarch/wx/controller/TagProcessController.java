@@ -41,6 +41,9 @@ public class TagProcessController {
     @GetMapping("/tagAnalysis")
     public Result tagAnalysis() {
         GzhAccount gzhAccount = gzhAccountService.getDefalutGzhAccount();
+        if (gzhAccount == null) {
+            return Result.fail("未设置默认公众号");
+        }
         String lock = syncLock.getSecondlock(gzhAccount);
         if (!syncLock.lock(lock)) {
             return Result.fail("正在二次解析中，请稍等...");
@@ -59,6 +62,9 @@ public class TagProcessController {
     @GetMapping("/tagRemove")
     public Result tagRemove() {
         GzhAccount gzhAccount = gzhAccountService.getDefalutGzhAccount();
+        if (gzhAccount == null) {
+            return Result.fail("未设置默认公众号");
+        }
         String lock = syncLock.getRemovelock(gzhAccount);
         if (!syncLock.lock(lock)) {
             return Result.fail("正在批量取消中，请稍等...");

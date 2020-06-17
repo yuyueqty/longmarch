@@ -3,9 +3,7 @@
 
 ------
 ### 项目演示
-在线演示：https://www.longmarch.top  
-账号密码：admin/111111  
-视频演示：http://www.56.com/u61/v_MTYyMzg3Nzcw.html  
+在线演示：https://www.longmarch.top
 后端仓库：https://github.com/yuyueqty/longmarch  
 前端仓库：https://github.com/yuyueqty/longmarch-web
 
@@ -36,9 +34,9 @@
  8. 登录日志
  9. 业务日志
  10. 任务管理
- 11. 内容管理  
-    11.1 分类管理  
-    11.2 文章管理  
+ 11. 内容管理
+    11.1 分类管理
+    11.2 文章管理
 
 ### 项目选项
 | 技术        | 版本   |  地址  |

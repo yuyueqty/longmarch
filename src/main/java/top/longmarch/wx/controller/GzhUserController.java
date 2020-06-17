@@ -69,12 +69,12 @@ public class GzhUserController {
         }
 
         GzhAccount gzhAccount = gzhAccountService.getDefalutGzhAccount();
+        Map<String, String> allLock = syncLock.getAllLock(gzhAccount);
         if (gzhAccount == null) {
-            wrapper.lambda().eq(GzhUser::getGzhId, -1);
-        } else {
-            wrapper.lambda().eq(GzhUser::getGzhId, gzhAccount.getId());
+            return Result.ok().add(page).add("lock", allLock);
         }
 
+        wrapper.lambda().eq(GzhUser::getGzhId, gzhAccount.getId());
         wrapper.lambda().eq(GzhUser::getCreateBy, UserUtil.getUserId());
         wrapper.lambda().eq(LmUtils.isNotBlank(params.get("sex")), GzhUser::getSex, params.get("sex"));
         wrapper.lambda().eq(LmUtils.isNotBlank(params.get("country")), GzhUser::getCountry, params.get("country"));
@@ -83,7 +83,7 @@ public class GzhUserController {
         Object fuzzySearch = params.get(Constant.FUZZY_SEARCH);
         wrapper.lambda().like(LmUtils.isNotBlank(fuzzySearch), GzhUser::getNickname, fuzzySearch);
 
-        return Result.ok().add(gzhUserService.page(page, wrapper)).add("lock", syncLock.getAllLock(gzhAccount));
+        return Result.ok().add(gzhUserService.page(page, wrapper)).add("lock", allLock);
     }
 
     @Log

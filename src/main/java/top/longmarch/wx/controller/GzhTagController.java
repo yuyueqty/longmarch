@@ -21,6 +21,7 @@ import top.longmarch.wx.service.IGzhAccountService;
 import top.longmarch.wx.service.IGzhTagRuleService;
 import top.longmarch.wx.service.IGzhTagService;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,9 +50,13 @@ public class GzhTagController {
     @ApiOperation(value = "标签列表")
     @PostMapping("/list")
     public Result list() {
+        List<GzhTag> gzhTagList = new ArrayList<>();
+        List<GzhTagRule> gzhTagRuleList = new ArrayList<>();
         GzhAccount gzhAccount = gzhAccountService.getDefalutGzhAccount();
-        List<GzhTag> gzhTagList = gzhTagService.list(new LambdaQueryWrapper<GzhTag>().eq(GzhTag::getGzhId, gzhAccount.getId()));
-        List<GzhTagRule> gzhTagRuleList = null;
+        if (gzhAccount == null) {
+            return Result.ok().add(gzhTagList).add("gzhTagRuleList", gzhTagRuleList);
+        }
+        gzhTagList = gzhTagService.list(new LambdaQueryWrapper<GzhTag>().eq(GzhTag::getGzhId, gzhAccount.getId()));
         if (CollectionUtil.isNotEmpty(gzhTagList)) {
             Long id = gzhTagList.get(0).getId();
             gzhTagRuleList = gzhTagRuleService.list(new LambdaQueryWrapper<GzhTagRule>().eq(GzhTagRule::getTagId, id));
