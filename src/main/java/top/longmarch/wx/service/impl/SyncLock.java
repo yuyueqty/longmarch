@@ -50,10 +50,17 @@ public class SyncLock {
 
     public synchronized Map<String, String> getAllLock(GzhAccount gzhAccount) {
         Map<String, String> map = new HashMap<>();
-        map.put("lock1", getValue(getSynclock(gzhAccount)));
-        map.put("lock2", getValue(getAnalyselock(gzhAccount)));
-        map.put("lock3", getValue(getSecondlock(gzhAccount)));
-        map.put("lock4", getValue(getRemovelock(gzhAccount)));
+        if (gzhAccount == null) {
+            map.put("lock1", null);
+            map.put("lock2", null);
+            map.put("lock3", null);
+            map.put("lock4", null);
+        } else {
+            map.put("lock1", getValue(getSynclock(gzhAccount)));
+            map.put("lock2", getValue(getAnalyselock(gzhAccount)));
+            map.put("lock3", getValue(getSecondlock(gzhAccount)));
+            map.put("lock4", getValue(getRemovelock(gzhAccount)));
+        }
         return map;
     }
 

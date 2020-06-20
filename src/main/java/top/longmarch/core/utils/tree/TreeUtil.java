@@ -1,12 +1,11 @@
 package top.longmarch.core.utils.tree;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.json.JSONUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 public class TreeUtil {
 
@@ -67,13 +66,12 @@ public class TreeUtil {
 
         List<T> dataTree = new ArrayList<>();
         for (T t : dataList) {
-
             if (t.getPid() == null || "0".equals(String.valueOf(t.getPid())) || "-1".equals(String.valueOf(t.getPid()))) {
                 dataTree.add(t);
             }
 
             for (T t1 : dataList) {
-                if (t1.getPid() == t.getId()) {
+                if (t1.getPid().equals(t.getId())) {
                     if (CollectionUtil.isEmpty(t.getChildren())) {
                         t.setChildren(new ArrayList<>());
                     }

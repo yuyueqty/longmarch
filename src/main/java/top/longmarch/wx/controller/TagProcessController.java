@@ -2,7 +2,9 @@ package top.longmarch.wx.controller;
 
 import cn.hutool.core.thread.ThreadUtil;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,9 +36,14 @@ public class TagProcessController {
     @Autowired
     private SyncLock syncLock;
 
+    @ApiOperation(value = "解析营销标签")
+    @RequiresPermissions("wx:gzhuser:analysis")
     @GetMapping("/tagAnalysis")
     public Result tagAnalysis() {
         GzhAccount gzhAccount = gzhAccountService.getDefalutGzhAccount();
+        if (gzhAccount == null) {
+            return Result.fail("未设置默认公众号");
+        }
         String lock = syncLock.getSecondlock(gzhAccount);
         if (!syncLock.lock(lock)) {
             return Result.fail("正在二次解析中，请稍等...");
@@ -50,9 +57,14 @@ public class TagProcessController {
         return Result.ok();
     }
 
+    @ApiOperation(value = "移除用户营销标签")
+    @RequiresPermissions("wx:gzhuser:remove")
     @GetMapping("/tagRemove")
     public Result tagRemove() {
         GzhAccount gzhAccount = gzhAccountService.getDefalutGzhAccount();
+        if (gzhAccount == null) {
+            return Result.fail("未设置默认公众号");
+        }
         String lock = syncLock.getRemovelock(gzhAccount);
         if (!syncLock.lock(lock)) {
             return Result.fail("正在批量取消中，请稍等...");

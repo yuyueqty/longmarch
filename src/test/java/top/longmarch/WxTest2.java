@@ -1,6 +1,9 @@
 package top.longmarch;
 
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
@@ -13,18 +16,35 @@ import java.util.List;
 
 public class WxTest2 {
 
+    public static void main(String[] args) throws WxErrorException {
+//        WxMpDefaultConfigImpl config = new WxMpDefaultConfigImpl();
+//        config.setAppId("wxaeeab59bae7d0deb");
+//        config.setSecret("0c95e460f74fc1e3c4e56a825c8a385e");
+//        WxMpService wxMpService = new WxMpServiceImpl();
+//        wxMpService.setWxMpConfigStorage(config);
+//
+//        String accessToken = wxMpService.getAccessToken();
+//        String url = "https://mp.weixin.qq.com/cgi-bin/settingpage?t=setting/index&action=index&token="+accessToken+"&lang=zh_CN&f=json";
+//
+//        String s = wxMpService.get(url, null);
+//        System.out.println(s);
 
-    public static void main(String[] args) throws Exception {
+        fun();
+
+
+    }
+
+    public static void fun4() throws Exception {
         fun();
     }
 
     public static void fun() throws WxErrorException {
         WxMpDefaultConfigImpl config = new WxMpDefaultConfigImpl();
-        config.setAppId("wxaeeab59bae7d0deb");
-        config.setSecret("0c95e460f74fc1e3c4e56a825c8a385e");
+        config.setAppId("wxb7f34de8f008212f");
+        config.setSecret("2a91bb6d113d0449c8a8b07db28eac7a");
         WxMpService wxMpService = new WxMpServiceImpl();
         wxMpService.setWxMpConfigStorage(config);
-        WxMpUserList userList = wxMpService.getUserService().userList("oG-Lc1E8kMH--SxsdhJzzcfrT73M");
+        WxMpUserList userList = wxMpService.getUserService().userList(null);
         String nextOpenid = userList.getOpenids().get(userList.getOpenids().size() - 1);
 //        List<String> openidList = (List<String>) userList
 //        System.out.println(openidList);
@@ -35,7 +55,7 @@ public class WxTest2 {
 
     private static void getUser(WxMpService wxMpService, String openid) throws WxErrorException {
         WxMpUser wxMpUser = wxMpService.getUserService().userInfo(openid);
-        System.out.println(wxMpUser.getNickname());
+        System.out.println(JSONUtil.toJsonStr(wxMpUser));
     }
 
 

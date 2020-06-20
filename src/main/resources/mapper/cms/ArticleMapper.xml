@@ -49,5 +49,25 @@
         AND DATE_FORMAT(publish_time,'%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     </update>
 
-
+    <select id="getArticleById" resultType="top.longmarch.cms.entity.Article">
+        SELECT
+            t1.id,
+            t1.title,
+            t1.summary,
+            t1.content,
+            t1.image_url AS imageUrl,
+            t1.category_id AS categoryId,
+            t1.source_url AS sourceUrl,
+            t1.author,
+            t1.publish_time AS publishTime,
+            t1.publish_status AS publishStatus,
+            t1.clicks,
+            t1.likes,
+            t1.sort,
+            t1.recommend,
+            t1.tags,
+            t1.create_time AS createTime,
+            t1.update_time AS updateTime
+        FROM cms_article t1 WHERE id = #{id}
+    </select>
 </mapper>

@@ -32,6 +32,9 @@ public class MybatisPlusConfig {
     static {
         tableList.add("cms_article");
         tableList.add("cms_category");
+        tableList.add("cms_tag");
+        tableList.add("cms_article_tag_rel");
+        tableList.add("test_member");
     }
 
     /**

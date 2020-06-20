@@ -14,6 +14,12 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 1000MB
+  thymeleaf:
+    mode: HTML5
+    encoding: UTF-8
+    content-type: text/html
+    cache: false
+    prefix: classpath:/templates
   datasource:
     druid:
       url: jdbc:mysql://122.51.244.159:3306/longmarch?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true

@@ -1,6 +1,7 @@
 package top.longmarch.wx.controller;
 
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
@@ -16,6 +17,7 @@ import top.longmarch.core.annotation.Log;
 import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.common.Result;
 import top.longmarch.core.utils.LmUtils;
+import top.longmarch.core.utils.UserUtil;
 import top.longmarch.sys.entity.vo.ChangeStatusDTO;
 import top.longmarch.sys.service.IDictionaryService;
 import top.longmarch.wx.entity.GzhAccount;
@@ -71,6 +73,12 @@ public class GzhFenweiTagController {
         return Result.ok().add(gzhFenweiTagService.page(page, wrapper));
     }
 
+    @ApiOperation(value = "获取分维标签")
+    @GetMapping("/getFenweiTags")
+    public Result getFenweiTags() {
+        return Result.ok().add(gzhFenweiTagService.getFenweiTagList());
+    }
+
     @ApiOperation(value = "获取用户标签")
     @GetMapping("/openid/{openId}")
     public Result getUserTagByOpenId(@PathVariable("openId") String openId) {
@@ -114,6 +122,10 @@ public class GzhFenweiTagController {
     @PostMapping("/create")
     public Result create(@Validated @RequestBody GzhFenweiTag gzhFenweiTag) {
         log.info("创建公众号粉丝分维解析标签, 入参：{}", gzhFenweiTag);
+        List<GzhFenweiTag> gzhFenweiTagList = gzhFenweiTagService.getList(gzhFenweiTag);
+        if (CollectionUtil.isNotEmpty(gzhFenweiTagList)) {
+            return Result.fail("规则重复");
+        }
         gzhFenweiTagService.save(gzhFenweiTag);
         return Result.ok().add(gzhFenweiTag);
     }

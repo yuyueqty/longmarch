@@ -28,7 +28,7 @@ public class KickoutSessionControlFilter extends AccessControlFilter {
     //踢出之前登录的/之后登录的用户 默认踢出之前登录的用户
     private boolean kickoutAfter = false;
     //同一个帐号最大会话数 默认1
-    private int maxSession = 1;
+    private int maxSession = 30;
 
     private SessionManager sessionManager;
 

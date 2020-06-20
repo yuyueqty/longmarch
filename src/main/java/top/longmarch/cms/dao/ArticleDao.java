@@ -23,4 +23,6 @@ public interface ArticleDao extends BaseMapper<Article> {
     @SqlParser(filter = true)
     void batchPublishArticles();
 
+    @SqlParser(filter = true)
+    Article getArticleById(Long id);
 }
