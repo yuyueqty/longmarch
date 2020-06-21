@@ -23,7 +23,7 @@ import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.common.Result;
 import top.longmarch.core.enums.StatusEnum;
 import top.longmarch.core.utils.tree.TreeUtil;
-import top.longmarch.sys.entity.vo.ChangeStatusDTO;
+import top.longmarch.sys.entity.dto.ChangeStatusDTO;
 
 import java.util.*;
 import java.util.stream.Collectors;

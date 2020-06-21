@@ -41,14 +41,14 @@ public class CustomRealm extends AuthorizingRealm {
         String username = (String) token.getPrincipal();
         String password = new String((char[]) token.getCredentials());
         if (StrUtil.isBlank(username) || StrUtil.isBlank(password)) {
-            throw new AccountException("用户名密码不能为空");
+            throw new AccountException();
         }
         User user = userIRolePermissionService.getUserByUserName(username);
         if (user == null) {
-            throw new UnknownAccountException("用户不存在");
+            throw new UnknownAccountException();
         }
         if (StatusEnum.NO.getValue() == user.getStatus()) {
-            throw new LockedAccountException("用户已冻结，请联系管理员");
+            throw new LockedAccountException();
         }
         Map<String, Object> map = userIRolePermissionService.getRoleDeptIdsByUserId(user.getId());
         if (CollectionUtil.isEmpty(map)) {

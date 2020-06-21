@@ -8,7 +8,6 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +15,12 @@ import top.longmarch.core.annotation.Log;
 import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.common.Result;
 import top.longmarch.sys.entity.Permission;
-import top.longmarch.sys.entity.vo.ChangeStatusDTO;
+import top.longmarch.sys.entity.dto.ChangeStatusDTO;
+import top.longmarch.sys.entity.dto.CreateUpdatePermissionDTO;
 import top.longmarch.sys.service.IPermissionService;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Map;
 
 /**
  * <p>
@@ -68,30 +69,28 @@ public class PermissionController {
     @PostMapping("/changeStatus")
     public Result changeStatus(@RequestBody ChangeStatusDTO changeStatusDTO) {
         log.info("修改权限状态, 入参：{}", changeStatusDTO);
-        Permission permission = new Permission();
-        BeanUtils.copyProperties(changeStatusDTO, permission);
-        permissionService.updatePermissionById(permission);
-        return Result.ok().add(permission);
+        permissionService.updateById(changeStatusDTO.convertPermission());
+        return Result.ok();
     }
 
     @Log
     @ApiOperation(value = "创建权限信息")
     @RequiresPermissions("sys:permission:create")
     @PostMapping("/create")
-    public Result create(@Validated @RequestBody Permission permission) {
-        log.info("创建权限信息, 入参：{}", permission);
-        permissionService.savePermission(permission);
-        return Result.ok().add(permission);
+    public Result create(@Validated @RequestBody CreateUpdatePermissionDTO createUpdatePermissionDTO) {
+        log.info("创建权限信息, 入参：{}", createUpdatePermissionDTO);
+        permissionService.saveOrUpdate(createUpdatePermissionDTO.convertPermission());
+        return Result.ok().add(createUpdatePermissionDTO);
     }
 
     @Log
     @ApiOperation(value = "更新权限信息")
     @RequiresPermissions("sys:permission:update")
     @PostMapping("/update")
-    public Result update(@Validated @RequestBody Permission permission) {
-        log.info("更新权限信息, 入参：{}", permission);
-        permissionService.updatePermissionById(permission);
-        return Result.ok().add(permission);
+    public Result update(@Validated @RequestBody CreateUpdatePermissionDTO createUpdatePermissionDTO) {
+        log.info("更新权限信息, 入参：{}", createUpdatePermissionDTO);
+        permissionService.saveOrUpdate(createUpdatePermissionDTO.convertPermission());
+        return Result.ok().add(createUpdatePermissionDTO);
     }
 
     @Log
@@ -100,10 +99,6 @@ public class PermissionController {
     @PostMapping("/delete")
     public Result delete(@RequestBody Long[] ids) {
         log.info("删除权限信息, ids={}", ids);
-        List<Permission> permissionList = permissionService.list(new LambdaQueryWrapper<Permission>().eq(Permission::getParentId, ids[0]));
-        if (permissionList != null && permissionList.size() > 0) {
-            return Result.fail("请先删除子分类节点");
-        }
         permissionService.removePermissionByIds(Arrays.asList(ids));
         return Result.ok();
     }
@@ -111,26 +106,7 @@ public class PermissionController {
     @ApiOperation(value = "获取权限父节点集")
     @GetMapping("/getPIds/{id}")
     public Result getPIds(@PathVariable Long id) {
-        List<Long> pIds = new ArrayList<>();
-        Permission permission = permissionService.getById(id);
-        if (permission == null) {
-            Result.ok().add(pIds);
-        }
-        if (permission.getParentId() == 0) {
-            pIds.add(id);
-            Result.ok().add(pIds);
-        }
-        getPidList(pIds, permission);
-        Collections.sort(pIds);
-        return Result.ok().add(pIds);
-    }
-
-    private void getPidList(List<Long> pIds, Permission permission) {
-        if (permission.getParentId() == 0) {
-            return;
-        }
-        pIds.add(permission.getParentId());
-        getPidList(pIds, permissionService.getById(permission.getParentId()));
+        return Result.ok().add(permissionService.getParentIds(id));
     }
 
 }

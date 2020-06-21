@@ -20,8 +20,7 @@ import top.longmarch.core.common.Result;
 import top.longmarch.core.enums.StatusEnum;
 import top.longmarch.core.utils.LmUtils;
 import top.longmarch.sys.entity.Dictionary;
-import top.longmarch.sys.entity.Permission;
-import top.longmarch.sys.entity.vo.ChangeStatusDTO;
+import top.longmarch.sys.entity.dto.ChangeStatusDTO;
 import top.longmarch.sys.service.IDictionaryService;
 
 import java.util.Arrays;

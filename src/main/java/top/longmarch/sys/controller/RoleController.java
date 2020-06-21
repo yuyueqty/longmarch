@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import top.longmarch.core.annotation.Log;
 import top.longmarch.core.common.Result;
 import top.longmarch.sys.entity.Role;
-import top.longmarch.sys.entity.vo.ChangeStatusDTO;
+import top.longmarch.sys.entity.dto.ChangeStatusDTO;
+import top.longmarch.sys.entity.dto.CreateUpdateRoleDTO;
+import top.longmarch.sys.entity.dto.RoleAddUserDTO;
 import top.longmarch.sys.entity.vo.RoleUserDTO;
 import top.longmarch.sys.service.IRoleService;
 
@@ -50,8 +52,7 @@ public class RoleController {
     @RequiresPermissions("sys:role:show")
     @GetMapping("/show/{id}")
     public Result show(@PathVariable("id") Long id) {
-        Role role = roleService.getById(id);
-        return Result.ok().add(role);
+        return Result.ok().add(roleService.getById(id));
     }
 
     @ApiOperation(value = "加载角色下用户")
@@ -69,39 +70,37 @@ public class RoleController {
     @PostMapping("/changeStatus")
     public Result changeStatus(@RequestBody ChangeStatusDTO changeStatusDTO) {
         log.info("修改角色状态, 入参：{}", changeStatusDTO);
-        Role role = new Role();
-        BeanUtils.copyProperties(changeStatusDTO, role);
-        roleService.updateById(role);
-        return Result.ok().add(role);
+        roleService.updateById(changeStatusDTO.convertRole());
+        return Result.ok();
     }
 
     @Log
     @ApiOperation(value = "创建角色信息")
     @RequiresPermissions("sys:role:create")
     @PostMapping("/create")
-    public Result create(@Validated @RequestBody Role role) {
-        log.info("创建角色信息, 入参：{}", role);
-        roleService.saveRole(role);
-        return Result.ok().add(role);
+    public Result create(@Validated @RequestBody CreateUpdateRoleDTO createUpdateRoleDTO) {
+        log.info("创建角色信息, 入参：{}", createUpdateRoleDTO);
+        roleService.saveRole(createUpdateRoleDTO);
+        return Result.ok().add(createUpdateRoleDTO);
     }
 
     @Log
     @ApiOperation(value = "更新角色信息")
     @RequiresPermissions("sys:role:update")
     @PostMapping("/update")
-    public Result update(@Validated @RequestBody Role role) {
-        log.info("更新角色信息, 入参：{}", role);
-        roleService.updateRole(role);
-        return Result.ok().add(role);
+    public Result update(@Validated @RequestBody CreateUpdateRoleDTO createUpdateRoleDTO) {
+        log.info("更新角色信息, 入参：{}", createUpdateRoleDTO);
+        roleService.updateRole(createUpdateRoleDTO);
+        return Result.ok().add(createUpdateRoleDTO);
     }
 
     @Log
     @ApiOperation(value = "添加角色用户")
     @RequiresPermissions("sys:role:update")
     @PostMapping("/addRoleUsers")
-    public Result addRoleUsers(@Validated @RequestBody Role role) {
-        log.info("添加角色用户, roleId={}, checkedKeys={}", role.getId(), role.getCheckedKeys());
-        roleService.addRoleUsers(role);
+    public Result addRoleUsers(@Validated @RequestBody RoleAddUserDTO roleAddUserDTO) {
+        log.info("添加角色用户, roleId={}, checkedKeys={}", roleAddUserDTO.getId(), roleAddUserDTO.getCheckedKeys());
+        roleService.addRoleUsers(roleAddUserDTO);
         return Result.ok();
     }
 

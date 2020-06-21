@@ -47,12 +47,13 @@ public class ShiroAutoConfiguration {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         Map<String, Filter> filterMap = new HashMap<>();
         filterMap.put("cross", new LMPathMatchingFilter());
-        filterMap.put("authc", new LMFormAuthenticationFilter());
+//        filterMap.put("authc", new LMFormAuthenticationFilter());
         KickoutSessionControlFilter kickoutSessionControlFilter = new KickoutSessionControlFilter();
         kickoutSessionControlFilter.setCacheManager(cacheManager);
         kickoutSessionControlFilter.setSessionManager(sessionManager(cacheManager));
         filterMap.put("Kickout", kickoutSessionControlFilter);
         shiroFilterFactoryBean.setFilters(filterMap);
+        shiroFilterFactoryBean.setLoginUrl("/noLogin");
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
         // authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问
@@ -65,7 +66,7 @@ public class ShiroAutoConfiguration {
         filterChainDefinitionMap.put("/login", "anon");
         filterChainDefinitionMap.put("/logout", "cross,anon");
         //对外暴露API接口
-        filterChainDefinitionMap.put("/api/**", "cross,anon");
+        filterChainDefinitionMap.put("/api/**", "anon");
         //主要这行代码必须放在所有权限设置的最后，不然会导致所有 url 都被拦截 剩余的都需要认证
         filterChainDefinitionMap.put("/**", "cross,Kickout,authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);

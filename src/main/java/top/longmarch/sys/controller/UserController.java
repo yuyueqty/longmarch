@@ -7,24 +7,18 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.longmarch.core.annotation.Log;
 import top.longmarch.core.common.Result;
-import top.longmarch.core.utils.PasswordUtil;
-import top.longmarch.core.utils.UserUtil;
-import top.longmarch.sys.entity.Department;
 import top.longmarch.sys.entity.User;
-import top.longmarch.sys.entity.vo.ChangeStatusDTO;
-import top.longmarch.sys.entity.vo.ChangeUserPasswordDTO;
-import top.longmarch.sys.entity.vo.ModifyingPersonalPassword;
-import top.longmarch.sys.service.IDepartmentService;
+import top.longmarch.sys.entity.dto.ChangeStatusDTO;
+import top.longmarch.sys.entity.dto.ChangePasswordDTO;
+import top.longmarch.sys.entity.dto.CreateUpdateUserDTO;
 import top.longmarch.sys.service.IUserService;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -35,7 +29,7 @@ import java.util.Map;
  * @author YuYue
  * @since 2020-01-12
 */
-@Api(value = "用户信息模块", tags = "用户信息模块接口")
+@Api(value = "用户模块", tags = "用户增删改查接口")
 @RestController
 @RequestMapping("/sys/user")
 public class UserController {
@@ -63,13 +57,10 @@ public class UserController {
     @ApiOperation(value="修改用户密码")
     @RequiresPermissions("sys:user:change:password")
     @PostMapping("/changePassword")
-    public Result changePassword(@RequestBody ChangeUserPasswordDTO changeUserPasswordDTO) {
-        log.info("修改用户密码, 入参：{}", changeUserPasswordDTO);
-        User user = new User();
-        changeUserPasswordDTO.setPassword(PasswordUtil.password(changeUserPasswordDTO.getPassword()));
-        BeanUtils.copyProperties(changeUserPasswordDTO, user);
-        userService.updateById(user);
-        return Result.ok().add(user);
+    public Result changePassword(@RequestBody ChangePasswordDTO changePasswordDTO) {
+        log.info("修改用户密码, 入参：{}", changePasswordDTO);
+        userService.changePassword(changePasswordDTO);
+        return Result.ok();
     }
 
     @Log
@@ -78,32 +69,28 @@ public class UserController {
     @PostMapping("/changeStatus")
     public Result changeStatus(@RequestBody ChangeStatusDTO changeStatusDTO) {
         log.info("修改用户状态, 入参：{}", changeStatusDTO);
-        User user = new User();
-        BeanUtils.copyProperties(changeStatusDTO, user);
-        userService.updateById(user);
-        return Result.ok().add(user);
+        userService.changeStatus(changeStatusDTO);
+        return Result.ok();
     }
 
     @Log(noSaveFields = {"password"})
     @ApiOperation(value="创建用户信息")
     @RequiresPermissions("sys:user:create")
     @PostMapping("/create")
-    public Result create(@Validated @RequestBody User user) {
-        log.info("创建用户信息, 入参：{}", user);
-        // 后台创建的用户默认是后台用户
-        user.setUserType(1);
-        userService.saveUser(user);
-        return Result.ok().add(user);
+    public Result create(@Validated @RequestBody CreateUpdateUserDTO createUpdateUserDTO) {
+        log.info("创建用户信息, 入参：{}", createUpdateUserDTO);
+        userService.createUpdateUser(createUpdateUserDTO);
+        return Result.ok().add(createUpdateUserDTO);
     }
 
     @Log(noSaveFields = {"password"})
     @ApiOperation(value="更新用户信息")
     @RequiresPermissions("sys:user:update")
     @PostMapping("/update")
-    public Result update(@Validated @RequestBody User user) {
-        log.info("更新用户信息, 入参：{}", user);
-        userService.updateUser(user);
-        return Result.ok().add(user);
+    public Result update(@Validated @RequestBody CreateUpdateUserDTO createUpdateUserDTO) {
+        log.info("更新用户信息, 入参：{}", createUpdateUserDTO);
+        userService.createUpdateUser(createUpdateUserDTO);
+        return Result.ok().add(createUpdateUserDTO);
     }
 
     @Log

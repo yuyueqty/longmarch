@@ -17,8 +17,7 @@ import top.longmarch.core.common.Constant;
 import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.common.Result;
 import top.longmarch.core.utils.LmUtils;
-import top.longmarch.sys.entity.OperateLog;
-import top.longmarch.sys.entity.vo.ChangeStatusDTO;
+import top.longmarch.sys.entity.dto.ChangeStatusDTO;
 import top.longmarch.test.entity.Member;
 import top.longmarch.test.service.IMemberService;
 

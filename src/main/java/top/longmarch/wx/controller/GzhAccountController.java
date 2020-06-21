@@ -13,18 +13,15 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import top.longmarch.core.common.Constant;
 import top.longmarch.core.annotation.Log;
 import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.common.Result;
-import top.longmarch.core.utils.LmUtils;
 import top.longmarch.core.utils.UserUtil;
-import top.longmarch.sys.entity.vo.ChangeStatusDTO;
+import top.longmarch.sys.entity.dto.ChangeStatusDTO;
 import top.longmarch.wx.entity.GzhAccount;
 import top.longmarch.wx.service.IGzhAccountService;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.web.bind.annotation.RestController;

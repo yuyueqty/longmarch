@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Result exceptionHandler1(MethodArgumentNotValidException e)
+    public Result MethodArgumentNotValidException(MethodArgumentNotValidException e)
             throws JsonProcessingException {
         List<ObjectError> allErrors = e.getBindingResult().getAllErrors();
         StringBuffer sb = new StringBuffer();
@@ -49,7 +49,7 @@ public class GlobalExceptionHandler {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
-    public Result exceptionHandler2(ConstraintViolationException e) {
+    public Result ConstraintViolationException(ConstraintViolationException e) {
         Set<ConstraintViolation<?>> allErrors = e.getConstraintViolations();
         StringBuffer sb = new StringBuffer();
         allErrors.forEach(o -> sb.append(o.getMessage()).append("; "));
@@ -57,13 +57,25 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UnauthorizedException.class)
-    public Result exceptionHandler3(UnauthorizedException e) {
+    public Result UnauthorizedException(UnauthorizedException e) {
         logger.error(e.getMessage());
         return Result.fail(401, "权限不足");
     }
 
+    @ExceptionHandler(LongmarchShiroException.class)
+    public Result LongmarchShiroException(LongmarchShiroException e) {
+        logger.error(e.getMessage());
+        return Result.fail(e.getCode(), e.getMessage());
+    }
+
+    @ExceptionHandler(LongmarchException.class)
+    public Result LongmarchException(LongmarchException e) {
+        logger.error(e.getMessage());
+        return Result.fail(e.getCode(), e.getMessage());
+    }
+
     @ExceptionHandler(Exception.class)
-    public Result exceptionHandler6(Exception e) {
+    public Result Exception(Exception e) {
         logger.error(e.getMessage(), e);
         return Result.fail(e.getMessage());
     }

@@ -18,11 +18,13 @@ import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.exception.LongmarchException;
 import top.longmarch.core.shiro.realm.CustomRealm;
 import top.longmarch.core.utils.PasswordUtil;
-import top.longmarch.core.enums.StatusEnum;
 import top.longmarch.sys.dao.UserDao;
 import top.longmarch.sys.entity.SysParams;
 import top.longmarch.sys.entity.User;
 import top.longmarch.sys.entity.UserRoleRel;
+import top.longmarch.sys.entity.dto.ChangeStatusDTO;
+import top.longmarch.sys.entity.dto.ChangePasswordDTO;
+import top.longmarch.sys.entity.dto.CreateUpdateUserDTO;
 import top.longmarch.sys.service.IParameterService;
 import top.longmarch.sys.service.IUserRoleRelService;
 import top.longmarch.sys.service.IUserService;
@@ -67,9 +69,9 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
     @Transactional
     @Override
     public void saveUser(User user) {
-        User userDB = this.getOne(new LambdaQueryWrapper<User>().eq(User::getStatus, StatusEnum.YES).eq(User::getUsername, user.getUsername()));
+        User userDB = this.getOne(new LambdaQueryWrapper<User>().eq(User::getUsername, user.getUsername()));
         if (userDB != null) {
-            throw new LongmarchException("账号已存在");
+            throw new LongmarchException("用户名已存在");
         }
         if (StrUtil.isBlank(user.getPassword())) {
             user.setPassword(PasswordUtil.defaultPassword());
@@ -106,12 +108,34 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
         userDao.updateUserLoginInfo(userId);
     }
 
-    public void createUserRolesRel(Long userId, List<Long> roleIdList) {
+    @Override
+    public void changePassword(ChangePasswordDTO changePasswordDTO) {
+        this.updateById(changePasswordDTO.convertUser());
+    }
+
+    @Override
+    public void changeStatus(ChangeStatusDTO changeStatusDTO) {
+        this.updateById(changeStatusDTO.convertUser());
+    }
+
+    @Override
+    public void createUpdateUser(CreateUpdateUserDTO createUpdateUserDTO) {
+        User user = createUpdateUserDTO.convertUser();
+        if (user.getId() != null) {
+            this.updateUser(user);
+        } else {
+            // 后台创建的用户默认是后台用户
+            createUpdateUserDTO.setUserType(1);
+            this.saveUser(user);
+        }
+    }
+
+    private void createUserRolesRel(Long userId, List<Long> roleIdList) {
         if (null == roleIdList) {
             return;
         }
         List<UserRoleRel> dbUserRoleRelList = userRoleRelService.list(new LambdaQueryWrapper<UserRoleRel>().eq(UserRoleRel::getUserId, userId));
-        List<UserRoleRel> insertUserRoleRelList = null;
+        List<UserRoleRel> insertUserRoleRelList;
         if (roleIdList.size() == 0) {
             userRoleRelService.remove(new LambdaQueryWrapper<UserRoleRel>().eq(UserRoleRel::getUserId, userId));
             log.info(DELETE_ALL_MESSAGE, userId);

@@ -8,8 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.longmarch.core.common.PageFactory;
@@ -21,6 +19,8 @@ import top.longmarch.sys.entity.Role;
 import top.longmarch.sys.entity.RolePermissionRel;
 import top.longmarch.sys.entity.User;
 import top.longmarch.sys.entity.UserRoleRel;
+import top.longmarch.sys.entity.dto.CreateUpdateRoleDTO;
+import top.longmarch.sys.entity.dto.RoleAddUserDTO;
 import top.longmarch.sys.entity.vo.PermissionTree;
 import top.longmarch.sys.entity.vo.RoleDTO;
 import top.longmarch.sys.entity.vo.RoleUserDTO;
@@ -75,25 +75,24 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements IRole
         return map;
     }
 
-    @CacheEvict(key = "'all_role'")
     @Transactional
     @Override
-    public void updateRole(Role role) {
+    public void updateRole(CreateUpdateRoleDTO createUpdateRoleDTO) {
+        Role role = createUpdateRoleDTO.convertRole();
         this.updateById(role);
         createRolePermissionsRel(role.getId(), role.getCheckedKeys());
         // 清除所有用户权限
         customRealm.clearCache();
     }
 
-    @CacheEvict(key = "'all_role'")
     @Transactional
     @Override
-    public void saveRole(Role role) {
+    public void saveRole(CreateUpdateRoleDTO createUpdateRoleDTO) {
+        Role role = createUpdateRoleDTO.convertRole();
         this.save(role);
         createRolePermissionsRel(role.getId(), role.getCheckedKeys());
     }
 
-    @CacheEvict(key = "'all_role'")
     @Transactional
     @Override
     public void removeRole(List<Long> roleIds) {
@@ -110,14 +109,14 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements IRole
 
     @Transactional
     @Override
-    public void addRoleUsers(Role role) {
+    public void addRoleUsers(RoleAddUserDTO roleAddUserDTO) {
         // 页面选择的用户ID集合
-        List<Long> selectUserIds = role.getCheckedKeys();
+        List<Long> selectUserIds = roleAddUserDTO.getCheckedKeys();
         if (selectUserIds == null || selectUserIds.size() == 0) {
             return;
         }
         List<UserRoleRel> userRoleRelList = userRoleRelService.list(new LambdaQueryWrapper<UserRoleRel>()
-                .eq(UserRoleRel::getRoleId, role.getId()));
+                .eq(UserRoleRel::getRoleId, roleAddUserDTO.getId()));
         List<Long> insertUserIds = null;
         List<Long> deleteUserIds = null;
         if (userRoleRelList == null || userRoleRelList.size() == 0) {
@@ -132,7 +131,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements IRole
         List<Long> clearCacheUserId = new ArrayList<>();
         if (deleteUserIds != null && deleteUserIds.size() > 0) {
             userRoleRelService.remove(new LambdaQueryWrapper<UserRoleRel>()
-                    .eq(UserRoleRel::getRoleId, role.getId()).in(UserRoleRel::getUserId, deleteUserIds));
+                    .eq(UserRoleRel::getRoleId, roleAddUserDTO.getId()).in(UserRoleRel::getUserId, deleteUserIds));
             clearCacheUserId.addAll(deleteUserIds);
         }
 
@@ -140,7 +139,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements IRole
             List<UserRoleRel> insertUserRoleRelList = new ArrayList<>();
             for (Long userId : insertUserIds) {
                 UserRoleRel userRoleRel = new UserRoleRel();
-                userRoleRel.setRoleId(role.getId());
+                userRoleRel.setRoleId(roleAddUserDTO.getId());
                 userRoleRel.setUserId(userId);
                 insertUserRoleRelList.add(userRoleRel);
             }
@@ -158,7 +157,6 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements IRole
         }
     }
 
-    @Cacheable(key = "'all_role'")
     @Override
     public List<RoleDTO> getCacheListMaps() {
         List<RoleDTO> roleDTOList = this.list().stream().map(role -> {

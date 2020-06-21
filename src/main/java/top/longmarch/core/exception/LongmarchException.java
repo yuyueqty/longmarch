@@ -1,7 +1,9 @@
 package top.longmarch.core.exception;
 
+import lombok.Data;
 import top.longmarch.core.common.Result;
 
+@Data
 public class LongmarchException extends RuntimeException {
 
     private Integer code;

@@ -4,16 +4,17 @@ import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import top.longmarch.core.common.Result;
+import top.longmarch.core.exception.LongmarchException;
 import top.longmarch.core.utils.tree.TreeUtil;
 import top.longmarch.sys.dao.PermissionDao;
 import top.longmarch.sys.entity.Permission;
 import top.longmarch.sys.entity.vo.PermissionTree;
 import top.longmarch.sys.service.IPermissionService;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,11 +26,9 @@ import java.util.stream.Collectors;
  * @author YuYue
  * @since 2020-01-12
  */
-@CacheConfig(cacheNames = {"PermissionService"})
 @Service
 public class PermissionServiceImpl extends ServiceImpl<PermissionDao, Permission> implements IPermissionService {
 
-    @Cacheable(key = "'permission_tree'")
     @Override
     public JSONObject getPermissionTree() {
         JSONObject tree = new JSONObject();
@@ -58,23 +57,37 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionDao, Permission
         return tree;
     }
 
-    @CacheEvict(key = "'permission_tree'")
-    @Override
-    public void updatePermissionById(Permission permission) {
-        this.updateById(permission);
-    }
-
-    @CacheEvict(key = "'permission_tree'")
-    @Override
-    public void savePermission(Permission permission) {
-        this.save(permission);
-    }
-
-    @CacheEvict(key = "'permission_tree'")
     @Override
     public void removePermissionByIds(List<Long> ids) {
+        List<Permission> permissionList = this.list(new LambdaQueryWrapper<Permission>().eq(Permission::getParentId, ids.get(0)));
+        if (permissionList != null && permissionList.size() > 0) {
+            throw new LongmarchException("请先删除子分类节点");
+        }
         this.removeByIds(ids);
     }
 
+    @Override
+    public List<Long> getParentIds(Long id) {
+        List<Long> pIds = new ArrayList<>();
+        Permission permission = this.getById(id);
+        if (permission == null) {
+            Result.ok().add(pIds);
+        }
+        if (permission.getParentId() == 0) {
+            pIds.add(id);
+            Result.ok().add(pIds);
+        }
+        getPidList(pIds, permission);
+        Collections.sort(pIds);
+        return pIds;
+    }
+
+    private void getPidList(List<Long> pIds, Permission permission) {
+        if (permission.getParentId() == 0) {
+            return;
+        }
+        pIds.add(permission.getParentId());
+        getPidList(pIds, this.getById(permission.getParentId()));
+    }
 
 }
