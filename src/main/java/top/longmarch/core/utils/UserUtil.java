@@ -22,6 +22,10 @@ public class UserUtil {
         return null;
     }
 
+    public static boolean isLogin() {
+        return getSubject() != null && getSubject().isAuthenticated();
+    }
+
     public static User loginUser() {
         return getSubject() == null ? null : (User) getSubject().getPrincipals().getPrimaryPrincipal();
     }

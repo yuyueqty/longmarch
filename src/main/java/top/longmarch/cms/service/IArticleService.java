@@ -2,8 +2,8 @@ package top.longmarch.cms.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import top.longmarch.cms.entity.Article;
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.longmarch.cms.entity.Article;
 
 import java.util.List;
 import java.util.Map;
@@ -26,5 +26,4 @@ public interface IArticleService extends IService<Article> {
 
     void removeArticleByIds(List<Long> ids);
 
-    Article getArticleById(Long id);
 }

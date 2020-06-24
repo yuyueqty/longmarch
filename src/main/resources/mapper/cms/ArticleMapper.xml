@@ -70,4 +70,5 @@
             t1.update_time AS updateTime
         FROM cms_article t1 WHERE id = #{id}
     </select>
+
 </mapper>

@@ -113,7 +113,7 @@ public class MybatisPlusConfig {
             @Override
             public boolean doTableFilter(String tableName) {
                 // 这里可以判断是否过滤表
-                if (tableList.contains(tableName) && !Constant.All_USER.equals(UserUtil.loginUser().getType())) {
+                if (UserUtil.isLogin() && tableList.contains(tableName) && !Constant.All_USER.equals(UserUtil.loginUser().getType())) {
                     return false;
                 }
                 return true;

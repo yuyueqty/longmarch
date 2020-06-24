@@ -1,5 +1,7 @@
 package top.longmarch;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
@@ -11,16 +13,7 @@ import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TimeZone;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-
-import sun.misc.BASE64Encoder;
+import java.util.*;
 
 
 class Demo {
@@ -31,7 +24,7 @@ class Demo {
         Key sKey = new SecretKeySpec(secretKey.getBytes("UTF-8"), mac.getAlgorithm());
         mac.init(sKey);
         byte[] hash = mac.doFinal(signStr.getBytes("UTF-8"));
-        String sig = new BASE64Encoder().encode(hash);
+        String sig = "123";
 
         String auth = "hmac id=\"" + secretId + "\", algorithm=\"hmac-sha1\", headers=\"x-date x-source\", signature=\"" + sig + "\"";
         return auth;

@@ -27,12 +27,7 @@ public class AutoFillMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
         String simpleName = metaObject.getOriginalObject().getClass().getSimpleName();
-        Subject subject = null;
-        try {
-            subject = SecurityUtils.getSubject();
-        } catch (Exception e) {
-        }
-        if (subject != null && subject.isAuthenticated() && !tableList.contains(simpleName)) {
+        if (UserUtil.isLogin() && !tableList.contains(simpleName)) {
             logger.info("start insert fill ....");
             this.strictInsertFill(metaObject, "createBy", Long.class, UserUtil.loginUser().getId());
             this.strictInsertFill(metaObject, "createTime", Date.class, new Date());
@@ -42,12 +37,7 @@ public class AutoFillMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void updateFill(MetaObject metaObject) {
         String simpleName = metaObject.getOriginalObject().getClass().getSimpleName();
-        Subject subject = null;
-        try {
-            subject = SecurityUtils.getSubject();
-        } catch (Exception e) {
-        }
-        if (subject != null && subject.isAuthenticated() && !tableList.contains(simpleName)) {
+        if (UserUtil.isLogin() && !tableList.contains(simpleName)) {
             logger.info("start update fill ....");
             this.strictUpdateFill(metaObject, "updateBy", Long.class, UserUtil.loginUser().getId());
             this.strictUpdateFill(metaObject, "updateTime", Date.class, new Date());

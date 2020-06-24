@@ -12,6 +12,7 @@ import org.apache.commons.beanutils.ConvertUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.longmarch.cms.dao.ArticleDao;
 import top.longmarch.cms.dao.TagDao;
 import top.longmarch.cms.entity.Article;
 import top.longmarch.cms.entity.ArticleTagRel;
@@ -39,6 +40,8 @@ public class TagServiceImpl extends ServiceImpl<TagDao, Tag> implements ITagServ
 
     @Autowired
     private IArticleTagRelService articleTagRelService;
+    @Autowired
+    private ArticleDao articleDao;
 
     @Transactional
     @Override
@@ -172,11 +175,10 @@ public class TagServiceImpl extends ServiceImpl<TagDao, Tag> implements ITagServ
         if (StrUtil.isBlank(tagIdStr)) {
             return null;
         }
-        String[] split = tagIdStr.split(",|，|\\|");
-        Long[] tagIds = (Long[]) ConvertUtils.convert(split, Long.class);
-        List<Tag> tagList = this.list(new LambdaQueryWrapper<Tag>().in(Tag::getId, tagIds));
-        List<String> tagNames = tagList.stream().map(Tag::getTagName).collect(Collectors.toList());
-        return CollectionUtil.join(tagNames, ",");
+        String[] split = tagIdStr.split(",");
+        List<Tag> list = this.list(new LambdaQueryWrapper<Tag>().in(Tag::getId, Arrays.asList(split)));
+        List<String> collect = list.stream().map(Tag::getTagName).collect(Collectors.toList());
+        return String.join(",", collect);
     }
 
 }

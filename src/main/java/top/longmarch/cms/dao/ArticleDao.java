@@ -1,11 +1,13 @@
 package top.longmarch.cms.dao;
 
 import com.baomidou.mybatisplus.annotation.SqlParser;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.ibatis.annotations.Param;
 import top.longmarch.cms.entity.Article;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,6 +25,4 @@ public interface ArticleDao extends BaseMapper<Article> {
     @SqlParser(filter = true)
     void batchPublishArticles();
 
-    @SqlParser(filter = true)
-    Article getArticleById(Long id);
 }
