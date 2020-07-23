@@ -60,6 +60,7 @@ public class ShiroAutoConfiguration {
         filterChainDefinitionMap.put("/doc.html", "anon");
         filterChainDefinitionMap.put("/static/**", "anon");
         filterChainDefinitionMap.put("/css/**", "anon");
+        filterChainDefinitionMap.put("/douyin/callback", "anon");
         filterChainDefinitionMap.put("/mavon-editor.js", "anon");
         filterChainDefinitionMap.put("/webjars/**", "anon");
         filterChainDefinitionMap.put("/swagger-resources/**", "anon");
