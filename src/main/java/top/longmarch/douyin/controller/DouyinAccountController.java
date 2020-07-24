@@ -1,11 +1,11 @@
 package top.longmarch.douyin.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.longmarch.core.common.Result;
 import top.longmarch.douyin.service.DouyinAccountService;
+
+import javax.annotation.PostConstruct;
 
 @RestController
 @RequestMapping("/douyin")
@@ -19,4 +19,9 @@ public class DouyinAccountController {
         return Result.ok().add(douyinAccountService.list());
     }
 
+    @PostMapping("/setDefault/{openId}")
+    public Result setDefault(@PathVariable String openId) {
+        douyinAccountService.setDefault(openId);
+        return Result.ok();
+    }
 }

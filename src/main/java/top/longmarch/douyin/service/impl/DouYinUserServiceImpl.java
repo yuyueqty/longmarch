@@ -7,9 +7,9 @@ import com.douyin.open.client.UserInfoApi;
 import com.douyin.open.model.FansListResponse;
 import com.douyin.open.model.FollowingListResponse;
 import com.douyin.open.model.OauthUserinfoResponse;
-import me.zhyd.oauth.model.AuthToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import top.longmarch.core.utils.TokenUtil;
 import top.longmarch.douyin.service.AuthRequestService;
 import top.longmarch.douyin.service.DouYinUserService;
 
@@ -20,24 +20,21 @@ public class DouYinUserServiceImpl implements DouYinUserService {
     private AuthRequestService authRequestService;
 
     @Override
-    public OauthUserinfoResponse getOauthUserinfo(String token) throws ApiException {
-        AuthToken authToken = authRequestService.getAuthToken(token);
+    public OauthUserinfoResponse getOauthUserinfo() throws ApiException {
         UserInfoApi apiInstance = new UserInfoApi();
-        return apiInstance.oauthUserinfoGet(authToken.getAccessToken(), authToken.getOpenId());
+        return apiInstance.oauthUserinfoGet(TokenUtil.openId(), TokenUtil.accessToken());
     }
 
     @Override
-    public FansListResponse getFansList(String token, Integer count, Long cursor) throws ApiException {
-        AuthToken authToken = authRequestService.getAuthToken(token);
+    public FansListResponse getFansList(Integer count, Long cursor) throws ApiException {
         FansListApi apiInstance = new FansListApi();
-        return apiInstance.fansListGet(authToken.getOpenId(), authToken.getAccessToken(), count, cursor);
+        return apiInstance.fansListGet(TokenUtil.openId(), TokenUtil.accessToken(), count, cursor);
     }
 
     @Override
-    public FollowingListResponse getFollowingList(String token, Integer count, Long cursor) throws ApiException {
-        AuthToken authToken = authRequestService.getAuthToken(token);
+    public FollowingListResponse getFollowingList(Integer count, Long cursor) throws ApiException {
         FollowingListApi apiInstance = new FollowingListApi();
-        return apiInstance.followingListGet(authToken.getOpenId(), authToken.getAccessToken(), count, cursor);
+        return apiInstance.followingListGet(TokenUtil.openId(), TokenUtil.accessToken(), count, cursor);
     }
 
 }

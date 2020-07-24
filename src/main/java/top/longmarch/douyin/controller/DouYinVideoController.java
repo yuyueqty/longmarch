@@ -26,13 +26,13 @@ public class DouYinVideoController {
     private DouYinVideoService douYinVideoService;
 
     @PostMapping("/videoUpload")
-    public Object videoUpload(@RequestParam String token, MultipartFile file) {
+    public Object videoUpload(MultipartFile file) {
         VideoUploadResponse response = new VideoUploadResponse();
         try {
             String file_name = MD5.create().digestHex(file.getOriginalFilename());
             String file_suffix = file.getOriginalFilename().substring(file.getOriginalFilename().indexOf(".") + 1);
             File video = FileUtil.writeBytes(file.getBytes(), new File(file_name + "." + file_suffix));
-            response = douYinVideoService.videoUpload(token, video);
+            response = douYinVideoService.videoUpload(video);
         } catch (Exception e) {
             log.error("上传视频文件失败：{}", e);
         }
@@ -40,10 +40,10 @@ public class DouYinVideoController {
     }
 
     @PostMapping("/videoCreate")
-    public Object videoCreate(@RequestParam String token, VideoCreateBody body) {
+    public Object videoCreate(VideoCreateBody body) {
         VideoCreateResponse response = new VideoCreateResponse();
         try {
-            response = douYinVideoService.videoCreate(token, body);
+            response = douYinVideoService.videoCreate(body);
         } catch (ApiException e) {
             log.error("发布抖音视频失败：{}", e);
         }
@@ -51,10 +51,10 @@ public class DouYinVideoController {
     }
 
     @GetMapping("/videoList")
-    public Object videoList(@RequestParam String token, @RequestParam Integer count, @RequestParam Long cursor) {
+    public Object videoList(@RequestParam Integer count, @RequestParam Long cursor) {
         VideoListResponse response = new VideoListResponse();
         try {
-            response = douYinVideoService.videoList(token, count, cursor);
+            response = douYinVideoService.videoList(count, cursor);
         } catch (ApiException e) {
             log.error("获取抖音视频列表失败：{}", e);
         }
@@ -62,10 +62,10 @@ public class DouYinVideoController {
     }
 
     @PostMapping("/videoDelete")
-    public Object videoDelete(@RequestParam String token, VideoDeleteBody body) {
+    public Object videoDelete(VideoDeleteBody body) {
         VideoDeleteResponse response = new VideoDeleteResponse();
         try {
-            response = douYinVideoService.videoDelete(token, body);
+            response = douYinVideoService.videoDelete(body);
         } catch (ApiException e) {
             log.error("删除抖音视频失败：itemId={}, error={}", body.getItemId(), e);
         }

@@ -17,9 +17,9 @@ public class DouYinVideoReportDataController {
     private DouYinVideoReportDataService douYinVideoReportDataService;
 
     @GetMapping("/dataExternalItemBaseGet")
-    public Object dataExternalItemBaseGet(@RequestParam String token, @RequestParam String itemId) {
+    public Object dataExternalItemBaseGet(@RequestParam String itemId) {
         try {
-            return douYinVideoReportDataService.dataExternalItemBaseGet(token, itemId);
+            return douYinVideoReportDataService.dataExternalItemBaseGet(itemId);
         } catch (ApiException e) {
             e.printStackTrace();
             return null;
@@ -27,9 +27,9 @@ public class DouYinVideoReportDataController {
     }
 
     @GetMapping("/dataExternalItemCommentGet")
-    public Object dataExternalItemCommentGet(@RequestParam String token, @RequestParam String itemId, @RequestParam Integer dateType) {
+    public Object dataExternalItemCommentGet(@RequestParam String itemId, @RequestParam Integer dateType) {
         try {
-            return douYinVideoReportDataService.dataExternalItemCommentGet(token, itemId, dateType);
+            return douYinVideoReportDataService.dataExternalItemCommentGet(itemId, dateType);
         } catch (ApiException e) {
             e.printStackTrace();
             return null;
@@ -37,9 +37,9 @@ public class DouYinVideoReportDataController {
     }
 
     @GetMapping("/dataExternalItemLikeGet")
-    public Object dataExternalItemLikeGet(@RequestParam String token, @RequestParam String itemId, @RequestParam Integer dateType) {
+    public Object dataExternalItemLikeGet(@RequestParam String itemId, @RequestParam Integer dateType) {
         try {
-            return douYinVideoReportDataService.dataExternalItemLikeGet(token, itemId, dateType);
+            return douYinVideoReportDataService.dataExternalItemLikeGet(itemId, dateType);
         } catch (ApiException e) {
             e.printStackTrace();
             return null;
@@ -47,9 +47,9 @@ public class DouYinVideoReportDataController {
     }
 
     @GetMapping("/dataExternalItemPlayGet")
-    public Object dataExternalItemPlayGet(@RequestParam String token, @RequestParam String itemId, @RequestParam Integer dateType) {
+    public Object dataExternalItemPlayGet(@RequestParam String itemId, @RequestParam Integer dateType) {
         try {
-            return douYinVideoReportDataService.dataExternalItemPlayGet(token, itemId, dateType);
+            return douYinVideoReportDataService.dataExternalItemPlayGet(itemId, dateType);
         } catch (ApiException e) {
             e.printStackTrace();
             return null;
@@ -57,9 +57,9 @@ public class DouYinVideoReportDataController {
     }
 
     @GetMapping("/dataExternalItemShareGet")
-    public Object dataExternalItemShareGet(@RequestParam String token, @RequestParam String itemId, @RequestParam Integer dateType) {
+    public Object dataExternalItemShareGet(@RequestParam String itemId, @RequestParam Integer dateType) {
         try {
-            return douYinVideoReportDataService.dataExternalItemShareGet(token, itemId, dateType);
+            return douYinVideoReportDataService.dataExternalItemShareGet(itemId, dateType);
         } catch (ApiException e) {
             e.printStackTrace();
             return null;

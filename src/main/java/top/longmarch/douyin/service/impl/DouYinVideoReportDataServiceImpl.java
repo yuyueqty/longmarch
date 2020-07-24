@@ -3,9 +3,9 @@ package top.longmarch.douyin.service.impl;
 import com.douyin.open.ApiException;
 import com.douyin.open.client.DataExternalItemApi;
 import com.douyin.open.model.*;
-import me.zhyd.oauth.model.AuthToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import top.longmarch.core.utils.TokenUtil;
 import top.longmarch.douyin.service.AuthRequestService;
 import top.longmarch.douyin.service.DouYinVideoReportDataService;
 
@@ -16,38 +16,33 @@ public class DouYinVideoReportDataServiceImpl implements DouYinVideoReportDataSe
     private AuthRequestService authRequestService;
 
     @Override
-    public DataExternalItemBaseResponse dataExternalItemBaseGet(String token, String itemId) throws ApiException {
-        AuthToken authToken = authRequestService.getAuthToken(token);
+    public DataExternalItemBaseResponse dataExternalItemBaseGet(String itemId) throws ApiException {
         DataExternalItemApi apiInstance = new DataExternalItemApi();
-        return apiInstance.dataExternalItemBaseGet(authToken.getOpenId(), authToken.getAccessToken(), itemId);
+        return apiInstance.dataExternalItemBaseGet(TokenUtil.openId(), TokenUtil.accessToken(), itemId);
     }
 
     @Override
-    public DataExternalItemLikeResponse dataExternalItemLikeGet(String token, String itemId, Integer dateType) throws ApiException {
-        AuthToken authToken = authRequestService.getAuthToken(token);
+    public DataExternalItemLikeResponse dataExternalItemLikeGet(String itemId, Integer dateType) throws ApiException {
         DataExternalItemApi apiInstance = new DataExternalItemApi();
-        return apiInstance.dataExternalItemLikeGet(authToken.getOpenId(), authToken.getAccessToken(), itemId, dateType);
+        return apiInstance.dataExternalItemLikeGet(TokenUtil.openId(), TokenUtil.accessToken(), itemId, dateType);
     }
 
     @Override
-    public DataExternalItemCommentResponse dataExternalItemCommentGet(String token, String itemId, Integer dateType) throws ApiException {
-        AuthToken authToken = authRequestService.getAuthToken(token);
+    public DataExternalItemCommentResponse dataExternalItemCommentGet(String itemId, Integer dateType) throws ApiException {
         DataExternalItemApi apiInstance = new DataExternalItemApi();
-        return apiInstance.dataExternalItemCommentGet(authToken.getOpenId(), authToken.getAccessToken(), itemId, dateType);
+        return apiInstance.dataExternalItemCommentGet(TokenUtil.openId(), TokenUtil.accessToken(), itemId, dateType);
     }
 
     @Override
-    public DataExternalItemPlayResponse dataExternalItemPlayGet(String token, String itemId, Integer dateType) throws ApiException {
-        AuthToken authToken = authRequestService.getAuthToken(token);
+    public DataExternalItemPlayResponse dataExternalItemPlayGet(String itemId, Integer dateType) throws ApiException {
         DataExternalItemApi apiInstance = new DataExternalItemApi();
-        return apiInstance.dataExternalItemPlayGet(authToken.getOpenId(), authToken.getAccessToken(), itemId, dateType);
+        return apiInstance.dataExternalItemPlayGet(TokenUtil.openId(), TokenUtil.accessToken(), itemId, dateType);
     }
 
     @Override
-    public DataExternalItemShareResponse dataExternalItemShareGet(String token, String itemId, Integer dateType) throws ApiException {
-        AuthToken authToken = authRequestService.getAuthToken(token);
+    public DataExternalItemShareResponse dataExternalItemShareGet(String itemId, Integer dateType) throws ApiException {
         DataExternalItemApi apiInstance = new DataExternalItemApi();
-        return apiInstance.dataExternalItemShareGet(authToken.getOpenId(), authToken.getAccessToken(), itemId, dateType);
+        return apiInstance.dataExternalItemShareGet(TokenUtil.openId(), TokenUtil.accessToken(), itemId, dateType);
     }
 
 }

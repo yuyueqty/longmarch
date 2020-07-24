@@ -22,6 +22,10 @@ public class UserUtil {
         return null;
     }
 
+    public static String sessionId() {
+        return getSubject() == null ? null : getSubject().getSession().getId().toString();
+    }
+
     public static boolean isLogin() {
         return getSubject() != null && getSubject().isAuthenticated();
     }

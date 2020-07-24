@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.longmarch.core.utils.TokenUtil;
 import top.longmarch.douyin.service.DouYinHotsearchService;
 
 /**
@@ -18,9 +19,9 @@ public class DouYinHotsearchController {
 
 
     @GetMapping("/hotsearchSentencesGet")
-    public Object hotsearchSentencesGet(@RequestParam String token) {
+    public Object hotsearchSentencesGet() {
         try {
-            return douYinHotsearchService.hotsearchSentencesGet(token);
+            return douYinHotsearchService.hotsearchSentencesGet();
         } catch (ApiException e) {
             e.printStackTrace();
             return null;
@@ -28,9 +29,9 @@ public class DouYinHotsearchController {
     }
 
     @GetMapping("/hotsearchTrendingSentencesGet")
-    public Object hotsearchTrendingSentencesGet(@RequestParam String token, @RequestParam Integer count, @RequestParam Long cursor) {
+    public Object hotsearchTrendingSentencesGet(@RequestParam Integer count, @RequestParam Long cursor) {
         try {
-            return douYinHotsearchService.hotsearchTrendingSentencesGet(token, count, cursor);
+            return douYinHotsearchService.hotsearchTrendingSentencesGet(count, cursor);
         } catch (ApiException e) {
             e.printStackTrace();
             return null;
@@ -38,9 +39,9 @@ public class DouYinHotsearchController {
     }
 
     @GetMapping("/hotsearchVideosGet")
-    public Object hotsearchVideosGet(@RequestParam String token, @RequestParam String hotSentence) {
+    public Object hotsearchVideosGet(@RequestParam String hotSentence) {
         try {
-            return douYinHotsearchService.hotsearchVideosGet(token, hotSentence);
+            return douYinHotsearchService.hotsearchVideosGet(hotSentence);
         } catch (ApiException e) {
             e.printStackTrace();
             return null;

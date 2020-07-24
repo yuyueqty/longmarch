@@ -3,8 +3,8 @@ package top.longmarch.douyin.controller;
 import com.douyin.open.ApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.longmarch.core.utils.TokenUtil;
 import top.longmarch.douyin.service.DouYinUserFansPortraitService;
 
 /**
@@ -18,9 +18,9 @@ public class DouYinUserFansPortraitController {
     private DouYinUserFansPortraitService douYinUserFansPortraitService;
 
     @GetMapping("/fansDataGet")
-    public Object fansDataGet(@RequestParam String token) {
+    public Object fansDataGet() {
         try {
-            return douYinUserFansPortraitService.fansDataGet(token);
+            return douYinUserFansPortraitService.fansDataGet();
         } catch (ApiException e) {
             e.printStackTrace();
             return null;

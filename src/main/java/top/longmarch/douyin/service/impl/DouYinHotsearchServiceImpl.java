@@ -5,9 +5,9 @@ import com.douyin.open.client.HotsearchApi;
 import com.douyin.open.model.HotsearchSentencesResponse;
 import com.douyin.open.model.HotsearchTrendingSentencesResponse;
 import com.douyin.open.model.HotsearchVideosResponse;
-import me.zhyd.oauth.model.AuthToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import top.longmarch.core.utils.TokenUtil;
 import top.longmarch.douyin.service.AuthRequestService;
 import top.longmarch.douyin.service.DouYinHotsearchService;
 
@@ -18,24 +18,21 @@ public class DouYinHotsearchServiceImpl implements DouYinHotsearchService {
     private AuthRequestService authRequestService;
 
     @Override
-    public HotsearchSentencesResponse hotsearchSentencesGet(String token) throws ApiException {
-        AuthToken authToken = authRequestService.getAuthToken(token);
+    public HotsearchSentencesResponse hotsearchSentencesGet() throws ApiException {
         HotsearchApi apiInstance = new HotsearchApi();
-        return apiInstance.hotsearchSentencesGet(authToken.getAccessToken());
+        return apiInstance.hotsearchSentencesGet(TokenUtil.accessToken());
     }
 
     @Override
-    public HotsearchTrendingSentencesResponse hotsearchTrendingSentencesGet(String token, Integer count, Long cursor) throws ApiException {
-        AuthToken authToken = authRequestService.getAuthToken(token);
+    public HotsearchTrendingSentencesResponse hotsearchTrendingSentencesGet(Integer count, Long cursor) throws ApiException {
         HotsearchApi apiInstance = new HotsearchApi();
-        return apiInstance.hotsearchTrendingSentencesGet(authToken.getAccessToken(), count, cursor);
+        return apiInstance.hotsearchTrendingSentencesGet(TokenUtil.accessToken(), count, cursor);
     }
 
     @Override
-    public HotsearchVideosResponse hotsearchVideosGet(String token, String hotSentence) throws ApiException {
-        AuthToken authToken = authRequestService.getAuthToken(token);
+    public HotsearchVideosResponse hotsearchVideosGet(String hotSentence) throws ApiException {
         HotsearchApi apiInstance = new HotsearchApi();
-        return apiInstance.hotsearchVideosGet(authToken.getAccessToken(), hotSentence);
+        return apiInstance.hotsearchVideosGet(TokenUtil.accessToken(), hotSentence);
     }
 
 }

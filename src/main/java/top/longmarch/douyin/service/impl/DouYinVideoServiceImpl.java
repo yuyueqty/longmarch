@@ -3,9 +3,9 @@ package top.longmarch.douyin.service.impl;
 import com.douyin.open.ApiException;
 import com.douyin.open.client.*;
 import com.douyin.open.model.*;
-import me.zhyd.oauth.model.AuthToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import top.longmarch.core.utils.TokenUtil;
 import top.longmarch.douyin.service.AuthRequestService;
 import top.longmarch.douyin.service.DouYinVideoService;
 
@@ -18,45 +18,39 @@ public class DouYinVideoServiceImpl implements DouYinVideoService {
     private AuthRequestService authRequestService;
 
     @Override
-    public VideoCreateResponse videoCreate(String token, VideoCreateBody body) throws ApiException {
-        AuthToken authToken = authRequestService.getAuthToken(token);
+    public VideoCreateResponse videoCreate(VideoCreateBody body) throws ApiException {
         VideoPublishApi apiInstance = new VideoPublishApi();
-        return apiInstance.videoCreatePost(authToken.getOpenId(), authToken.getAccessToken(), body);
+        return apiInstance.videoCreatePost(TokenUtil.openId(), TokenUtil.accessToken(), body);
     }
 
     @Override
-    public VideoDeleteResponse videoDelete(String token, VideoDeleteBody body) throws ApiException {
-        AuthToken authToken = authRequestService.getAuthToken(token);
+    public VideoDeleteResponse videoDelete(VideoDeleteBody body) throws ApiException {
         VideoDeleteApi apiInstance = new VideoDeleteApi();
-        return apiInstance.videoDeletePost(authToken.getOpenId(), authToken.getAccessToken(), body);
+        return apiInstance.videoDeletePost(TokenUtil.openId(), TokenUtil.accessToken(), body);
     }
 
     @Override
-    public ImageCreateResponse imageCreate(String token, ImageCreateBody body) throws ApiException {
-        AuthToken authToken = authRequestService.getAuthToken(token);
+    public ImageCreateResponse imageCreate(ImageCreateBody body) throws ApiException {
         ImageApi apiInstance = new ImageApi();
-        return apiInstance.imageCreatePost(authToken.getOpenId(), authToken.getAccessToken(), body);
+        return apiInstance.imageCreatePost(TokenUtil.openId(), TokenUtil.accessToken(), body);
     }
 
     @Override
-    public VideoListResponse videoList(String token, Integer count, Long cursor) throws ApiException {
-        AuthToken authToken = authRequestService.getAuthToken(token);
+    public VideoListResponse videoList(Integer count, Long cursor) throws ApiException {
         VideoListApi apiInstance = new VideoListApi();
-        return apiInstance.videoListGet(authToken.getOpenId(), authToken.getAccessToken(), count, cursor);
+        return apiInstance.videoListGet(TokenUtil.openId(), TokenUtil.accessToken(), count, cursor);
     }
 
     @Override
-    public VideoDataResponse videoData(String token, VideoDataBody body) throws ApiException {
-        AuthToken authToken = authRequestService.getAuthToken(token);
+    public VideoDataResponse videoData(VideoDataBody body) throws ApiException {
         VideoDataApi apiInstance = new VideoDataApi();
-        return apiInstance.videoDataPost(body, authToken.getOpenId(), authToken.getAccessToken());
+        return apiInstance.videoDataPost(body, TokenUtil.openId(), TokenUtil.accessToken());
     }
 
     @Override
-    public VideoUploadResponse videoUpload(String token, File video) throws ApiException {
-        AuthToken authToken = authRequestService.getAuthToken(token);
+    public VideoUploadResponse videoUpload(File video) throws ApiException {
         VideoPublishApi apiInstance = new VideoPublishApi();
-        VideoUploadResponse videoUploadResponse = apiInstance.videoUploadPost(video, authToken.getOpenId(), authToken.getAccessToken());
+        VideoUploadResponse videoUploadResponse = apiInstance.videoUploadPost(video, TokenUtil.openId(), TokenUtil.accessToken());
         return videoUploadResponse;
     }
 

@@ -10,7 +10,7 @@ public interface DouYinVideoReportDataService {
      * @param itemId
      * @return
      */
-    DataExternalItemBaseResponse dataExternalItemBaseGet(String token, String itemId) throws ApiException;
+    DataExternalItemBaseResponse dataExternalItemBaseGet(String itemId) throws ApiException;
 
     /**
      * 获取视频点赞数据
@@ -18,7 +18,7 @@ public interface DouYinVideoReportDataService {
      * @param dateType
      * @return
      */
-    DataExternalItemLikeResponse dataExternalItemLikeGet(String token, String itemId, Integer dateType) throws ApiException;
+    DataExternalItemLikeResponse dataExternalItemLikeGet(String itemId, Integer dateType) throws ApiException;
 
     /**
      * 获取视频评论数据
@@ -26,7 +26,7 @@ public interface DouYinVideoReportDataService {
      * @param dateType
      * @return
      */
-    DataExternalItemCommentResponse dataExternalItemCommentGet(String token, String itemId, Integer dateType) throws ApiException;
+    DataExternalItemCommentResponse dataExternalItemCommentGet(String itemId, Integer dateType) throws ApiException;
 
     /**
      * 获取视频播放数据
@@ -34,7 +34,7 @@ public interface DouYinVideoReportDataService {
      * @param dateType
      * @return
      */
-    DataExternalItemPlayResponse dataExternalItemPlayGet(String token, String itemId, Integer dateType) throws ApiException;
+    DataExternalItemPlayResponse dataExternalItemPlayGet(String itemId, Integer dateType) throws ApiException;
 
     /**
      * 获取视频分享数据
@@ -42,6 +42,6 @@ public interface DouYinVideoReportDataService {
      * @param dateType
      * @return
      */
-    DataExternalItemShareResponse dataExternalItemShareGet(String token, String itemId, Integer dateType) throws ApiException;
+    DataExternalItemShareResponse dataExternalItemShareGet(String itemId, Integer dateType) throws ApiException;
 
 }

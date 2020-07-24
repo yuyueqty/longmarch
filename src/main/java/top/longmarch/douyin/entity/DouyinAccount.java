@@ -1,8 +1,13 @@
 package top.longmarch.douyin.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import java.util.Date;
 
 @Data
 @TableName("douyin_account")
@@ -34,5 +39,14 @@ public class DouyinAccount {
     private Integer profileNum;
     private Integer videoNum;
     private Integer videoPlayNum;
+    private Integer defaultAccount;
+    @TableField(value = "create_by", fill = FieldFill.INSERT)
+    private Long createBy;
+    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    private Date createTime;
+    @TableField(value = "update_by", fill = FieldFill.UPDATE)
+    private Long updateBy;
+    @TableField(value = "update_time", fill = FieldFill.UPDATE)
+    private Date updateTime;
 
 }

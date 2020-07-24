@@ -11,19 +11,17 @@ import me.zhyd.oauth.utils.AuthStateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import top.longmarch.core.utils.TokenUtil;
 import top.longmarch.douyin.entity.DouyinAccount;
 import top.longmarch.douyin.request.AuthRequestFactory;
 import top.longmarch.douyin.service.AuthRequestService;
 import top.longmarch.douyin.service.DouyinAccountService;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class AuthRequestServiceImpl implements AuthRequestService {
 
-    //    @Value(value = "${tiaoyue.auth.webUri}")
-    private String webUrl = "http://localhost:9528/auth-redirect";
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
@@ -38,12 +36,9 @@ public class AuthRequestServiceImpl implements AuthRequestService {
     public String callbackUrl(HttpServletResponse response, AuthCallback authCallback, String source) {
         AuthResponse authResponse = AuthRequestFactory.getAuthRequest(source).login(authCallback);
         if (authResponse != null && authResponse.ok()) {
-            String token = AuthStateUtils.createState();
             AuthUser authUser = (AuthUser) authResponse.getData();
-            saveToken(token, authUser);
-//            CookieUtil.addCookie(response, "token", token, 0);
-            System.out.println(JSONUtil.toJsonStr(authUser));
-            return "http://localhost:9527/douyin/account";
+            saveToken(authUser);
+            return "https://tiaoyue.longmarch.top/douyin/account";
         } else {
             System.out.println("授权失败");
             return "http://127.0.0.1:8081";
@@ -80,10 +75,9 @@ public class AuthRequestServiceImpl implements AuthRequestService {
         return authResponse;
     }
 
-    private void saveToken(String token, AuthUser authUser) {
-        stringRedisTemplate.opsForValue().set(token, JSONUtil.toJsonStr(authUser), 24, TimeUnit.HOURS);
-//        douyinAccountService.saveOrUpdateDouyinAccount(token);
+    private void saveToken(AuthUser authUser) {
         douyinAccountService.saveOrUpdate(convert(authUser));
+        TokenUtil.set(authUser.getToken());
     }
 
     private DouyinAccount convert(AuthUser authUser) {

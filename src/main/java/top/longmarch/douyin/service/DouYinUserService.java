@@ -12,19 +12,19 @@ public interface DouYinUserService {
      *
      * @return
      */
-    OauthUserinfoResponse getOauthUserinfo(String token) throws ApiException;
+    OauthUserinfoResponse getOauthUserinfo() throws ApiException;
 
     /**
      * 获取粉丝列表
      *
      * @return
      */
-    FansListResponse getFansList(String token, Integer count, Long cursor) throws ApiException;
+    FansListResponse getFansList(Integer count, Long cursor) throws ApiException;
 
     /**
      * 获取关注列表
      *
      * @return
      */
-    FollowingListResponse getFollowingList(String token, Integer count, Long cursor) throws ApiException;
+    FollowingListResponse getFollowingList(Integer count, Long cursor) throws ApiException;
 }

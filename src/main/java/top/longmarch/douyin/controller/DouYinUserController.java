@@ -2,13 +2,18 @@ package top.longmarch.douyin.controller;
 
 import com.douyin.open.ApiException;
 import com.douyin.open.model.FansListResponse;
+import com.douyin.open.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.longmarch.core.common.Result;
+import top.longmarch.core.utils.TokenUtil;
 import top.longmarch.douyin.service.DouYinUserService;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,9 +27,9 @@ public class DouYinUserController {
     private DouYinUserService douYinUserService;
 
     @GetMapping("/getOauthUserinfo")
-    public Object getOauthUserinfo(@RequestParam String token) {
+    public Object getOauthUserinfo() {
         try {
-            return douYinUserService.getOauthUserinfo(token);
+            return douYinUserService.getOauthUserinfo();
         } catch (ApiException e) {
             e.printStackTrace();
             return null;
@@ -33,22 +38,20 @@ public class DouYinUserController {
 
     @GetMapping("/getFansList")
     public Object getFansList(@RequestParam Integer count, @RequestParam Long cursor) {
-        Map<String, Object> result = new HashMap<>();
+        List<User> list = new ArrayList<>();
         try {
-            FansListResponse fansList = douYinUserService.getFansList(null, count, cursor);
-            result.put("code", fansList.hashCode());
-            result.put("data", fansList.getData().getList());
+            FansListResponse fansList = douYinUserService.getFansList(count, cursor);
+            list = fansList.getData().getList();
         } catch (ApiException e) {
             e.printStackTrace();
-            return null;
         }
-        return result;
+        return Result.ok().add(list);
     }
 
     @GetMapping("/getFollowingList")
-    public Object getFollowingList(@RequestParam String token, @RequestParam Integer count, @RequestParam Long cursor) {
+    public Object getFollowingList(@RequestParam Integer count, @RequestParam Long cursor) {
         try {
-            return douYinUserService.getFollowingList(token, count, cursor);
+            return douYinUserService.getFollowingList(count, cursor);
         } catch (ApiException e) {
             e.printStackTrace();
             return null;

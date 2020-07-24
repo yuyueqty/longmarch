@@ -3,9 +3,9 @@ package top.longmarch.douyin.service.impl;
 import com.douyin.open.ApiException;
 import com.douyin.open.client.DataExternalUserApi;
 import com.douyin.open.model.*;
-import me.zhyd.oauth.model.AuthToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import top.longmarch.core.utils.TokenUtil;
 import top.longmarch.douyin.service.AuthRequestService;
 import top.longmarch.douyin.service.DouYinUserReportDataService;
 
@@ -16,45 +16,39 @@ public class DouYinUserReportDataServiceImpl implements DouYinUserReportDataServ
     private AuthRequestService authRequestService;
 
     @Override
-    public DataExternalUserItemResponse dataExternalUserItemGet(String token, Integer dateType) throws ApiException {
-        AuthToken authToken = authRequestService.getAuthToken(token);
+    public DataExternalUserItemResponse dataExternalUserItemGet(Integer dateType) throws ApiException {
         DataExternalUserApi apiInstance = new DataExternalUserApi();
-        return apiInstance.dataExternalUserItemGet(authToken.getOpenId(), authToken.getAccessToken(), dateType);
+        return apiInstance.dataExternalUserItemGet(TokenUtil.openId(), TokenUtil.accessToken(), dateType);
     }
 
     @Override
-    public DataExternalUserFansResponse dataExternalUserFansGet(String token, Integer dateType) throws ApiException {
-        AuthToken authToken = authRequestService.getAuthToken(token);
+    public DataExternalUserFansResponse dataExternalUserFansGet(Integer dateType) throws ApiException {
         DataExternalUserApi apiInstance = new DataExternalUserApi();
-        return apiInstance.dataExternalUserFansGet(authToken.getOpenId(), authToken.getAccessToken(), dateType);
+        return apiInstance.dataExternalUserFansGet(TokenUtil.openId(), TokenUtil.accessToken(), dateType);
     }
 
     @Override
-    public DataExternalUserLikeResponse dataExternalUserLikeGet(String token, Integer dateType) throws ApiException {
-        AuthToken authToken = authRequestService.getAuthToken(token);
+    public DataExternalUserLikeResponse dataExternalUserLikeGet(Integer dateType) throws ApiException {
         DataExternalUserApi apiInstance = new DataExternalUserApi();
-        return apiInstance.dataExternalUserLikeGet(authToken.getOpenId(), authToken.getAccessToken(), dateType);
+        return apiInstance.dataExternalUserLikeGet(TokenUtil.openId(), TokenUtil.accessToken(), dateType);
     }
 
     @Override
-    public DataExternalUserCommentResponse dataExternalUserCommentGet(String token, Integer dateType) throws ApiException {
-        AuthToken authToken = authRequestService.getAuthToken(token);
+    public DataExternalUserCommentResponse dataExternalUserCommentGet(Integer dateType) throws ApiException {
         DataExternalUserApi apiInstance = new DataExternalUserApi();
-        return apiInstance.dataExternalUserCommentGet(authToken.getOpenId(), authToken.getAccessToken(), dateType);
+        return apiInstance.dataExternalUserCommentGet(TokenUtil.openId(), TokenUtil.accessToken(), dateType);
     }
 
     @Override
-    public DataExternalUserShareResponse dataExternalUserShareGet(String token, Integer dateType) throws ApiException {
-        AuthToken authToken = authRequestService.getAuthToken(token);
+    public DataExternalUserShareResponse dataExternalUserShareGet(Integer dateType) throws ApiException {
         DataExternalUserApi apiInstance = new DataExternalUserApi();
-        return apiInstance.dataExternalUserShareGet(authToken.getOpenId(), authToken.getAccessToken(), dateType);
+        return apiInstance.dataExternalUserShareGet(TokenUtil.openId(), TokenUtil.accessToken(), dateType);
     }
 
     @Override
-    public DataExternalUserProfileResponse dataExternalUserProfileGet(String token, Integer dateType) throws ApiException {
-        AuthToken authToken = authRequestService.getAuthToken(token);
+    public DataExternalUserProfileResponse dataExternalUserProfileGet(Integer dateType) throws ApiException {
         DataExternalUserApi apiInstance = new DataExternalUserApi();
-        return apiInstance.dataExternalUserProfileGet(authToken.getOpenId(), authToken.getAccessToken(), dateType);
+        return apiInstance.dataExternalUserProfileGet(TokenUtil.openId(), TokenUtil.accessToken(), dateType);
     }
 
 }

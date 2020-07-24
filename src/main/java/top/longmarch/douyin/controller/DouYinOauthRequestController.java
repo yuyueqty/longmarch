@@ -25,12 +25,6 @@ public class DouYinOauthRequestController {
         return Result.ok().add(authRequestService.authorizeUrl(source));
     }
 
-    @RequestMapping("/{source}/callback")
-    public Result callbackR(HttpServletResponse response, AuthCallback callback, @PathVariable String source) {
-        authRequestService.callbackUrl(response, callback, source);
-        return Result.ok();
-    }
-
     @RequestMapping("/{source}/login")
     public void login(HttpServletResponse response, @PathVariable String source) {
         try {
@@ -40,7 +34,7 @@ public class DouYinOauthRequestController {
         }
     }
 
-    @RequestMapping("/{source}/callback_bak")
+    @RequestMapping("/{source}/callback")
     public void callback(HttpServletResponse response, AuthCallback callback, @PathVariable String source) {
         try {
             response.sendRedirect(authRequestService.callbackUrl(response, callback, source));

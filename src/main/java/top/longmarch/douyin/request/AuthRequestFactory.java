@@ -8,7 +8,7 @@ import me.zhyd.oauth.request.AuthToutiaoRequest;
 
 public class AuthRequestFactory {
 
-    private static final String callBackUrl = "https://tiaoyue.longmarch.top/api/%s/callback";
+    private static final String callBackUrl = "https://tiaoyue.longmarch.top/lmapi/%s/callback";
 
     private AuthRequestFactory() {
     }

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.longmarch.core.utils.TokenUtil;
 import top.longmarch.douyin.service.DouYinUserReportDataService;
 
 /**
@@ -18,9 +19,9 @@ public class DouYinUserReportDataController {
     private DouYinUserReportDataService douYinUserReportDataService;
 
     @GetMapping("/dataExternalUserCommentGet")
-    public Object dataExternalUserCommentGet(@RequestParam String token, @RequestParam Integer dateType) {
+    public Object dataExternalUserCommentGet(@RequestParam Integer dateType) {
         try {
-            return douYinUserReportDataService.dataExternalUserCommentGet(token, dateType);
+            return douYinUserReportDataService.dataExternalUserCommentGet(dateType);
         } catch (ApiException e) {
             e.printStackTrace();
             return null;
@@ -28,9 +29,9 @@ public class DouYinUserReportDataController {
     }
 
     @GetMapping("/dataExternalUserItemGet")
-    public Object dataExternalUserItemGet(@RequestParam String token, @RequestParam Integer dateType) {
+    public Object dataExternalUserItemGet(@RequestParam Integer dateType) {
         try {
-            return douYinUserReportDataService.dataExternalUserItemGet(token, dateType);
+            return douYinUserReportDataService.dataExternalUserItemGet(dateType);
         } catch (ApiException e) {
             e.printStackTrace();
             return null;
@@ -38,9 +39,9 @@ public class DouYinUserReportDataController {
     }
 
     @GetMapping("/dataExternalUserFansGet")
-    public Object dataExternalUserFansGet(@RequestParam String token, @RequestParam Integer dateType) {
+    public Object dataExternalUserFansGet(@RequestParam Integer dateType) {
         try {
-            return douYinUserReportDataService.dataExternalUserFansGet(token, dateType);
+            return douYinUserReportDataService.dataExternalUserFansGet(dateType);
         } catch (ApiException e) {
             e.printStackTrace();
             return null;
@@ -48,9 +49,9 @@ public class DouYinUserReportDataController {
     }
 
     @GetMapping("/dataExternalUserLikeGet")
-    public Object dataExternalUserLikeGet(@RequestParam String token, @RequestParam Integer dateType) {
+    public Object dataExternalUserLikeGet(@RequestParam Integer dateType) {
         try {
-            return douYinUserReportDataService.dataExternalUserLikeGet(token, dateType);
+            return douYinUserReportDataService.dataExternalUserLikeGet(dateType);
         } catch (ApiException e) {
             e.printStackTrace();
             return null;
@@ -58,9 +59,9 @@ public class DouYinUserReportDataController {
     }
 
     @GetMapping("/dataExternalUserProfileGet")
-    public Object dataExternalUserProfileGet(@RequestParam String token, @RequestParam Integer dateType) {
+    public Object dataExternalUserProfileGet(@RequestParam Integer dateType) {
         try {
-            return douYinUserReportDataService.dataExternalUserProfileGet(token, dateType);
+            return douYinUserReportDataService.dataExternalUserProfileGet(dateType);
         } catch (ApiException e) {
             e.printStackTrace();
             return null;
@@ -68,9 +69,9 @@ public class DouYinUserReportDataController {
     }
 
     @GetMapping("/dataExternalUserShareGet")
-    public Object dataExternalUserShareGet(@RequestParam String token, @RequestParam Integer dateType) {
+    public Object dataExternalUserShareGet(@RequestParam Integer dateType) {
         try {
-            return douYinUserReportDataService.dataExternalUserShareGet(token, dateType);
+            return douYinUserReportDataService.dataExternalUserShareGet(dateType);
         } catch (ApiException e) {
             e.printStackTrace();
             return null;

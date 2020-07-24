@@ -7,4 +7,5 @@ public interface DouyinAccountService extends IService<DouyinAccount> {
 
     void saveOrUpdateDouyinAccount(String token);
 
+    void setDefault(String openId);
 }
