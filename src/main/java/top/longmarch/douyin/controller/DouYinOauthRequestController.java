@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.longmarch.core.common.Result;
 import top.longmarch.douyin.service.AuthRequestService;
 
 import javax.servlet.http.HttpServletResponse;
@@ -20,15 +21,18 @@ public class DouYinOauthRequestController {
     private AuthRequestService authRequestService;
 
     @RequestMapping("/{source}/loginUrl")
-    public Object getRenderAuth(@PathVariable String source) {
-        Map<String, Object> result = new HashMap<>();
-        result.put("code", 20000);
-        result.put("login_url", authRequestService.authorizeUrl(source));
-        return result;
+    public Result getRenderAuth(@PathVariable String source) {
+        return Result.ok().add(authRequestService.authorizeUrl(source));
+    }
+
+    @RequestMapping("/{source}/callback")
+    public Result callbackR(HttpServletResponse response, AuthCallback callback, @PathVariable String source) {
+        authRequestService.callbackUrl(response, callback, source);
+        return Result.ok();
     }
 
     @RequestMapping("/{source}/login")
-    public void renderAuth(HttpServletResponse response, @PathVariable String source) {
+    public void login(HttpServletResponse response, @PathVariable String source) {
         try {
             response.sendRedirect(authRequestService.authorizeUrl(source));
         } catch (IOException e) {
@@ -36,8 +40,8 @@ public class DouYinOauthRequestController {
         }
     }
 
-    @RequestMapping("/{source}/callback")
-    public void login(HttpServletResponse response, AuthCallback callback, @PathVariable String source) {
+    @RequestMapping("/{source}/callback_bak")
+    public void callback(HttpServletResponse response, AuthCallback callback, @PathVariable String source) {
         try {
             response.sendRedirect(authRequestService.callbackUrl(response, callback, source));
         } catch (IOException e) {
