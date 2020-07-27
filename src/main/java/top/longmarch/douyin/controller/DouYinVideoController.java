@@ -11,9 +11,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import top.longmarch.core.common.Result;
 import top.longmarch.douyin.service.DouYinVideoService;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 发布抖音视频
@@ -52,13 +55,14 @@ public class DouYinVideoController {
 
     @GetMapping("/videoList")
     public Object videoList(@RequestParam Integer count, @RequestParam Long cursor) {
-        VideoListResponse response = new VideoListResponse();
+        List<Video> list = new ArrayList<>();
         try {
-            response = douYinVideoService.videoList(count, cursor);
+            VideoListResponse response = douYinVideoService.videoList(count, cursor);
+            list = response.getData().getList();
         } catch (ApiException e) {
             log.error("获取抖音视频列表失败：{}", e);
         }
-        return response;
+        return Result.ok().add(list);
     }
 
     @PostMapping("/videoDelete")
