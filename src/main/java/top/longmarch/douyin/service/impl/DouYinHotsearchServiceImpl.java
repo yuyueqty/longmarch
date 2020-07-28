@@ -5,17 +5,12 @@ import com.douyin.open.client.HotsearchApi;
 import com.douyin.open.model.HotsearchSentencesResponse;
 import com.douyin.open.model.HotsearchTrendingSentencesResponse;
 import com.douyin.open.model.HotsearchVideosResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.longmarch.core.utils.TokenUtil;
-import top.longmarch.douyin.service.AuthRequestService;
 import top.longmarch.douyin.service.DouYinHotsearchService;
 
 @Service
 public class DouYinHotsearchServiceImpl implements DouYinHotsearchService {
-
-    @Autowired
-    private AuthRequestService authRequestService;
 
     @Override
     public HotsearchSentencesResponse hotsearchSentencesGet() throws ApiException {

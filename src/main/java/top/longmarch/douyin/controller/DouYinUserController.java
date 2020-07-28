@@ -2,19 +2,19 @@ package top.longmarch.douyin.controller;
 
 import com.douyin.open.ApiException;
 import com.douyin.open.model.FansListResponse;
+import com.douyin.open.model.FollowingListResponse;
+import com.douyin.open.model.OauthUserinfoResponseData;
 import com.douyin.open.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.longmarch.core.common.Result;
-import top.longmarch.core.utils.TokenUtil;
+import top.longmarch.douyin.request.DouyinParam;
 import top.longmarch.douyin.service.DouYinUserService;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 用户管理信息
@@ -27,17 +27,19 @@ public class DouYinUserController {
     private DouYinUserService douYinUserService;
 
     @GetMapping("/getOauthUserinfo")
-    public Object getOauthUserinfo() {
+    public Result getOauthUserinfo() {
+        OauthUserinfoResponseData oauthUserinfo = new OauthUserinfoResponseData();
         try {
-            return douYinUserService.getOauthUserinfo();
+            oauthUserinfo = douYinUserService.getOauthUserinfo().getData();
         } catch (ApiException e) {
             e.printStackTrace();
-            return null;
         }
+        return Result.ok().add(oauthUserinfo);
     }
 
     @GetMapping("/getFansList")
-    public Object getFansList(@RequestParam Integer count, @RequestParam Long cursor) {
+    public Result getFansList(@RequestParam(required = false, defaultValue = DouyinParam.COUNT) Integer count,
+                              @RequestParam(required = false, defaultValue = DouyinParam.CURSOR) Long cursor) {
         List<User> list = new ArrayList<>();
         try {
             FansListResponse fansList = douYinUserService.getFansList(count, cursor);
@@ -49,13 +51,16 @@ public class DouYinUserController {
     }
 
     @GetMapping("/getFollowingList")
-    public Object getFollowingList(@RequestParam Integer count, @RequestParam Long cursor) {
+    public Result getFollowingList(@RequestParam(required = false, defaultValue = DouyinParam.COUNT) Integer count,
+                                   @RequestParam(required = false, defaultValue = DouyinParam.CURSOR) Long cursor) {
+        List<User> list = new ArrayList<>();
         try {
-            return douYinUserService.getFollowingList(count, cursor);
+            FollowingListResponse followingList = douYinUserService.getFollowingList(count, cursor);
+            list = followingList.getData().getList();
         } catch (ApiException e) {
             e.printStackTrace();
-            return null;
         }
+        return Result.ok().add(list);
     }
 
 }

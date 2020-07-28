@@ -3,17 +3,12 @@ package top.longmarch.douyin.service.impl;
 import com.douyin.open.ApiException;
 import com.douyin.open.client.DataExternalItemApi;
 import com.douyin.open.model.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.longmarch.core.utils.TokenUtil;
-import top.longmarch.douyin.service.AuthRequestService;
 import top.longmarch.douyin.service.DouYinVideoReportDataService;
 
 @Service
 public class DouYinVideoReportDataServiceImpl implements DouYinVideoReportDataService {
-
-    @Autowired
-    private AuthRequestService authRequestService;
 
     @Override
     public DataExternalItemBaseResponse dataExternalItemBaseGet(String itemId) throws ApiException {

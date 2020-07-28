@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import top.longmarch.core.common.Result;
+import top.longmarch.douyin.request.DouyinParam;
 import top.longmarch.douyin.service.DouYinVideoService;
 
 import java.io.File;
@@ -29,51 +30,51 @@ public class DouYinVideoController {
     private DouYinVideoService douYinVideoService;
 
     @PostMapping("/videoUpload")
-    public Object videoUpload(MultipartFile file) {
-        VideoUploadResponse response = new VideoUploadResponse();
+    public Result videoUpload(MultipartFile file) {
+        VideoUploadResponseData data = new VideoUploadResponseData();
         try {
             String file_name = MD5.create().digestHex(file.getOriginalFilename());
             String file_suffix = file.getOriginalFilename().substring(file.getOriginalFilename().indexOf(".") + 1);
             File video = FileUtil.writeBytes(file.getBytes(), new File(file_name + "." + file_suffix));
-            response = douYinVideoService.videoUpload(video);
+            data = douYinVideoService.videoUpload(video).getData();
         } catch (Exception e) {
             log.error("上传视频文件失败：{}", e);
         }
-        return response;
+        return Result.ok().add(data);
     }
 
     @PostMapping("/videoCreate")
-    public Object videoCreate(VideoCreateBody body) {
-        VideoCreateResponse response = new VideoCreateResponse();
+    public Result videoCreate(VideoCreateBody body) {
+        VideoCreateResponseData data = new VideoCreateResponseData();
         try {
-            response = douYinVideoService.videoCreate(body);
+            data = douYinVideoService.videoCreate(body).getData();
         } catch (ApiException e) {
             log.error("发布抖音视频失败：{}", e);
         }
-        return response;
+        return Result.ok().add(data);
     }
 
     @GetMapping("/videoList")
-    public Object videoList(@RequestParam Integer count, @RequestParam Long cursor) {
+    public Result videoList(@RequestParam(required = false, defaultValue = DouyinParam.COUNT) Integer count,
+                            @RequestParam(required = false, defaultValue = DouyinParam.CURSOR) Long cursor) {
         List<Video> list = new ArrayList<>();
         try {
-            VideoListResponse response = douYinVideoService.videoList(count, cursor);
-            list = response.getData().getList();
+            list = douYinVideoService.videoList(count, cursor).getData().getList();
         } catch (ApiException e) {
-            log.error("获取抖音视频列表失败：{}", e);
+            log.error("获取抖音视频列表失败：{}", e.getMessage());
         }
         return Result.ok().add(list);
     }
 
     @PostMapping("/videoDelete")
-    public Object videoDelete(VideoDeleteBody body) {
-        VideoDeleteResponse response = new VideoDeleteResponse();
+    public Result videoDelete(VideoDeleteBody body) {
+        VideoDeleteResponseData data = new VideoDeleteResponseData();
         try {
-            response = douYinVideoService.videoDelete(body);
+            data = douYinVideoService.videoDelete(body).getData();
         } catch (ApiException e) {
             log.error("删除抖音视频失败：itemId={}, error={}", body.getItemId(), e);
         }
-        return response;
+        return Result.ok().add(data);
     }
 
 }

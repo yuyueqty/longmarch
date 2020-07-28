@@ -7,17 +7,12 @@ import com.douyin.open.client.UserInfoApi;
 import com.douyin.open.model.FansListResponse;
 import com.douyin.open.model.FollowingListResponse;
 import com.douyin.open.model.OauthUserinfoResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.longmarch.core.utils.TokenUtil;
-import top.longmarch.douyin.service.AuthRequestService;
 import top.longmarch.douyin.service.DouYinUserService;
 
 @Service
 public class DouYinUserServiceImpl implements DouYinUserService {
-
-    @Autowired
-    private AuthRequestService authRequestService;
 
     @Override
     public OauthUserinfoResponse getOauthUserinfo() throws ApiException {

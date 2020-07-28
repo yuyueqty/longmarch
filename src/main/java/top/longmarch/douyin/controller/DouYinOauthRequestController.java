@@ -43,9 +43,10 @@ public class DouYinOauthRequestController {
         }
     }
 
-    @RequestMapping("/{source}/refresh")
-    public void refresh(HttpServletResponse response, AuthCallback callback, @PathVariable String source) {
-        authRequestService.refresh(source, "");
+    @RequestMapping("/{source}/refreshToken/{openId}")
+    public Result refreshToken(@PathVariable String source, @PathVariable String openId) {
+        authRequestService.refreshToken(source, openId);
+        return Result.ok();
     }
 
     @RequestMapping("/logout")

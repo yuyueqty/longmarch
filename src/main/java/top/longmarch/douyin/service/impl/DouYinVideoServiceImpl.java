@@ -14,9 +14,6 @@ import java.io.File;
 @Service
 public class DouYinVideoServiceImpl implements DouYinVideoService {
 
-    @Autowired
-    private AuthRequestService authRequestService;
-
     @Override
     public VideoCreateResponse videoCreate(VideoCreateBody body) throws ApiException {
         VideoPublishApi apiInstance = new VideoPublishApi();

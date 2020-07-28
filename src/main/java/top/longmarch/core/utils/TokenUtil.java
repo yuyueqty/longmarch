@@ -50,10 +50,6 @@ public class TokenUtil {
         return get().getOpenId();
     }
 
-    private static String refreshToken() {
-        return get().getRefreshToken();
-    }
-
     private static String key() {
         return String.format("%s_token_key", UserUtil.getUsername().toLowerCase());
     }
