@@ -47,4 +47,20 @@ public class DouYinVideoServiceImpl implements DouYinVideoService {
         return apiInstance.videoUploadPost(video, TokenUtil.openId(), TokenUtil.accessToken()).getData();
     }
 
+    public void videosRelease(File video) {
+        String openId = TokenUtil.openId();
+        String accessToken = TokenUtil.accessToken();
+        VideoPublishApi apiInstance = new VideoPublishApi();
+        VideoCreateAwemeCreateInlineResponse200Data data = apiInstance.videoUploadPost(video, openId, accessToken).getData();
+        String videoId = data.getVideo().getVideoId();
+
+        VideoCreateAwemeCreateBody1 createBody = new VideoCreateAwemeCreateBody1();
+        createBody.setVideoId(videoId);
+        createBody.setCoverTsp(2.3);
+        createBody.setText("测试发布视频");
+        VideoCreateAwemeCreateInlineResponse2001Data data1 = apiInstance.videoCreatePost(openId, accessToken, createBody).getData();
+        String itemId = data1.getItemId();
+        System.out.println(itemId);
+    }
+
 }
