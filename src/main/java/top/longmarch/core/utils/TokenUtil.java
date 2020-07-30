@@ -1,18 +1,16 @@
 package top.longmarch.core.utils;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import me.zhyd.oauth.model.AuthToken;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import top.longmarch.core.config.ApplicationContextManager;
 import top.longmarch.douyin.entity.DouyinAccount;
 
 public class TokenUtil {
 
-    private static StringRedisTemplate stringRedisTemplate = ApplicationContextManager.getBean(StringRedisTemplate.class);
-
     public static void set(AuthToken token) {
-        stringRedisTemplate.opsForValue().set(key(), JSONUtil.toJsonStr(token));
+        RedisUtil.put(key(), token);
     }
 
     public static void set(DouyinAccount account) {
@@ -35,8 +33,8 @@ public class TokenUtil {
     }
 
     public static AuthToken get() {
-        String authTokenJson = stringRedisTemplate.opsForValue().get(key());
-        if (StrUtil.isBlank(authTokenJson)) {
+        String authTokenJson = RedisUtil.get(key());
+        if (authTokenJson == null || "".equals(authTokenJson)) {
             return new AuthToken();
         }
         return JSONUtil.toBean(authTokenJson, AuthToken.class);
@@ -48,6 +46,20 @@ public class TokenUtil {
 
     public static String openId() {
         return get().getOpenId();
+    }
+
+    public static synchronized String clientToken() {
+        String client_token = RedisUtil.get("douyin_client_token");
+        if (StrUtil.isBlank(client_token)) {
+            String url = "https://open.douyin.com/passport/open/client_token/?client_key=awi3wm9fql82mobq&client_secret=9105f13c041abc3877e38be08186c632&grant_type=client_credential";
+            JSONObject jsonObject = JSONUtil.parseObj(HttpUtil.get(url)).getJSONObject("data");
+            Integer error_code = jsonObject.getInt("error_code");
+            if (error_code == 0) {
+                client_token = jsonObject.getStr("access_token");
+                RedisUtil.put("douyin_client_token", client_token, 2);
+            }
+        }
+        return client_token;
     }
 
     private static String key() {

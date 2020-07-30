@@ -1,8 +1,8 @@
 package top.longmarch.douyin.service.impl;
 
-import com.douyin.open.ApiException;
-import com.douyin.open.client.FansDataApi;
-import com.douyin.open.model.FansDataResponse;
+
+import com.douyin.open.api.FansDataApi;
+import com.douyin.open.models.FansDataFansDataInlineResponse200Data;
 import org.springframework.stereotype.Service;
 import top.longmarch.core.utils.TokenUtil;
 import top.longmarch.douyin.service.DouYinUserFansPortraitService;
@@ -11,9 +11,9 @@ import top.longmarch.douyin.service.DouYinUserFansPortraitService;
 public class DouYinUserFansPortraitServiceImpl implements DouYinUserFansPortraitService {
 
     @Override
-    public FansDataResponse fansDataGet() throws ApiException {
+    public FansDataFansDataInlineResponse200Data fansDataGet() {
         FansDataApi apiInstance = new FansDataApi();
-        return apiInstance.fansDataGet(TokenUtil.openId(), TokenUtil.accessToken());
+        return apiInstance.fansDataGet(TokenUtil.openId(), TokenUtil.accessToken()).getData();
     }
 
 }

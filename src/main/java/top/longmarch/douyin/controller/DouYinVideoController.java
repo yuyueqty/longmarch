@@ -2,8 +2,8 @@ package top.longmarch.douyin.controller;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.crypto.digest.MD5;
-import com.douyin.open.ApiException;
-import com.douyin.open.model.*;
+import com.douyin.open.models.VideoCreateAwemeCreateBody1;
+import com.douyin.open.models.VideoDeleteAwemeDeleteBody;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +16,7 @@ import top.longmarch.douyin.request.DouyinParam;
 import top.longmarch.douyin.service.DouYinVideoService;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
 
 /**
  * 发布抖音视频
@@ -31,50 +30,31 @@ public class DouYinVideoController {
 
     @PostMapping("/videoUpload")
     public Result videoUpload(MultipartFile file) {
-        VideoUploadResponseData data = new VideoUploadResponseData();
+        String file_name = MD5.create().digestHex(file.getOriginalFilename());
+        String file_suffix = file.getOriginalFilename().substring(file.getOriginalFilename().indexOf(".") + 1);
+        File video = null;
         try {
-            String file_name = MD5.create().digestHex(file.getOriginalFilename());
-            String file_suffix = file.getOriginalFilename().substring(file.getOriginalFilename().indexOf(".") + 1);
-            File video = FileUtil.writeBytes(file.getBytes(), new File(file_name + "." + file_suffix));
-            data = douYinVideoService.videoUpload(video).getData();
-        } catch (Exception e) {
-            log.error("上传视频文件失败：{}", e);
+            video = FileUtil.writeBytes(file.getBytes(), new File(file_name + "." + file_suffix));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return Result.ok().add(data);
+        return Result.ok().add(douYinVideoService.videoUpload(video));
     }
 
     @PostMapping("/videoCreate")
-    public Result videoCreate(VideoCreateBody body) {
-        VideoCreateResponseData data = new VideoCreateResponseData();
-        try {
-            data = douYinVideoService.videoCreate(body).getData();
-        } catch (ApiException e) {
-            log.error("发布抖音视频失败：{}", e);
-        }
-        return Result.ok().add(data);
+    public Result videoCreate(VideoCreateAwemeCreateBody1 body) {
+        return Result.ok().add(douYinVideoService.videoCreate(body));
     }
 
     @GetMapping("/videoList")
     public Result videoList(@RequestParam(required = false, defaultValue = DouyinParam.COUNT) Integer count,
-                            @RequestParam(required = false, defaultValue = DouyinParam.CURSOR) Long cursor) {
-        List<Video> list = new ArrayList<>();
-        try {
-            list = douYinVideoService.videoList(count, cursor).getData().getList();
-        } catch (ApiException e) {
-            log.error("获取抖音视频列表失败：{}", e.getMessage());
-        }
-        return Result.ok().add(list);
+                            @RequestParam(required = false, defaultValue = DouyinParam.CURSOR) Integer cursor) {
+        return Result.ok().add(douYinVideoService.videoList(count, cursor));
     }
 
     @PostMapping("/videoDelete")
-    public Result videoDelete(VideoDeleteBody body) {
-        VideoDeleteResponseData data = new VideoDeleteResponseData();
-        try {
-            data = douYinVideoService.videoDelete(body).getData();
-        } catch (ApiException e) {
-            log.error("删除抖音视频失败：itemId={}, error={}", body.getItemId(), e);
-        }
-        return Result.ok().add(data);
+    public Result videoDelete(VideoDeleteAwemeDeleteBody body) {
+        return Result.ok().add(douYinVideoService.videoDelete(body));
     }
 
 }

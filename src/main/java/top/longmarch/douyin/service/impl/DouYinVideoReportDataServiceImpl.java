@@ -1,8 +1,7 @@
 package top.longmarch.douyin.service.impl;
 
-import com.douyin.open.ApiException;
-import com.douyin.open.client.DataExternalItemApi;
-import com.douyin.open.model.*;
+import com.douyin.open.api.DataExternalItemApi;
+import com.douyin.open.models.*;
 import org.springframework.stereotype.Service;
 import top.longmarch.core.utils.TokenUtil;
 import top.longmarch.douyin.service.DouYinVideoReportDataService;
@@ -11,33 +10,33 @@ import top.longmarch.douyin.service.DouYinVideoReportDataService;
 public class DouYinVideoReportDataServiceImpl implements DouYinVideoReportDataService {
 
     @Override
-    public DataExternalItemBaseResponse dataExternalItemBaseGet(String itemId) throws ApiException {
+    public ExternalDataItemExternalDataItemInlineResponse200Data dataExternalItemBaseGet(String itemId) {
         DataExternalItemApi apiInstance = new DataExternalItemApi();
-        return apiInstance.dataExternalItemBaseGet(TokenUtil.openId(), TokenUtil.accessToken(), itemId);
+        return apiInstance.dataExternalItemBaseGet(TokenUtil.openId(), TokenUtil.accessToken(), itemId).getData();
     }
 
     @Override
-    public DataExternalItemLikeResponse dataExternalItemLikeGet(String itemId, Integer dateType) throws ApiException {
+    public ExternalDataItemExternalDataItemInlineResponse2001Data dataExternalItemLikeGet(String itemId, Integer dateType) {
         DataExternalItemApi apiInstance = new DataExternalItemApi();
-        return apiInstance.dataExternalItemLikeGet(TokenUtil.openId(), TokenUtil.accessToken(), itemId, dateType);
+        return apiInstance.dataExternalItemLikeGet(TokenUtil.openId(), TokenUtil.accessToken(), itemId, dateType).getData();
     }
 
     @Override
-    public DataExternalItemCommentResponse dataExternalItemCommentGet(String itemId, Integer dateType) throws ApiException {
+    public ExternalDataItemExternalDataItemInlineResponse2002Data dataExternalItemCommentGet(String itemId, Integer dateType) {
         DataExternalItemApi apiInstance = new DataExternalItemApi();
-        return apiInstance.dataExternalItemCommentGet(TokenUtil.openId(), TokenUtil.accessToken(), itemId, dateType);
+        return apiInstance.dataExternalItemCommentGet(TokenUtil.openId(), TokenUtil.accessToken(), itemId, dateType).getData();
     }
 
     @Override
-    public DataExternalItemPlayResponse dataExternalItemPlayGet(String itemId, Integer dateType) throws ApiException {
+    public ExternalDataItemExternalDataItemInlineResponse2003Data dataExternalItemPlayGet(String itemId, Integer dateType) {
         DataExternalItemApi apiInstance = new DataExternalItemApi();
-        return apiInstance.dataExternalItemPlayGet(TokenUtil.openId(), TokenUtil.accessToken(), itemId, dateType);
+        return apiInstance.dataExternalItemPlayGet(TokenUtil.openId(), TokenUtil.accessToken(), itemId, dateType).getData();
     }
 
     @Override
-    public DataExternalItemShareResponse dataExternalItemShareGet(String itemId, Integer dateType) throws ApiException {
+    public ExternalDataItemExternalDataItemInlineResponse2004Data dataExternalItemShareGet(String itemId, Integer dateType) {
         DataExternalItemApi apiInstance = new DataExternalItemApi();
-        return apiInstance.dataExternalItemShareGet(TokenUtil.openId(), TokenUtil.accessToken(), itemId, dateType);
+        return apiInstance.dataExternalItemShareGet(TokenUtil.openId(), TokenUtil.accessToken(), itemId, dateType).getData();
     }
 
 }

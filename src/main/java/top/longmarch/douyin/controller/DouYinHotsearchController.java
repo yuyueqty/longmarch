@@ -1,9 +1,5 @@
 package top.longmarch.douyin.controller;
 
-import com.douyin.open.ApiException;
-import com.douyin.open.model.HotsearchSentencesResponse;
-import com.douyin.open.model.HotsearchTrendingSentencesResponse;
-import com.douyin.open.model.HotsearchVideosResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,36 +20,18 @@ public class DouYinHotsearchController {
 
     @GetMapping("/hotsearchSentencesGet")
     public Result hotsearchSentencesGet() {
-        HotsearchSentencesResponse response = new HotsearchSentencesResponse();
-        try {
-            response = douYinHotsearchService.hotsearchSentencesGet();
-        } catch (ApiException e) {
-            e.printStackTrace();
-        }
-        return Result.ok().add(response);
+        return Result.ok().add(douYinHotsearchService.hotsearchSentencesGet());
     }
 
     @GetMapping("/hotsearchTrendingSentencesGet")
     public Result hotsearchTrendingSentencesGet(@RequestParam(required = false, defaultValue = DouyinParam.COUNT) Integer count,
-                                                @RequestParam(required = false, defaultValue = DouyinParam.CURSOR) Long cursor) {
-        HotsearchTrendingSentencesResponse response = new HotsearchTrendingSentencesResponse();
-        try {
-            response = douYinHotsearchService.hotsearchTrendingSentencesGet(count, cursor);
-        } catch (ApiException e) {
-            e.printStackTrace();
-        }
-        return Result.ok().add(response);
+                                                @RequestParam(required = false, defaultValue = DouyinParam.CURSOR) Integer cursor) {
+        return Result.ok().add(douYinHotsearchService.hotsearchTrendingSentencesGet(count, cursor));
     }
 
     @GetMapping("/hotsearchVideosGet")
     public Result hotsearchVideosGet(@RequestParam String hotSentence) {
-        HotsearchVideosResponse response = new HotsearchVideosResponse();
-        try {
-            response = douYinHotsearchService.hotsearchVideosGet(hotSentence);
-        } catch (ApiException e) {
-            e.printStackTrace();
-        }
-        return Result.ok().add(response);
+        return Result.ok().add(douYinHotsearchService.hotsearchVideosGet(hotSentence));
     }
 
 }

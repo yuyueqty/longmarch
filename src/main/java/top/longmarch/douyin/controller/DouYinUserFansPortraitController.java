@@ -1,7 +1,5 @@
 package top.longmarch.douyin.controller;
 
-import com.douyin.open.ApiException;
-import com.douyin.open.model.FansData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,13 +18,7 @@ public class DouYinUserFansPortraitController {
 
     @GetMapping("/fansDataGet")
     public Result fansDataGet() {
-        FansData fansData = new FansData();
-        try {
-            fansData = douYinUserFansPortraitService.fansDataGet().getData().getFansData();
-        } catch (ApiException e) {
-            e.printStackTrace();
-        }
-        return Result.ok().add(fansData);
+        return Result.ok().add(douYinUserFansPortraitService.fansDataGet());
     }
 
 }

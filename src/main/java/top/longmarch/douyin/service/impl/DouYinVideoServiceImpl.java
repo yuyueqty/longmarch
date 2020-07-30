@@ -1,12 +1,9 @@
 package top.longmarch.douyin.service.impl;
 
-import com.douyin.open.ApiException;
-import com.douyin.open.client.*;
-import com.douyin.open.model.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.douyin.open.api.*;
+import com.douyin.open.models.*;
 import org.springframework.stereotype.Service;
 import top.longmarch.core.utils.TokenUtil;
-import top.longmarch.douyin.service.AuthRequestService;
 import top.longmarch.douyin.service.DouYinVideoService;
 
 import java.io.File;
@@ -15,40 +12,39 @@ import java.io.File;
 public class DouYinVideoServiceImpl implements DouYinVideoService {
 
     @Override
-    public VideoCreateResponse videoCreate(VideoCreateBody body) throws ApiException {
+    public VideoCreateAwemeCreateInlineResponse2001Data videoCreate(VideoCreateAwemeCreateBody1 body) {
         VideoPublishApi apiInstance = new VideoPublishApi();
-        return apiInstance.videoCreatePost(TokenUtil.openId(), TokenUtil.accessToken(), body);
+        return apiInstance.videoCreatePost(TokenUtil.openId(), TokenUtil.accessToken(), body).getData();
     }
 
     @Override
-    public VideoDeleteResponse videoDelete(VideoDeleteBody body) throws ApiException {
+    public VideoDeleteAwemeDeleteInlineResponse200Data videoDelete(VideoDeleteAwemeDeleteBody body) {
         VideoDeleteApi apiInstance = new VideoDeleteApi();
-        return apiInstance.videoDeletePost(TokenUtil.openId(), TokenUtil.accessToken(), body);
+        return apiInstance.videoDeletePost(TokenUtil.openId(), TokenUtil.accessToken(), body).getData();
     }
 
     @Override
-    public ImageCreateResponse imageCreate(ImageCreateBody body) throws ApiException {
+    public ImageCreateImageCreateInlineResponse2001Data imageCreate(ImageCreateImageCreateBody1 body) {
         ImageApi apiInstance = new ImageApi();
-        return apiInstance.imageCreatePost(TokenUtil.openId(), TokenUtil.accessToken(), body);
+        return apiInstance.imageCreatePost(TokenUtil.openId(), TokenUtil.accessToken(), body).getData();
     }
 
     @Override
-    public VideoListResponse videoList(Integer count, Long cursor) throws ApiException {
+    public VideoListVideoListInlineResponse200Data videoList(Integer count, Integer cursor) {
         VideoListApi apiInstance = new VideoListApi();
-        return apiInstance.videoListGet(TokenUtil.openId(), TokenUtil.accessToken(), count, cursor);
+        return apiInstance.videoListGet(TokenUtil.openId(), TokenUtil.accessToken(), count, cursor).getData();
     }
 
     @Override
-    public VideoDataResponse videoData(VideoDataBody body) throws ApiException {
+    public VideoDataVideoDataInlineResponse200Data videoData(VideoDataVideoDataBody body) {
         VideoDataApi apiInstance = new VideoDataApi();
-        return apiInstance.videoDataPost(body, TokenUtil.openId(), TokenUtil.accessToken());
+        return apiInstance.videoDataPost(body, TokenUtil.openId(), TokenUtil.accessToken()).getData();
     }
 
     @Override
-    public VideoUploadResponse videoUpload(File video) throws ApiException {
+    public VideoCreateAwemeCreateInlineResponse200Data videoUpload(File video) {
         VideoPublishApi apiInstance = new VideoPublishApi();
-        VideoUploadResponse videoUploadResponse = apiInstance.videoUploadPost(video, TokenUtil.openId(), TokenUtil.accessToken());
-        return videoUploadResponse;
+        return apiInstance.videoUploadPost(video, TokenUtil.openId(), TokenUtil.accessToken()).getData();
     }
 
 }

@@ -1,9 +1,8 @@
 package top.longmarch.douyin.service;
 
-import com.douyin.open.ApiException;
-import com.douyin.open.model.FansListResponse;
-import com.douyin.open.model.FollowingListResponse;
-import com.douyin.open.model.OauthUserinfoResponse;
+import com.douyin.open.models.UserFansFansInlineResponse200Data;
+import com.douyin.open.models.UserFollowingFollowingInlineResponse200Data;
+import com.douyin.open.models.UserUserInfoUserInfoInlineResponse200Data;
 
 public interface DouYinUserService {
 
@@ -12,19 +11,19 @@ public interface DouYinUserService {
      *
      * @return
      */
-    OauthUserinfoResponse getOauthUserinfo() throws ApiException;
+    UserUserInfoUserInfoInlineResponse200Data getOauthUserinfo();
 
     /**
      * 获取粉丝列表
      *
      * @return
      */
-    FansListResponse getFansList(Integer count, Long cursor) throws ApiException;
+    UserFansFansInlineResponse200Data getFansList(Integer count, Integer cursor);
 
     /**
      * 获取关注列表
      *
      * @return
      */
-    FollowingListResponse getFollowingList(Integer count, Long cursor) throws ApiException;
+    UserFollowingFollowingInlineResponse200Data getFollowingList(Integer count, Integer cursor);
 }

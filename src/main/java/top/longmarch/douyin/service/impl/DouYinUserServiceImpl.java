@@ -1,12 +1,11 @@
 package top.longmarch.douyin.service.impl;
 
-import com.douyin.open.ApiException;
-import com.douyin.open.client.FansListApi;
-import com.douyin.open.client.FollowingListApi;
-import com.douyin.open.client.UserInfoApi;
-import com.douyin.open.model.FansListResponse;
-import com.douyin.open.model.FollowingListResponse;
-import com.douyin.open.model.OauthUserinfoResponse;
+import com.douyin.open.api.FansListApi;
+import com.douyin.open.api.FollowingListApi;
+import com.douyin.open.api.UserInfoApi;
+import com.douyin.open.models.UserFansFansInlineResponse200Data;
+import com.douyin.open.models.UserFollowingFollowingInlineResponse200Data;
+import com.douyin.open.models.UserUserInfoUserInfoInlineResponse200Data;
 import org.springframework.stereotype.Service;
 import top.longmarch.core.utils.TokenUtil;
 import top.longmarch.douyin.service.DouYinUserService;
@@ -15,21 +14,21 @@ import top.longmarch.douyin.service.DouYinUserService;
 public class DouYinUserServiceImpl implements DouYinUserService {
 
     @Override
-    public OauthUserinfoResponse getOauthUserinfo() throws ApiException {
+    public UserUserInfoUserInfoInlineResponse200Data getOauthUserinfo() {
         UserInfoApi apiInstance = new UserInfoApi();
-        return apiInstance.oauthUserinfoGet(TokenUtil.openId(), TokenUtil.accessToken());
+        return apiInstance.oauthUserinfoGet(TokenUtil.openId(), TokenUtil.accessToken()).getData();
     }
 
     @Override
-    public FansListResponse getFansList(Integer count, Long cursor) throws ApiException {
+    public UserFansFansInlineResponse200Data getFansList(Integer count, Integer cursor) {
         FansListApi apiInstance = new FansListApi();
-        return apiInstance.fansListGet(TokenUtil.openId(), TokenUtil.accessToken(), count, cursor);
+        return apiInstance.fansListGet(TokenUtil.openId(), TokenUtil.accessToken(), count, cursor).getData();
     }
 
     @Override
-    public FollowingListResponse getFollowingList(Integer count, Long cursor) throws ApiException {
+    public UserFollowingFollowingInlineResponse200Data getFollowingList(Integer count, Integer cursor) {
         FollowingListApi apiInstance = new FollowingListApi();
-        return apiInstance.followingListGet(TokenUtil.openId(), TokenUtil.accessToken(), count, cursor);
+        return apiInstance.followingListGet(TokenUtil.openId(), TokenUtil.accessToken(), count, cursor).getData();
     }
 
 }
