@@ -7,6 +7,7 @@ import top.longmarch.core.utils.TokenUtil;
 import top.longmarch.douyin.service.DouYinVideoService;
 
 import java.io.File;
+import java.util.Arrays;
 
 @Service
 public class DouYinVideoServiceImpl implements DouYinVideoService {
@@ -14,6 +15,7 @@ public class DouYinVideoServiceImpl implements DouYinVideoService {
     @Override
     public VideoCreateAwemeCreateInlineResponse2001Data videoCreate(VideoCreateAwemeCreateBody1 body) {
         VideoPublishApi apiInstance = new VideoPublishApi();
+        buildVideoCreateAwemeCreateBody1(body);
         return apiInstance.videoCreatePost(TokenUtil.openId(), TokenUtil.accessToken(), body).getData();
     }
 
@@ -61,6 +63,22 @@ public class DouYinVideoServiceImpl implements DouYinVideoService {
         VideoCreateAwemeCreateInlineResponse2001Data data1 = apiInstance.videoCreatePost(openId, accessToken, createBody).getData();
         String itemId = data1.getItemId();
         System.out.println(itemId);
+    }
+
+    private void buildVideoCreateAwemeCreateBody1(VideoCreateAwemeCreateBody1 body) {
+        body.setMicroAppId("");
+        body.timelinessLabel(0);
+        body.setPoiId("");
+        body.setTimelinessKeyword("");
+        body.setArticleId("");
+        body.setMicroAppUrl("");
+        body.setPoiName("");
+        body.setGameId("");
+        body.setArticleTitle("");
+        body.setMicroAppTitle("");
+        body.setCoverTsp(1.3);
+        body.setAtUsers(Arrays.asList());
+        body.setGameContent("");
     }
 
 }

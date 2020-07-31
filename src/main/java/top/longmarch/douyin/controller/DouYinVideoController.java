@@ -3,6 +3,7 @@ package top.longmarch.douyin.controller;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.crypto.digest.MD5;
 import com.douyin.open.models.VideoCreateAwemeCreateBody1;
+import com.douyin.open.models.VideoCreateAwemeCreateInlineResponse200Data;
 import com.douyin.open.models.VideoDeleteAwemeDeleteBody;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,9 @@ public class DouYinVideoController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return Result.ok().add(douYinVideoService.videoUpload(video));
+        VideoCreateAwemeCreateInlineResponse200Data data = douYinVideoService.videoUpload(video);
+        System.out.println(data.toString());
+        return Result.ok().add(data);
     }
 
     @PostMapping("/videoCreate")
