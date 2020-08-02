@@ -55,4 +55,11 @@ public interface DouYinVideoService {
      * @return
      */
     VideoCreateAwemeCreateInlineResponse200Data videoUpload(File video);
+
+    /**
+     * 关键词视频搜索
+     *
+     * @return
+     */
+    VideoSearchVideoSearchInlineResponse200Data videoSearch(Integer count, Integer cursor, String keyword);
 }

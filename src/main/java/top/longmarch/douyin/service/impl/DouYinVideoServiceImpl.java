@@ -49,6 +49,12 @@ public class DouYinVideoServiceImpl implements DouYinVideoService {
         return apiInstance.videoUploadPost(video, TokenUtil.openId(), TokenUtil.accessToken()).getData();
     }
 
+    @Override
+    public VideoSearchVideoSearchInlineResponse200Data videoSearch(Integer count, Integer cursor, String keyword) {
+        VideoSearchApi apiInstance = new VideoSearchApi();
+        return apiInstance.videoSearchGet(TokenUtil.openId(), TokenUtil.accessToken(), count, keyword, cursor).getData();
+    }
+
     public void videosRelease(File video) {
         String openId = TokenUtil.openId();
         String accessToken = TokenUtil.accessToken();

@@ -24,6 +24,9 @@ public class TokenUtil {
         if (StrUtil.isNotBlank(account.getRefreshToken())) {
             authToken.setRefreshToken(account.getRefreshToken());
         }
+        if (StrUtil.isNotBlank(account.getUnionId())) {
+            authToken.setUnionId(account.getUnionId());
+        }
         if (account.getExpireIn() == null) {
             authToken.setExpireIn(0);
         } else {
@@ -46,6 +49,10 @@ public class TokenUtil {
 
     public static String openId() {
         return get().getOpenId();
+    }
+
+    public static String unionId() {
+        return get().getUnionId();
     }
 
     public static synchronized String clientToken() {

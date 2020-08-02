@@ -55,6 +55,13 @@ public class DouYinVideoController {
         return Result.ok().add(douYinVideoService.videoList(count, cursor));
     }
 
+    @GetMapping("/videoSearch")
+    public Result videoSearch(@RequestParam(required = false, defaultValue = DouyinParam.COUNT) Integer count,
+                              @RequestParam(required = false, defaultValue = DouyinParam.CURSOR) Integer cursor,
+                              @RequestParam String keyword) {
+        return Result.ok().add(douYinVideoService.videoSearch(count, cursor, keyword));
+    }
+
     @PostMapping("/videoDelete")
     public Result videoDelete(VideoDeleteAwemeDeleteBody body) {
         return Result.ok().add(douYinVideoService.videoDelete(body));

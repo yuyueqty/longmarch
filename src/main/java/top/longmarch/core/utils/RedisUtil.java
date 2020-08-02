@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 public class RedisUtil {
 
     private static StringRedisTemplate stringRedisTemplate = ApplicationContextManager.getBean(StringRedisTemplate.class);
-    public static final int DEFAULT_TIMEOUT = 2;
+    public static final int DEFAULT_TIMEOUT = 12;
 
     public static void put(String key, Object value) {
         stringRedisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(value));
