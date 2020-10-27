@@ -37,7 +37,7 @@ public interface DouYinVideoService {
      * @param cursor
      * @return
      */
-    VideoListVideoListInlineResponse200Data videoList(Integer count, Integer cursor);
+    VideoListVideoListInlineResponse200Data videoList(Integer count, Long cursor);
 
     /**
      * 查询指定视频数据
@@ -61,5 +61,5 @@ public interface DouYinVideoService {
      *
      * @return
      */
-    VideoSearchVideoSearchInlineResponse200Data videoSearch(Integer count, Integer cursor, String keyword);
+    VideoSearchVideoSearchInlineResponse200Data videoSearch(Integer count, Long cursor, String keyword);
 }

@@ -32,7 +32,7 @@ public class DouYinVideoServiceImpl implements DouYinVideoService {
     }
 
     @Override
-    public VideoListVideoListInlineResponse200Data videoList(Integer count, Integer cursor) {
+    public VideoListVideoListInlineResponse200Data videoList(Integer count, Long cursor) {
         VideoListApi apiInstance = new VideoListApi();
         return apiInstance.videoListGet(TokenUtil.openId(), TokenUtil.accessToken(), count, cursor).getData();
     }
@@ -50,7 +50,7 @@ public class DouYinVideoServiceImpl implements DouYinVideoService {
     }
 
     @Override
-    public VideoSearchVideoSearchInlineResponse200Data videoSearch(Integer count, Integer cursor, String keyword) {
+    public VideoSearchVideoSearchInlineResponse200Data videoSearch(Integer count, Long cursor, String keyword) {
         VideoSearchApi apiInstance = new VideoSearchApi();
         return apiInstance.videoSearchGet(TokenUtil.openId(), TokenUtil.accessToken(), count, keyword, cursor).getData();
     }

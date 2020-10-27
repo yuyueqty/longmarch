@@ -20,13 +20,13 @@ public class DouYinUserServiceImpl implements DouYinUserService {
     }
 
     @Override
-    public UserFansFansInlineResponse200Data getFansList(Integer count, Integer cursor) {
+    public UserFansFansInlineResponse200Data getFansList(Integer count, Long cursor) {
         FansListApi apiInstance = new FansListApi();
         return apiInstance.fansListGet(TokenUtil.openId(), TokenUtil.accessToken(), count, cursor).getData();
     }
 
     @Override
-    public UserFollowingFollowingInlineResponse200Data getFollowingList(Integer count, Integer cursor) {
+    public UserFollowingFollowingInlineResponse200Data getFollowingList(Integer count, Long cursor) {
         FollowingListApi apiInstance = new FollowingListApi();
         return apiInstance.followingListGet(TokenUtil.openId(), TokenUtil.accessToken(), count, cursor).getData();
     }

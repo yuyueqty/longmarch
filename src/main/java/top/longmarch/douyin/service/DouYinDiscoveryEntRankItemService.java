@@ -7,6 +7,6 @@ public interface DouYinDiscoveryEntRankItemService {
 
     DiscoveryEntRankRankInlineResponse200Data discoveryEntRankItemGet(Integer type, Integer version);
 
-    DiscoveryEntRankRankInlineResponse2001Data discoveryEntRankVersionGet(Integer type, Integer count, Integer cursor);
+    DiscoveryEntRankRankInlineResponse2001Data discoveryEntRankVersionGet(Integer type, Integer count, Long cursor);
 
 }

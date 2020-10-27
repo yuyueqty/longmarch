@@ -30,7 +30,7 @@ public class DouYinUserController {
 
     @GetMapping("/getFansList")
     public Result getFansList(@RequestParam(required = false, defaultValue = DouyinParam.COUNT) Integer count,
-                              @RequestParam(required = false, defaultValue = DouyinParam.CURSOR) Integer cursor) {
+                              @RequestParam(required = false, defaultValue = DouyinParam.CURSOR) Long cursor) {
         UserFansFansInlineResponse200Data data = douYinUserService.getFansList(count, cursor);
         douyinFansService.saveDouyinFans(data);
         return Result.ok().add(data);
@@ -38,7 +38,7 @@ public class DouYinUserController {
 
     @GetMapping("/getFollowingList")
     public Result getFollowingList(@RequestParam(required = false, defaultValue = DouyinParam.COUNT) Integer count,
-                                   @RequestParam(required = false, defaultValue = DouyinParam.CURSOR) Integer cursor) {
+                                   @RequestParam(required = false, defaultValue = DouyinParam.CURSOR) Long cursor) {
         return Result.ok().add(douYinUserService.getFollowingList(count, cursor));
     }
 

@@ -22,7 +22,7 @@ public class DouYinDiscoveryEntRankItemController {
     @GetMapping("/discoveryEntRankVersionGet")
     public Result discoveryEntRankVersionGet(@RequestParam Integer type,
                                              @RequestParam(required = false, defaultValue = DouyinParam.COUNT) Integer count,
-                                             @RequestParam(required = false, defaultValue = DouyinParam.CURSOR) Integer cursor) {
+                                             @RequestParam(required = false, defaultValue = DouyinParam.CURSOR) Long cursor) {
         return Result.ok().add(douYinDiscoveryEntRankItemService.discoveryEntRankVersionGet(type, count, cursor));
     }
 

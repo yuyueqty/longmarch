@@ -18,12 +18,12 @@ public interface DouYinUserService {
      *
      * @return
      */
-    UserFansFansInlineResponse200Data getFansList(Integer count, Integer cursor);
+    UserFansFansInlineResponse200Data getFansList(Integer count, Long cursor);
 
     /**
      * 获取关注列表
      *
      * @return
      */
-    UserFollowingFollowingInlineResponse200Data getFollowingList(Integer count, Integer cursor);
+    UserFollowingFollowingInlineResponse200Data getFollowingList(Integer count, Long cursor);
 }

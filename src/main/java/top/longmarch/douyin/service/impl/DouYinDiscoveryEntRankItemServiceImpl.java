@@ -31,7 +31,7 @@ public class DouYinDiscoveryEntRankItemServiceImpl implements DouYinDiscoveryEnt
     }
 
     @Override
-    public DiscoveryEntRankRankInlineResponse2001Data discoveryEntRankVersionGet(Integer type, Integer count, Integer cursor) {
+    public DiscoveryEntRankRankInlineResponse2001Data discoveryEntRankVersionGet(Integer type, Integer count, Long cursor) {
         DiscoveryEntRankRankInlineResponse2001Data data;
         String key_new = key2 + "_" + type + "_" + cursor;
         String value = RedisUtil.get(key_new);
