@@ -21,6 +21,7 @@ import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.longmarch.core.utils.IpUtil;
 import top.longmarch.core.utils.ResponseUtil;
 
 import javax.servlet.ServletRequest;
@@ -55,6 +56,11 @@ public class LMFormAuthenticationFilter extends FormAuthenticationFilter {
             ResponseUtil.respondJson(WebUtils.toHttp(request), WebUtils.toHttp(response), 10, "用户未登陆");
             return false;
         }
+    }
+
+    @Override
+    protected String getHost(ServletRequest request) {
+        return IpUtil.getIPAddress(WebUtils.toHttp(request));
     }
 
 }

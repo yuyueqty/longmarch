@@ -15,7 +15,7 @@ import top.longmarch.cms.service.ITagService;
 
 import java.util.Date;
 
-@Api(value = "开放接口", tags = "微信开放接口")
+@Api(value = "开放接口", tags = "文章预览页面")
 @Controller
 @RequestMapping("/api")
 public class CmsOpenApi {

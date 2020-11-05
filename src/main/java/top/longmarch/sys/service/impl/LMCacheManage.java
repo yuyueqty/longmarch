@@ -27,35 +27,33 @@ public class LMCacheManage {
     private SessionManager sessionManager;
 
     public int getOnlineUsersCount() {
-        return cacheManager.getCache(Constant.KEEP_ONE_USER_CACHE).size();
+        return getCache(Constant.KEEP_ONE_USER_CACHE).size();
     }
 
     public void cleanActivityUserInfo(Long userId) {
-        cacheManager.getCache(Constant.USER_PERMISSION_CACHE).remove(String.format(Constant.ACTIVITY_USER_INFO_KEY, userId));
+        getCache(Constant.USER_PERMISSION_CACHE).remove(String.format(Constant.ACTIVITY_USER_INFO_KEY, userId));
     }
 
     public void removeOnlineUser(String username) {
-        Cache cache = cacheManager.getCache(Constant.KEEP_ONE_USER_CACHE);
-        Cache<Object, Object> sessionCache = cacheManager.getCache(Constant.ACTIVE_SESSION_CACHE);
+        Cache cache = getCache(Constant.KEEP_ONE_USER_CACHE);
         String sessionId = JSONUtil.parseObj(cache.get(username)).getStr("last");
         if (StrUtil.isNotBlank(sessionId)) {
             DefaultSessionKey serializable = new DefaultSessionKey(sessionId);
             Session session = sessionManager.getSession(serializable);
             session.setTimeout(0);
             cache.remove(username);
-            sessionCache.remove(serializable);
+            getCache(Constant.ACTIVE_SESSION_CACHE).remove(serializable);
         }
     }
 
     public void cleanCacheSession(String sessionId) {
-        Cache cache = cacheManager.getCache(Constant.KEEP_ONE_USER_CACHE);
-        Cache<Object, Object> sessionCache = cacheManager.getCache(Constant.ACTIVE_SESSION_CACHE);
+        Cache cache = getCache(Constant.KEEP_ONE_USER_CACHE);
         Set keys = cache.keys();
         for (Object key : keys) {
             String _sessionId = JSONUtil.parseObj(cache.get(key)).getStr("last");
             if (sessionId.equals(_sessionId)) {
                 cache.remove(key);
-                sessionCache.remove(key);
+                getCache(Constant.ACTIVE_SESSION_CACHE).remove(key);
                 break;
             }
         }
@@ -63,7 +61,7 @@ public class LMCacheManage {
 
     public List<Object> getOnlineUsers() {
         List<Object> onlineUsers = new ArrayList<>();
-        Cache cache = cacheManager.getCache(Constant.KEEP_ONE_USER_CACHE);
+        Cache cache = getCache(Constant.KEEP_ONE_USER_CACHE);
         for (Object key : cache.keys()) {
             String sessionId = JSONUtil.parseObj(cache.get(key)).getStr("last");
             if (StrUtil.isBlank(sessionId)) {
@@ -112,6 +110,10 @@ public class LMCacheManage {
             }
         }
         return cacheManageList;
+    }
+
+    public Cache getCache(String cacheName) {
+        return cacheManager.getCache(cacheName);
     }
 
 }
