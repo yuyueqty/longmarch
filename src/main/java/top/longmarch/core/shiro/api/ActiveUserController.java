@@ -59,9 +59,9 @@ public class ActiveUserController {
 
     @ApiOperation(value = "踢出用户")
     @GetMapping("/kickOutUser")
-    public Result kickOutUser(@RequestParam String username) {
-        log.info("踢出用户：username={}", username);
-        lmCacheManage.removeOnlineUser(username);
+    public Result kickOutUser(@RequestParam String sessionId) {
+        log.info("踢出用户：sessionId={}", sessionId);
+        lmCacheManage.cleanCacheSession(sessionId);
         return Result.ok();
     }
 

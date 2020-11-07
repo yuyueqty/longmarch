@@ -1,22 +1,26 @@
 package top.longmarch.sys.service.impl;
 
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
-import org.apache.shiro.session.Session;
-import org.apache.shiro.session.mgt.DefaultSessionKey;
 import org.apache.shiro.session.mgt.SessionManager;
+import org.apache.shiro.session.mgt.SimpleSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.longmarch.core.common.Constant;
 import top.longmarch.core.shiro.cache.LMRedisCacheManager;
+import top.longmarch.sys.entity.User;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Service
 public class LMCacheManage {
 
@@ -31,54 +35,65 @@ public class LMCacheManage {
     }
 
     public void cleanActivityUserInfo(Long userId) {
-        getCache(Constant.USER_PERMISSION_CACHE).remove(String.format(Constant.ACTIVITY_USER_INFO_KEY, userId));
-    }
-
-    public void removeOnlineUser(String username) {
-        Cache cache = getCache(Constant.KEEP_ONE_USER_CACHE);
-        String sessionId = JSONUtil.parseObj(cache.get(username)).getStr("last");
-        if (StrUtil.isNotBlank(sessionId)) {
-            DefaultSessionKey serializable = new DefaultSessionKey(sessionId);
-            Session session = sessionManager.getSession(serializable);
-            session.setTimeout(0);
-            cache.remove(username);
-            getCache(Constant.ACTIVE_SESSION_CACHE).remove(serializable);
+        Cache cache = getCache(Constant.USER_PERMISSION_CACHE);
+        if (cache != null) {
+            cache.remove(String.format(Constant.ACTIVITY_USER_INFO_KEY, userId));
         }
     }
 
     public void cleanCacheSession(String sessionId) {
-        Cache cache = getCache(Constant.KEEP_ONE_USER_CACHE);
-        Set keys = cache.keys();
-        for (Object key : keys) {
-            String _sessionId = JSONUtil.parseObj(cache.get(key)).getStr("last");
-            if (sessionId.equals(_sessionId)) {
-                cache.remove(key);
-                getCache(Constant.ACTIVE_SESSION_CACHE).remove(key);
-                break;
+        Cache active_session_cache = getCache(Constant.ACTIVE_SESSION_CACHE);
+        if (active_session_cache != null) {
+            Object o = active_session_cache.get(sessionId);
+            if (o != null) {
+                SimpleSession simpleSession = JSONUtil.toBean(JSONUtil.parseObj(o), SimpleSession.class);
+                User user = getUser(simpleSession);
+                active_session_cache.remove(sessionId);
+                Cache keep_one_user_cache = getCache(Constant.KEEP_ONE_USER_CACHE);
+                if (keep_one_user_cache != null) {
+                    keep_one_user_cache.remove(user.getUsername());
+                }
+                Cache authentication_cache = getCache(Constant.AUTHENTICATION_CACHE);
+                if (authentication_cache != null) {
+                    authentication_cache.remove(user.getUsername());
+                }
+                Cache authorization_cache = getCache(Constant.AUTHORIZATION_CACHE);
+                if (authentication_cache != null) {
+                    authorization_cache.remove(user.getUsername());
+                }
+                cleanActivityUserInfo(user.getId());
             }
         }
     }
 
     public List<Object> getOnlineUsers() {
         List<Object> onlineUsers = new ArrayList<>();
-        Cache cache = getCache(Constant.KEEP_ONE_USER_CACHE);
-        for (Object key : cache.keys()) {
-            String sessionId = JSONUtil.parseObj(cache.get(key)).getStr("last");
-            if (StrUtil.isBlank(sessionId)) {
-                cleanCacheSession(sessionId);
-            } else {
-                Map<String, Object> user = new HashMap<>();
-                Session session = sessionManager.getSession(new DefaultSessionKey(sessionId));
-                user.put("username", key);
-                user.put("sessionId", session.getId());
-                user.put("host", session.getHost());
-                user.put("startTimestamp", session.getStartTimestamp());
-                user.put("lastAccessTime", session.getLastAccessTime());
-                user.put("timeout", TimeUnit.MILLISECONDS.toHours(session.getTimeout()));
-                onlineUsers.add(user);
+        Cache active_session_cache = getCache(Constant.ACTIVE_SESSION_CACHE);
+        if (active_session_cache == null) {
+            return onlineUsers;
+        }
+
+        if (active_session_cache.values() != null) {
+            for (Object o : active_session_cache.values()) {
+                SimpleSession session = JSONUtil.toBean(JSONUtil.parseObj(o), SimpleSession.class);
+                Map<String, Object> userMap = new HashMap<>();
+                userMap.put("username", getUser(session).getUsername());
+                userMap.put("sessionId", session.getId());
+                userMap.put("host", session.getHost());
+                userMap.put("isValid", session.isValid());
+                userMap.put("startTimestamp", session.getStartTimestamp());
+                userMap.put("lastAccessTime", session.getLastAccessTime());
+                userMap.put("timeout", TimeUnit.MILLISECONDS.toMinutes(session.getTimeout()));
+                onlineUsers.add(userMap);
             }
         }
         return onlineUsers;
+    }
+
+    public User getUser(SimpleSession simpleSession) {
+        Object attribute = simpleSession.getAttribute("org.apache.shiro.subject.support.DefaultSubjectContext_PRINCIPALS_SESSION_KEY");
+        List<User> userList = JSONUtil.toList(JSONUtil.parseArray(attribute), User.class);
+        return userList.get(0);
     }
 
     public List<Object> getAllCache() {

@@ -12,7 +12,7 @@ import org.apache.shiro.cache.CacheManager;
 public class MapCacheManager implements CacheManager{
 
 	
-	private final ConcurrentMap<String, Cache> CACHES = new ConcurrentHashMap<String, Cache>(); 
+	private static final ConcurrentMap<String, Cache> CACHES = new ConcurrentHashMap<String, Cache>();
 	
 	@Override
 	public <K, V> Cache<K, V> getCache(String cacheName) throws CacheException {

@@ -13,7 +13,7 @@ public class SpringCacheManager implements CacheManager {
 
 	private final org.springframework.cache.CacheManager delegator;
 	
-	private final ConcurrentMap<String, SpringCache> CACHES = new ConcurrentHashMap<String, SpringCache>();
+	private static final ConcurrentMap<String, SpringCache> CACHES = new ConcurrentHashMap<String, SpringCache>();
 	
 	public SpringCacheManager(org.springframework.cache.CacheManager cacheManager){
 		this.delegator = cacheManager;
