@@ -47,7 +47,7 @@ public class ShiroAutoConfiguration {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         Map<String, Filter> filterMap = new HashMap<>();
         filterMap.put("cross", new LMPathMatchingFilter());
-//        filterMap.put("authc", new LMFormAuthenticationFilter());
+        filterMap.put("authc", new LMFormAuthenticationFilter());
         KickoutSessionControlFilter kickoutSessionControlFilter = new KickoutSessionControlFilter();
         kickoutSessionControlFilter.setCacheManager(cacheManager);
         kickoutSessionControlFilter.setSessionManager(sessionManager(cacheManager));

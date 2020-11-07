@@ -5,10 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
-import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.session.mgt.SimpleSession;
+import org.apache.shiro.subject.support.DefaultSubjectContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import top.longmarch.core.common.Constant;
 import top.longmarch.core.shiro.cache.LMRedisCacheManager;
 import top.longmarch.sys.entity.User;
@@ -24,11 +25,8 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class LMCacheManage {
 
-
     @Autowired
     private CacheManager cacheManager;
-    @Autowired
-    private SessionManager sessionManager;
 
     public int getOnlineUsersCount() {
         return getCache(Constant.KEEP_ONE_USER_CACHE).size();
@@ -58,7 +56,7 @@ public class LMCacheManage {
                     authentication_cache.remove(user.getUsername());
                 }
                 Cache authorization_cache = getCache(Constant.AUTHORIZATION_CACHE);
-                if (authentication_cache != null) {
+                if (authorization_cache != null) {
                     authorization_cache.remove(user.getUsername());
                 }
                 cleanActivityUserInfo(user.getId());
@@ -91,9 +89,13 @@ public class LMCacheManage {
     }
 
     public User getUser(SimpleSession simpleSession) {
-        Object attribute = simpleSession.getAttribute("org.apache.shiro.subject.support.DefaultSubjectContext_PRINCIPALS_SESSION_KEY");
+        User user = new User();
+        Object attribute = simpleSession.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY);
         List<User> userList = JSONUtil.toList(JSONUtil.parseArray(attribute), User.class);
-        return userList.get(0);
+        if (!CollectionUtils.isEmpty(userList)) {
+            user = userList.get(0);
+        }
+        return user;
     }
 
     public List<Object> getAllCache() {
@@ -125,6 +127,20 @@ public class LMCacheManage {
             }
         }
         return cacheManageList;
+    }
+
+    public void cleanAuthorizationCache() {
+        Cache authorization_cache = getCache(Constant.AUTHORIZATION_CACHE);
+        if (authorization_cache != null) {
+            authorization_cache.clear();
+        }
+    }
+
+    public void cleanAuthorizationByUserCache(String username) {
+        Cache authorization_cache = getCache(Constant.AUTHORIZATION_CACHE);
+        if (authorization_cache != null) {
+            authorization_cache.remove(username);
+        }
     }
 
     public Cache getCache(String cacheName) {

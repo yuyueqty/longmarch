@@ -16,14 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 import top.longmarch.core.common.Constant;
 import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.exception.LongmarchException;
-import top.longmarch.core.shiro.realm.CustomRealm;
 import top.longmarch.core.utils.PasswordUtil;
 import top.longmarch.sys.dao.UserDao;
 import top.longmarch.sys.entity.SysParams;
 import top.longmarch.sys.entity.User;
 import top.longmarch.sys.entity.UserRoleRel;
-import top.longmarch.sys.entity.dto.ChangeStatusDTO;
 import top.longmarch.sys.entity.dto.ChangePasswordDTO;
+import top.longmarch.sys.entity.dto.ChangeStatusDTO;
 import top.longmarch.sys.entity.dto.CreateUpdateUserDTO;
 import top.longmarch.sys.service.IParameterService;
 import top.longmarch.sys.service.IUserRoleRelService;
@@ -55,7 +54,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
     @Autowired
     private IUserRoleRelService userRoleRelService;
     @Autowired
-    private CustomRealm customRealm;
+    private LMCacheManage lmCacheManage;
     @Autowired
     private IParameterService parameterService;
 
@@ -93,7 +92,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
         this.updateById(user);
         this.createUserRolesRel(user.getId(), this.str2List(user.getRoleIds()));
         // 清除用户权限信息
-        customRealm.clearCache(user.getUsername());
+        lmCacheManage.cleanAuthorizationByUserCache(user.getUsername());
     }
 
     @Transactional

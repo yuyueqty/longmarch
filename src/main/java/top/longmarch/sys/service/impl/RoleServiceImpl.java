@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.longmarch.core.common.PageFactory;
 import top.longmarch.core.enums.StatusEnum;
-import top.longmarch.core.shiro.realm.CustomRealm;
 import top.longmarch.core.utils.tree.TreeUtil;
 import top.longmarch.sys.dao.RoleDao;
 import top.longmarch.sys.entity.Role;
@@ -50,7 +49,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements IRole
     @Autowired
     private IRolePermissionRelService rolePermissionRelService;
     @Autowired
-    private CustomRealm customRealm;
+    private LMCacheManage lmCacheManage;
     @Autowired
     private IUserRoleRelService userRoleRelService;
     @Autowired
@@ -82,7 +81,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements IRole
         this.updateById(role);
         createRolePermissionsRel(role.getId(), role.getCheckedKeys());
         // 清除所有用户权限
-        customRealm.clearCache();
+        lmCacheManage.cleanAuthorizationCache();
     }
 
     @Transactional
@@ -99,7 +98,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements IRole
         this.removeByIds(roleIds);
         rolePermissionRelService.remove(new LambdaQueryWrapper<RolePermissionRel>().in(RolePermissionRel::getRoleId, roleIds));
         // 清除所有用户权限
-        customRealm.clearCache();
+        lmCacheManage.cleanAuthorizationCache();
     }
 
     @Override
@@ -152,7 +151,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements IRole
                     .eq(User::getStatus, StatusEnum.YES.getValue()).in(User::getId, clearCacheUserId));
             for (User user : clearCacheUserList) {
                 // 清除用户权限信息
-                customRealm.clearCache(user.getUsername());
+                lmCacheManage.cleanAuthorizationByUserCache(user.getUsername());
             }
         }
     }

@@ -5,8 +5,6 @@ import cn.hutool.core.util.StrUtil;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
-import org.apache.shiro.cache.Cache;
-import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.slf4j.Logger;
@@ -14,7 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import top.longmarch.core.enums.StatusEnum;
 import top.longmarch.core.shiro.service.UserIRolePermissionService;
+import top.longmarch.core.utils.UserUtil;
 import top.longmarch.sys.entity.User;
+import top.longmarch.sys.service.impl.LMCacheManage;
 
 import java.util.Map;
 import java.util.Set;
@@ -24,6 +24,8 @@ public class CustomRealm extends AuthorizingRealm {
     private static final Logger logger = LoggerFactory.getLogger(CustomRealm.class);
     @Autowired
     private UserIRolePermissionService userIRolePermissionService;
+    @Autowired
+    private LMCacheManage lmCacheManage;
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
@@ -75,34 +77,8 @@ public class CustomRealm extends AuthorizingRealm {
     @Override
     protected void doClearCache(PrincipalCollection principals) {
         User user = (User) principals.getPrimaryPrincipal();
-        String username = user.getUsername();
-        Cache<Object, Object> authenticationCache = getCache(getAuthenticationCacheName());
-        if (authenticationCache != null) {
-            authenticationCache.remove(username);
-            logger.info("用户[{}]认证信息已被清除！", username);
-        }
-        clearCache(username);
-    }
-
-    public void clearCache(String username) {
-        Cache<Object, Object> authorizationCache = getCache(getAuthorizationCacheName());
-        if (authorizationCache != null) {
-            authorizationCache.remove(username);
-            logger.info("用户[{}]权限信息已被清除！", username);
-        }
-    }
-
-    public void clearCache() {
-        Cache<Object, Object> authorizationCache = getCache(getAuthorizationCacheName());
-        if (authorizationCache != null) {
-            authorizationCache.clear();
-            logger.info("所有用户权限信息已被清除！");
-        }
-    }
-
-    public Cache<Object, Object> getCache(String cacheName) {
-        CacheManager cacheManager = getCacheManager();
-        return cacheManager.getCache(cacheName);
+        lmCacheManage.cleanCacheSession(UserUtil.sessionId());
+        logger.info("用户[{}]认证授权缓存信息已清除！", user.getUsername());
     }
 
 }

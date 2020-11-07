@@ -1,5 +1,6 @@
 package top.longmarch.core.shiro.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.session.Session;
@@ -11,6 +12,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
+@Slf4j
 public class LMSessionDAO extends AbstractSessionDAO {
 
     private CacheManager cacheManager;
