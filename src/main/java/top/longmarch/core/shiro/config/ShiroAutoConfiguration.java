@@ -106,6 +106,8 @@ public class ShiroAutoConfiguration {
         ExecutorServiceSessionValidationScheduler scheduler = new ExecutorServiceSessionValidationScheduler();
         scheduler.setSessionManager(sessionManager);
         scheduler.setInterval(Constant.SESSION_CLEAR_TILE);
+        // 执行会话验证调度器
+        scheduler.enableSessionValidation();
         sessionManager.setSessionValidationScheduler(scheduler);
         sessionManager.setSessionDAO(new LMSessionDAO(cacheManager));
         return sessionManager;

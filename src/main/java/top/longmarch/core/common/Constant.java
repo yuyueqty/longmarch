@@ -28,9 +28,11 @@ public class Constant {
     public static final Integer BUTTON = 2;
 
     // 默认SESSION超时时间：1小时=3600000毫秒(ms)
-    public static final long SESSION_TIMEOUT = 1000 * 60 * 60 * 24;
+//    public static final long SESSION_TIMEOUT = 1000 * 60 * 60 * 24;
+    public static final long SESSION_TIMEOUT = 1000 * 60 * 2;
     // 10分钟清理一次失效的Session
-    public static final long SESSION_CLEAR_TILE = 1000 * 60 * 10;
+//    public static final long SESSION_CLEAR_TILE = 1000 * 60 * 10;
+    public static final long SESSION_CLEAR_TILE = 1000 * 60;
     // Cache
     public static final String ACTIVE_SESSION_CACHE = "__activeSessionCache__";
     public static final String KEEP_ONE_USER_CACHE = "__keepOneUserCache__";

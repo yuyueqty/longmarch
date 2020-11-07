@@ -38,7 +38,7 @@ public class VideoListApiTest {
         String openId = "b1f9c170-d2d8-4d06-b02d-dd20027bfcf0";
         String accessToken = "act.1c926119d77da82c90ee67c7bd62bf09pdRBAjSfx4T30lNuyQN1GXy4yWc2";
         Integer count = 10;
-        Integer cursor = 0;
+        Long cursor = 0L;
         VideoListVideoListInlineResponse200 response = api.videoListGet(openId, accessToken, count, cursor);
         System.out.println(response.getData().getList());
         // TODO: test validations

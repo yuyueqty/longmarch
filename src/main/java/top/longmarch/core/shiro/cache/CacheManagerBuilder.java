@@ -22,7 +22,7 @@ public class CacheManagerBuilder{
 	}
 	
 	public CacheManager build() {
-		CacheManager cacheManager = null;
+		CacheManager cacheManager;
 		org.springframework.cache.CacheManager springCacheManager = springCachePvd.getIfAvailable();
 		if(Objects.isNull(springCacheManager)) {
 			cacheManager = new MapCacheManager();
@@ -33,15 +33,16 @@ public class CacheManagerBuilder{
 	}
 	
 	private CacheManager decision(org.springframework.cache.CacheManager springCacheManager) {
+		// EhCache
 		if (springCacheManager instanceof EhCacheCacheManager) {
 			EhCacheManager ehCacheManager = new EhCacheManager();
 			ehCacheManager.setCacheManager(((EhCacheCacheManager) springCacheManager).getCacheManager());
 			return ehCacheManager;
 		}
-		
+		// RedisCache
 		if (springCacheManager instanceof org.springframework.data.redis.cache.RedisCacheManager) {
 			GenericJackson2JsonRedisSerializer jsonSerializer = new GenericJackson2JsonRedisSerializer();
-			RedisTemplate rt = new RedisTemplate<Object, Object>();
+			RedisTemplate rt = new RedisTemplate();
 			rt.setConnectionFactory(redisConnectionFactory);
 			rt.setKeySerializer(jsonSerializer);
 			rt.setHashKeySerializer(jsonSerializer);
@@ -52,6 +53,7 @@ public class CacheManagerBuilder{
 			redisCacheManager.setRedisTimeout(Constant.ACTIVE_SESSION_CACHE, Constant.SESSION_TIMEOUT);
 			return redisCacheManager;
 		}
+		// SpringCache
 		return new SpringCacheManager(springCacheManager);
 	}
 

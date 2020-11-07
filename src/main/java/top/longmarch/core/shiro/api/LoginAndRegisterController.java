@@ -16,6 +16,7 @@ import top.longmarch.core.shiro.model.RegisterInfo;
 import top.longmarch.core.shiro.service.LoginAndRegisterService;
 import top.longmarch.core.utils.UserUtil;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.UUID;
 
 @Slf4j
@@ -29,7 +30,7 @@ public class LoginAndRegisterController {
     @Log(type = Log.LogType.LOGIN)
     @ApiOperation(value = "用户登陆")
     @PostMapping(value = "/login")
-    public Result login(@RequestBody @Validated LoginInfo loginInfo) {
+    public Result login(HttpServletRequest request, @RequestBody @Validated LoginInfo loginInfo) {
         log.info("用户登录信息：username={}, password=***", loginInfo.getUsername());
         loginAndRegisterService.login(loginInfo);
         return Result.ok("登录成功").add("token", UUID.randomUUID());

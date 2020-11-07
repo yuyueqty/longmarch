@@ -48,9 +48,7 @@ public class ExportWxUserController {
     @RequiresPermissions("wx:gzhuser:download")
     @GetMapping("/download.xls")
     public void export(HttpServletResponse response) {
-        GzhAccount gzhAccount = gzhAccountService.getOne(new LambdaQueryWrapper<GzhAccount>()
-                .eq(GzhAccount::getCreateBy, UserUtil.getUserId())
-                .eq(GzhAccount::getDefaultAccount, 1));
+        GzhAccount gzhAccount = gzhAccountService.getDefalutGzhAccount();
         ExportParams exportParams;
         if (gzhAccount != null) {
             exportParams = new ExportParams("微信用户分维标签", "用户标签");

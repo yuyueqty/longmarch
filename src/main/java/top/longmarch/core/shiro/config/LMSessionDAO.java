@@ -23,7 +23,7 @@ public class LMSessionDAO extends AbstractSessionDAO {
     protected Serializable doCreate(Session session) {
         Serializable serializable = this.generateSessionId(session);
         assignSessionId(session, serializable);
-        cacheManager.getCache(Constant.ACTIVE_SESSION_CACHE).put(serializable, session);
+        this.cache().put(serializable, session);
         return serializable;
     }
 

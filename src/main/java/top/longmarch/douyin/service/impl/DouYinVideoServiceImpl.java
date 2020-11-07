@@ -2,6 +2,7 @@ package top.longmarch.douyin.service.impl;
 
 import com.douyin.open.api.*;
 import com.douyin.open.models.*;
+import io.swagger.models.auth.In;
 import org.springframework.stereotype.Service;
 import top.longmarch.core.utils.TokenUtil;
 import top.longmarch.douyin.service.DouYinVideoService;

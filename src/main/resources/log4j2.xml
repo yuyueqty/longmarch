@@ -2,9 +2,9 @@
 <Configuration status="off">
     <!-- 日志文件目录和压缩文件 -->
     <Properties>
-        <Property name="projectName">long-march</Property>
-        <Property name="fileName">./logs</Property>
-        <Property name="fileGz">./logs/7z</Property>
+        <Property name="projectName">longmarch-service</Property>
+        <Property name="fileName">/root/longmarch/logs</Property>
+        <Property name="fileGz">/root/longmarch/logs/history</Property>
     </Properties>
     <Appenders>
         <!--这个输出控制台的配置 -->
@@ -17,8 +17,8 @@
         </Console>
 
         <!--这个会打印出所有的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档 -->
-        <RollingRandomAccessFile name="rollingInfoFile" fileName="${fileName}/${projectName}-info.log" immediateFlush="false"
-                                 filePattern="${fileGz}/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.${projectName}-info.gz">
+        <RollingRandomAccessFile name="rollingInfoFile" fileName="${fileName}/${projectName}.log" immediateFlush="false"
+                                 filePattern="${fileGz}/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.${projectName}.log.gz">
             <PatternLayout pattern="%d{yyyy-MM-dd 'at' HH:mm:ss z} [%t] %-5level %logger{36} %L %M - %msg%xEx%n" />
             <Policies>
                 <TimeBasedTriggeringPolicy interval="6" modulate="true" />
@@ -35,8 +35,8 @@
         </RollingRandomAccessFile>
 
 
-        <RollingRandomAccessFile name="rollingErrorFile" fileName="${fileName}/${projectName}-error.log" immediateFlush="false"
-                                 filePattern="${fileGz}/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.${projectName}-error.gz">
+        <RollingRandomAccessFile name="rollingErrorFile" fileName="${fileName}/${projectName}.error" immediateFlush="false"
+                                 filePattern="${fileGz}/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.${projectName}.error.gz">
             <PatternLayout pattern="%d{yyyy-MM-dd 'at' HH:mm:ss z} [%t] %-5level %logger{36} %L %M - %msg%xEx%n" />
             <Policies>
                 <TimeBasedTriggeringPolicy interval="6" modulate="true" />
