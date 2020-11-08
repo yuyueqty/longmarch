@@ -1,6 +1,6 @@
 
 # 简介
-长征后台管理系统，是一个轻量级的SpringBoot快捷开发项目，代码规范，学习简单，易于扩展，可作为基础框架使用。
+长征后台管理系统，采用前后端分离技术，后端SpringBoot+Mybatis-plus+Shiro框架，前端vue-element-admin框架，代码规范，学习简单，易于扩展，可作为基础框架使用。
 
 ------
 ### 项目演示
@@ -10,9 +10,9 @@
 
 ### 系统特色
 
- - 前后端分离
-    后端：SpringBoot+MyBatis-pus+Shiro  
-    前端：vue-element-admin  
+ - 前后端分离  
+    后端：SpringBoot+Mybatis-pus+Shiro  
+    前端：vue-element-admin 
  - 后端代码按照业务模块进行分层，方便后期项目拆分和扩展  
  - RBAC权限管理 控制到按钮级权限（实现无权限时按钮不可见）  
  - 实现路由动态加载，可通过后台页面进行管理  

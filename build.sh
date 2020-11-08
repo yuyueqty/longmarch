@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 # 远程主机IP
-HOST=122.51.244.159
+HOST=***
 # 远程主机账号
-USERNAME=root
+USERNAME=***
 # 远程主机目录
 TARGET_HOST_DIR=/root
 # 镜像仓库地址
@@ -15,7 +15,7 @@ IMAGES_REPOSITORY=
 # 镜像文件
 IMAGES=${IMAGES_URL}/${IMAGES_SPACENAME}/${IMAGES_REPOSITORY}
 # 上传文件
-UPLOAD_FILES="target/longmarch-framework-0.0.1-SNAPSHOT.jar"
+UPLOAD_FILES="target/longmarch-service.jar"
 # 对远程仓库进行授权
 # sudo docker login --username 100002732739 ${IMAGES_URL};
 #############################################################################
