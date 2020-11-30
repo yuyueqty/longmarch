@@ -91,8 +91,8 @@ spring:
      min-idle: 0
   cache:
     type: redis
-    ehcache:
-      config: classpath:ehcache.xml
+    #ehcache:
+    #  config: classpath:ehcache.xml
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/*/*Mapper.xml
