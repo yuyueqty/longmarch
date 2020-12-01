@@ -16,6 +16,8 @@ APP_BIN_DIR=$APP_HOME/bin
 
 APP_LIB_DIR=$APP_HOME/lib
 
+APP_CONF_DIR=$APP_HOME/conf
+
 JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 
 if [ ! -d $APP_LOG_DIR ];then
@@ -34,7 +36,7 @@ echo "start sna inprogress service..."
 
 cd $APP_HOME
 
-java -jar -Dloader.path=conf,lib -Duser.timezone=GMT+08 ${PROG}
+java -jar -Dloader.path=${APP_LIB_DIR},${APP_CONF_DIR} -Duser.timezone=GMT+08 ${PROG}
 
 echo $! > ${FILE_PID}
 

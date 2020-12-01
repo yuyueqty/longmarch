@@ -27,7 +27,7 @@ spring:
     prefix: classpath:/templates
   datasource:
     druid:
-      url: jdbc:mysql://mysql:3306/longmarch?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true
+      url: jdbc:mysql://mysql:3306/longmarch?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
       username: longmarch
       password: pfbNKZmkcZ7CDhSf
       driver-class-name: com.mysql.cj.jdbc.Driver

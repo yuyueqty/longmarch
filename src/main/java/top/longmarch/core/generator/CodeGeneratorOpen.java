@@ -43,7 +43,7 @@ public class CodeGeneratorOpen {
         TemplateConfig templateConfig = buildTemplateConfig();
         DataSourceConfig dataSourceConfig = buildDataSourceConfig();
         PackageConfig packageConfig = buildPackageConfig(moduleName);
-        InjectionConfig injectionConfig = buildInjectionConfig(packageConfig, tableName);
+        InjectionConfig injectionConfig = buildInjectionConfig(tableName);
         StrategyConfig strategy = buildStrategyConfig(packageConfig, tableName);
 
         autoGenerator.setGlobalConfig(globalConfig);
@@ -82,7 +82,7 @@ public class CodeGeneratorOpen {
         return strategy;
     }
 
-    private InjectionConfig buildInjectionConfig(PackageConfig packageConfig, String tableName) {
+    private InjectionConfig buildInjectionConfig(String tableName) {
         InjectionConfig injectionConfig = new InjectionConfig() {
             @Override
             public void initMap() {

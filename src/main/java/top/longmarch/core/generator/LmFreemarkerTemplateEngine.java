@@ -1,6 +1,5 @@
 package top.longmarch.core.generator;
 
-import cn.hutool.db.Entity;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import top.longmarch.sys.entity.Generator;
