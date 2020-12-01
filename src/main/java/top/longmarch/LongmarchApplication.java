@@ -9,6 +9,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import top.longmarch.core.config.CrossDomainFilter;
 
 import java.net.InetAddress;
@@ -17,6 +18,7 @@ import java.net.UnknownHostException;
 @SpringBootApplication
 @EnableCaching
 @EnableAsync
+@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 86400*30)
 public class LongmarchApplication {
 
     public final static Logger log = LoggerFactory.getLogger(LongmarchApplication.class);
