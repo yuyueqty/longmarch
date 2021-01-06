@@ -33,7 +33,7 @@ public class DouYinHotsearchServiceImpl implements DouYinHotsearchService {
     }
 
     @Override
-    public HotsearchHotsearchInlineResponse2001Data hotsearchTrendingSentencesGet(Integer count, Integer cursor) {
+    public HotsearchHotsearchInlineResponse2001Data hotsearchTrendingSentencesGet(Integer count, Long cursor) {
         HotsearchHotsearchInlineResponse2001Data data;
         String key_new = key2 + "_" + cursor;
         String value = RedisUtil.get(key_new + "_" + cursor);
