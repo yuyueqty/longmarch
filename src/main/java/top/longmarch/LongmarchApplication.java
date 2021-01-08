@@ -33,7 +33,7 @@ public class LongmarchApplication {
                 "Application AI-Coal is running! Access URLs:\n\t" +
                 "Local: \t\thttp://localhost:" + port + path + "/\n\t" +
                 "External: \thttp://" + ip + ":" + port + path + "/\n\t" +
-                "API Local: \thttp://localhost" + port + path + "/doc.html\n\t" +
+                "API Local: \thttp://localhost:" + port + path + "/doc.html\n\t" +
                 "API External: \thttp://" + ip + ":" + port + path + "/doc.html\n\t" +
                 "----------------------------------------------------------");
     }
