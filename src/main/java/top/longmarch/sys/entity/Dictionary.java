@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 /**
  * <p>
@@ -18,6 +19,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @author YuYue
  * @since 2020-01-12
  */
+@Data
 @TableName("sys_dictionary")
 @ApiModel(value="Dictionary对象", description="字典信息")
 public class Dictionary implements Serializable {
@@ -60,82 +62,4 @@ public class Dictionary implements Serializable {
     @TableField(value = "create_time", fill = FieldFill.INSERT)
     private Date createTime;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-    public Integer getSort() {
-        return sort;
-    }
-
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    public Long getCreateBy() {
-        return createBy;
-    }
-
-    public void setCreateBy(Long createBy) {
-        this.createBy = createBy;
-    }
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    @Override
-    public String toString() {
-        return "Dictionary{" +
-            "id=" + id +
-            ", code=" + code +
-            ", value=" + value +
-            ", label=" + label +
-            ", sort=" + sort +
-            ", status=" + status +
-            ", description=" + description +
-            ", createBy=" + createBy +
-            ", createTime=" + createTime +
-        "}";
-    }
 }

@@ -8,6 +8,7 @@ import java.io.Serializable;
 public class RoleDTO implements Serializable {
 
     private Long value;
+
     private String label;
 
 }

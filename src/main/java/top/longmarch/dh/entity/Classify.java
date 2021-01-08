@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 /**
  * <p>
@@ -18,6 +19,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @author YuYue
  * @since 2020-06-22
  */
+@Data
 @TableName("dh_classify")
 @ApiModel(value="Classify对象", description="导航分类")
 public class Classify implements Serializable {
@@ -48,58 +50,4 @@ public class Classify implements Serializable {
     @TableField(value = "create_time", fill = FieldFill.INSERT)
     private Date createTime;
 
-    public Long getClassifyId() {
-        return classifyId;
-    }
-
-    public void setClassifyId(Long classifyId) {
-        this.classifyId = classifyId;
-    }
-    public String getClassifyName() {
-        return classifyName;
-    }
-
-    public void setClassifyName(String classifyName) {
-        this.classifyName = classifyName;
-    }
-    public String getClassifyDesc() {
-        return classifyDesc;
-    }
-
-    public void setClassifyDesc(String classifyDesc) {
-        this.classifyDesc = classifyDesc;
-    }
-    public Integer getClassifySort() {
-        return classifySort;
-    }
-
-    public void setClassifySort(Integer classifySort) {
-        this.classifySort = classifySort;
-    }
-    public Long getCreateBy() {
-        return createBy;
-    }
-
-    public void setCreateBy(Long createBy) {
-        this.createBy = createBy;
-    }
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    @Override
-    public String toString() {
-        return "Classify{" +
-            "classifyId=" + classifyId +
-            ", classifyName=" + classifyName +
-            ", classifyDesc=" + classifyDesc +
-            ", classifySort=" + classifySort +
-            ", createBy=" + createBy +
-            ", createTime=" + createTime +
-        "}";
-    }
 }

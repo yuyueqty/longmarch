@@ -6,8 +6,11 @@ import lombok.Data;
 public class RoleUserDTO {
 
     private Long roleId;
+
     private Long userId;
+
     private String username;
+
     private boolean checked;
 
 }

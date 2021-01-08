@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 /**
  * <p>
@@ -17,8 +18,9 @@ import io.swagger.annotations.ApiModelProperty;
  * @author YuYue
  * @since 2020-01-14
  */
+@Data
 @TableName("sys_login_log")
-@ApiModel(value="LoginLog对象", description="")
+@ApiModel(value="LoginLog对象", description="登录日志")
 public class LoginLog implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -47,58 +49,4 @@ public class LoginLog implements Serializable {
     @TableField("user_agent")
     private String userAgent;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-    public Date getLoginTime() {
-        return loginTime;
-    }
-
-    public void setLoginTime(Date loginTime) {
-        this.loginTime = loginTime;
-    }
-    public String getUserAgent() {
-        return userAgent;
-    }
-
-    public void setUserAgent(String userAgent) {
-        this.userAgent = userAgent;
-    }
-
-    @Override
-    public String toString() {
-        return "LoginLog{" +
-            "id=" + id +
-            ", userId=" + userId +
-            ", userName=" + userName +
-            ", ip=" + ip +
-            ", loginTime=" + loginTime +
-            ", userAgent=" + userAgent +
-        "}";
-    }
 }

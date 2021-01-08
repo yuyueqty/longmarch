@@ -3,6 +3,7 @@ package top.longmarch.job.entity;
 import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -15,6 +16,7 @@ import java.util.Date;
  * @author YuYue
  * @since 2019-04-07
  */
+@Data
 @TableName("schedule_job")
 @ApiModel(value = "ScheduleJob对象", description = "定时任务")
 public class ScheduleJob implements Serializable {
@@ -71,117 +73,4 @@ public class ScheduleJob implements Serializable {
     @TableField(value = "update_time", fill = FieldFill.UPDATE)
     private Date updateTime;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getBeanName() {
-        return beanName;
-    }
-
-    public void setBeanName(String beanName) {
-        this.beanName = beanName;
-    }
-
-    public String getMethodName() {
-        return methodName;
-    }
-
-    public void setMethodName(String methodName) {
-        this.methodName = methodName;
-    }
-
-    public String getParams() {
-        return params;
-    }
-
-    public void setParams(String params) {
-        this.params = params;
-    }
-
-    public String getCronExpression() {
-        return cronExpression;
-    }
-
-    public void setCronExpression(String cronExpression) {
-        this.cronExpression = cronExpression;
-    }
-
-    public Boolean getStatus() {
-        return status;
-    }
-
-    public void setStatus(Boolean status) {
-        this.status = status;
-    }
-
-    public Integer getCount() {
-        return count;
-    }
-
-    public void setCount(Integer count) {
-        this.count = count;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public Long getCreateBy() {
-        return createBy;
-    }
-
-    public void setCreateBy(Long createBy) {
-        this.createBy = createBy;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Long getUpdateBy() {
-        return updateBy;
-    }
-
-    public void setUpdateBy(Long updateBy) {
-        this.updateBy = updateBy;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    @Override
-    public String toString() {
-        return "ScheduleJob{" +
-                "id=" + id +
-                ", beanName='" + beanName + '\'' +
-                ", methodName='" + methodName + '\'' +
-                ", params='" + params + '\'' +
-                ", cronExpression='" + cronExpression + '\'' +
-                ", status=" + status +
-                ", count=" + count +
-                ", remark='" + remark + '\'' +
-                ", createBy=" + createBy +
-                ", createTime=" + createTime +
-                ", updateBy=" + updateBy +
-                ", updateTime=" + updateTime +
-                '}';
-    }
 }

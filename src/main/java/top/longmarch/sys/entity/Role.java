@@ -11,6 +11,7 @@ import java.util.List;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 /**
  * <p>
@@ -20,6 +21,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @author YuYue
  * @since 2020-01-12
  */
+@Data
 @TableName("sys_role")
 @ApiModel(value="Role对象", description="角色信息")
 public class Role implements Serializable {
@@ -72,110 +74,4 @@ public class Role implements Serializable {
     @TableField(exist = false)
     private Integer userCount;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public String getRoleName() {
-        return roleName;
-    }
-
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
-    }
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public Integer getDataPerm() {
-        return dataPerm;
-    }
-
-    public void setDataPerm(Integer dataPerm) {
-        this.dataPerm = dataPerm;
-    }
-
-    public String getDataPermIds() {
-        return dataPermIds;
-    }
-
-    public void setDataPermIds(String dataPermIds) {
-        this.dataPermIds = dataPermIds;
-    }
-
-    public Long getCreateBy() {
-        return createBy;
-    }
-
-    public void setCreateBy(Long createBy) {
-        this.createBy = createBy;
-    }
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-    public Long getUpdateBy() {
-        return updateBy;
-    }
-
-    public void setUpdateBy(Long updateBy) {
-        this.updateBy = updateBy;
-    }
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public List<Long> getCheckedKeys() {
-        return checkedKeys;
-    }
-
-    public void setCheckedKeys(List<Long> checkedKeys) {
-        this.checkedKeys = checkedKeys;
-    }
-
-    public Integer getUserCount() {
-        return userCount;
-    }
-
-    public void setUserCount(Integer userCount) {
-        this.userCount = userCount;
-    }
-
-    @Override
-    public String toString() {
-        return "Role{" +
-            "id=" + id +
-            ", roleName=" + roleName +
-            ", description=" + description +
-            ", status=" + status +
-            ", dataPerm=" + dataPerm +
-            ", dataPermIds=" + dataPermIds +
-            ", userCount=" + userCount +
-            ", createBy=" + createBy +
-            ", createTime=" + createTime +
-            ", updateBy=" + updateBy +
-            ", updateTime=" + updateTime +
-        "}";
-    }
 }

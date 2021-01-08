@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 /**
  * <p>
@@ -18,6 +19,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @author YuYue
  * @since 2020-03-01
  */
+@Data
 @TableName("sys_image")
 @ApiModel(value="Image对象", description="图片管理")
 public class Image implements Serializable {
@@ -48,58 +50,4 @@ public class Image implements Serializable {
     @TableField(value = "create_time", fill = FieldFill.INSERT)
     private Date createTime;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-    public String getFileUrl() {
-        return fileUrl;
-    }
-
-    public void setFileUrl(String fileUrl) {
-        this.fileUrl = fileUrl;
-    }
-    public Long getFileSize() {
-        return fileSize;
-    }
-
-    public void setFileSize(Long fileSize) {
-        this.fileSize = fileSize;
-    }
-    public Long getCreateBy() {
-        return createBy;
-    }
-
-    public void setCreateBy(Long createBy) {
-        this.createBy = createBy;
-    }
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    @Override
-    public String toString() {
-        return "Image{" +
-            "id=" + id +
-            ", fileName=" + fileName +
-            ", fileUrl=" + fileUrl +
-            ", fileSize=" + fileSize +
-            ", createBy=" + createBy +
-            ", createTime=" + createTime +
-        "}";
-    }
 }

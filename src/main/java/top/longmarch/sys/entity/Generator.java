@@ -3,6 +3,7 @@ package top.longmarch.sys.entity;
 import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -15,8 +16,9 @@ import java.util.Date;
  * @author YuYue
  * @since 2020-02-19
  */
+@Data
 @TableName("sys_generator")
-@ApiModel(value="SysGenerator对象", description="")
+@ApiModel(value="SysGenerator对象", description="生成工具实体")
 public class Generator implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -100,170 +102,4 @@ public class Generator implements Serializable {
     @TableField(exist = false)
     private String comment;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
-    }
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public void setColumnName(String columnName) {
-        this.columnName = columnName;
-    }
-    public String getColumnType() {
-        return columnType;
-    }
-
-    public void setColumnType(String columnType) {
-        this.columnType = columnType;
-    }
-    public String getPropertyName() {
-        return propertyName;
-    }
-
-    public void setPropertyName(String propertyName) {
-        this.propertyName = propertyName;
-    }
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-    public Boolean getNotNull() {
-        return notNull;
-    }
-
-    public void setNotNull(Boolean notNull) {
-        this.notNull = notNull;
-    }
-    public Boolean getListShow() {
-        return listShow;
-    }
-
-    public void setListShow(Boolean listShow) {
-        this.listShow = listShow;
-    }
-    public Boolean getFormShow() {
-        return formShow;
-    }
-
-    public void setFormShow(Boolean formShow) {
-        this.formShow = formShow;
-    }
-    public String getFormType() {
-        return formType;
-    }
-
-    public void setFormType(String formType) {
-        this.formType = formType;
-    }
-    public String getQueryType() {
-        return queryType;
-    }
-
-    public void setQueryType(String queryType) {
-        this.queryType = queryType;
-    }
-    public Boolean getOrderBy() {
-        return orderBy;
-    }
-
-    public void setOrderBy(Boolean orderBy) {
-        this.orderBy = orderBy;
-    }
-    public Boolean getParameter() {
-        return parameter;
-    }
-
-    public void setParameter(Boolean parameter) {
-        this.parameter = parameter;
-    }
-    public String getDefaultValue() {
-        return defaultValue;
-    }
-
-    public void setDefaultValue(String defaultValue) {
-        this.defaultValue = defaultValue;
-    }
-    public String getDictCode() {
-        return dictCode;
-    }
-
-    public void setDictCode(String dictCode) {
-        this.dictCode = dictCode;
-    }
-    public Long getCreateBy() {
-        return createBy;
-    }
-
-    public void setCreateBy(Long createBy) {
-        this.createBy = createBy;
-    }
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-    public Long getUpdateBy() {
-        return updateBy;
-    }
-
-    public void setUpdateBy(Long updateBy) {
-        this.updateBy = updateBy;
-    }
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    @Override
-    public String toString() {
-        return "SysGenerator{" +
-            "id=" + id +
-            ", tableName=" + tableName +
-            ", columnName=" + columnName +
-            ", columnType=" + columnType +
-            ", propertyName=" + propertyName +
-            ", remark=" + remark +
-            ", notNull=" + notNull +
-            ", listShow=" + listShow +
-            ", formShow=" + formShow +
-            ", formType=" + formType +
-            ", queryType=" + queryType +
-            ", orderBy=" + orderBy +
-            ", parameter=" + parameter +
-            ", defaultValue=" + defaultValue +
-            ", dictCode=" + dictCode +
-            ", createBy=" + createBy +
-            ", createTime=" + createTime +
-            ", updateBy=" + updateBy +
-            ", updateTime=" + updateTime +
-        "}";
-    }
 }

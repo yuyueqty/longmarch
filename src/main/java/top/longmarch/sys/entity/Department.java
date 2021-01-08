@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 /**
  * <p>
@@ -16,6 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @author YuYue
  * @since 2020-02-05
  */
+@Data
 @TableName("sys_department")
 @ApiModel(value="Department对象", description="部门信息")
 public class Department implements Serializable {
@@ -45,62 +47,4 @@ public class Department implements Serializable {
     @TableField(exist = false)
     private Integer userCount;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public Long getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
-    }
-
-    public String getDeptName() {
-        return deptName;
-    }
-
-    public void setDeptName(String deptName) {
-        this.deptName = deptName;
-    }
-
-    public Integer getUserCount() {
-        return userCount;
-    }
-
-    public void setUserCount(Integer userCount) {
-        this.userCount = userCount;
-    }
-
-    public String getParentIds() {
-        return parentIds;
-    }
-
-    public void setParentIds(String parentIds) {
-        this.parentIds = parentIds;
-    }
-
-    public Integer getSort() {
-        return sort;
-    }
-
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
-
-    @Override
-    public String toString() {
-        return "Department{" +
-            "id=" + id +
-            ", parentId=" + parentId +
-            ", parentIds=" + parentIds +
-            ", deptName=" + deptName +
-            ", sort=" + sort +
-            ", userCount=" + userCount +
-        "}";
-    }
 }

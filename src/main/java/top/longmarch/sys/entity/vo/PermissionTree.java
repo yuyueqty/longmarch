@@ -1,7 +1,7 @@
 package top.longmarch.sys.entity.vo;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import top.longmarch.core.utils.tree.Tree;
 
 import java.util.Date;
@@ -14,6 +14,7 @@ import java.util.Date;
  * @author YuYue
  * @since 2020-01-12
  */
+@Data
 public class PermissionTree extends Tree<Long> {
 
     private static final long serialVersionUID = 1L;
@@ -69,153 +70,4 @@ public class PermissionTree extends Tree<Long> {
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
 
-    public String getPermissionName() {
-        return permissionName;
-    }
-
-    public void setPermissionName(String permissionName) {
-        this.permissionName = permissionName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getPermissionString() {
-        return permissionString;
-    }
-
-    public void setPermissionString(String permissionString) {
-        this.permissionString = permissionString;
-    }
-
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(Integer type) {
-        this.type = type;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public Boolean getChecked() {
-        return checked;
-    }
-
-    public void setChecked(Boolean checked) {
-        this.checked = checked;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getPids() {
-        return pids;
-    }
-
-    public void setPids(String pids) {
-        this.pids = pids;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public String getComponent() {
-        return component;
-    }
-
-    public void setComponent(String component) {
-        this.component = component;
-    }
-
-    public String getRedirect() {
-        return redirect;
-    }
-
-    public void setRedirect(String redirect) {
-        this.redirect = redirect;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
-    public Integer getHidden() {
-        return hidden;
-    }
-
-    public void setHidden(Integer hidden) {
-        this.hidden = hidden;
-    }
-
-    public Integer getCache() {
-        return cache;
-    }
-
-    public void setCache(Integer cache) {
-        this.cache = cache;
-    }
-
-    public Integer getSort() {
-        return sort;
-    }
-
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
-
-    @Override
-    public String toString() {
-        return "PermissionTree{" +
-                "permissionName='" + permissionName + '\'' +
-                ", description='" + description + '\'' +
-                ", permissionString='" + permissionString + '\'' +
-                ", type=" + type +
-                ", pids=" + pids +
-                ", status=" + status +
-                ", checked=" + checked +
-                ", createTime=" + createTime +
-                '}';
-    }
 }

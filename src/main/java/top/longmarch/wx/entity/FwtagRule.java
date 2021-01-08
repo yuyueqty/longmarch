@@ -3,6 +3,7 @@ package top.longmarch.wx.entity;
 import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -15,6 +16,7 @@ import java.util.Date;
  * @author YuYue
  * @since 2020-05-09
  */
+@Data
 @TableName("wx_fwtag_rule")
 @ApiModel(value = "FwtagRule对象", description = "规则")
 public class FwtagRule implements Serializable {
@@ -65,108 +67,4 @@ public class FwtagRule implements Serializable {
     @TableField(value = "update_time", fill = FieldFill.UPDATE)
     private Date updateTime;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getRid() {
-        return rid;
-    }
-
-    public void setRid(String rid) {
-        this.rid = rid;
-    }
-
-    public Integer getScore() {
-        return score;
-    }
-
-    public void setScore(Integer score) {
-        this.score = score;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public Integer getGzhId() {
-        return gzhId;
-    }
-
-    public void setGzhId(Integer gzhId) {
-        this.gzhId = gzhId;
-    }
-
-    public Long getCreateBy() {
-        return createBy;
-    }
-
-    public void setCreateBy(Long createBy) {
-        this.createBy = createBy;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Long getUpdateBy() {
-        return updateBy;
-    }
-
-    public void setUpdateBy(Long updateBy) {
-        this.updateBy = updateBy;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public String getNewTag() {
-        return newTag;
-    }
-
-    public void setNewTag(String newTag) {
-        this.newTag = newTag;
-    }
-
-    public String getCompute() {
-        return compute;
-    }
-
-    public void setCompute(String compute) {
-        this.compute = compute;
-    }
-
-    @Override
-    public String toString() {
-        return "FwtagRule{" +
-                "id=" + id +
-                ", rid=" + rid +
-                ", score=" + score +
-                ", compute=" + compute +
-                ", content=" + content +
-                ", newTag=" + newTag +
-                ", gzhId=" + gzhId +
-                ", createBy=" + createBy +
-                ", createTime=" + createTime +
-                ", updateBy=" + updateBy +
-                ", updateTime=" + updateTime +
-                "}";
-    }
 }

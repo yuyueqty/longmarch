@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.io.Serializable;
 
@@ -15,6 +16,7 @@ import java.io.Serializable;
  * @author YuYue
  * @since 2020-01-12
  */
+@Data
 @TableName("sys_role_permission_rel")
 @ApiModel(value="RolePermissionRel对象", description="角色权限关联信息")
 public class RolePermissionRel implements Serializable {
@@ -29,26 +31,4 @@ public class RolePermissionRel implements Serializable {
     @TableField("permission_id")
     private Long permissionId;
 
-    public Long getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
-    }
-    public Long getPermissionId() {
-        return permissionId;
-    }
-
-    public void setPermissionId(Long permissionId) {
-        this.permissionId = permissionId;
-    }
-
-    @Override
-    public String toString() {
-        return "RolePermissionRel{" +
-            "roleId=" + roleId +
-            ", permissionId=" + permissionId +
-        "}";
-    }
 }

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -18,6 +19,7 @@ import java.util.Date;
  * @author YuYue
  * @since 2019-04-07
  */
+@Data
 @TableName("schedule_job_log")
 @ApiModel(value = "ScheduleJobLog对象", description = "定时任务日志")
 public class ScheduleJobLog implements Serializable {
@@ -64,99 +66,4 @@ public class ScheduleJobLog implements Serializable {
     @TableField("end_time")
     private Date endTime;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getJobId() {
-        return jobId;
-    }
-
-    public void setJobId(Long jobId) {
-        this.jobId = jobId;
-    }
-
-    public String getBeanName() {
-        return beanName;
-    }
-
-    public void setBeanName(String beanName) {
-        this.beanName = beanName;
-    }
-
-    public String getMethodName() {
-        return methodName;
-    }
-
-    public void setMethodName(String methodName) {
-        this.methodName = methodName;
-    }
-
-    public String getParams() {
-        return params;
-    }
-
-    public void setParams(String params) {
-        this.params = params;
-    }
-
-    public String getError() {
-        return error;
-    }
-
-    public void setError(String error) {
-        this.error = error;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public Long getExecuteTime() {
-        return executeTime;
-    }
-
-    public void setExecuteTime(Long executeTime) {
-        this.executeTime = executeTime;
-    }
-
-    public Date getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
-
-    public Date getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
-    }
-
-    @Override
-    public String toString() {
-        return "ScheduleJobLog{" +
-                "id=" + id +
-                "jobId=" + jobId +
-                ", beanName='" + beanName + '\'' +
-                ", methodName='" + methodName + '\'' +
-                ", params='" + params + '\'' +
-                ", error='" + error + '\'' +
-                ", status=" + status +
-                ", executeTime=" + executeTime +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                '}';
-    }
 }

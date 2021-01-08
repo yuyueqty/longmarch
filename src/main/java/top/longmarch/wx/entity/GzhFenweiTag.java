@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 /**
  * <p>
@@ -18,6 +19,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @author YuYue
  * @since 2020-04-19
  */
+@Data
 @TableName("wx_gzh_fenwei_tag")
 @ApiModel(value="GzhFenweiTag对象", description="公众号粉丝分维解析标签")
 public class GzhFenweiTag implements Serializable {
@@ -72,106 +74,4 @@ public class GzhFenweiTag implements Serializable {
     @TableField(value = "update_time", fill = FieldFill.UPDATE)
     private Date updateTime;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public Long getGzhId() {
-        return gzhId;
-    }
-
-    public void setGzhId(Long gzhId) {
-        this.gzhId = gzhId;
-    }
-    public String getOpenId() {
-        return openId;
-    }
-
-    public void setOpenId(String openId) {
-        this.openId = openId;
-    }
-    public Integer getFieldId() {
-        return fieldId;
-    }
-
-    public void setFieldId(Integer fieldId) {
-        this.fieldId = fieldId;
-    }
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-    public String getRank() {
-        return rank;
-    }
-
-    public void setRank(String rank) {
-        this.rank = rank;
-    }
-    public Integer getScore() {
-        return score;
-    }
-
-    public void setScore(Integer score) {
-        this.score = score;
-    }
-    public Long getCreateBy() {
-        return createBy;
-    }
-
-    public void setCreateBy(Long createBy) {
-        this.createBy = createBy;
-    }
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-    public Long getUpdateBy() {
-        return updateBy;
-    }
-
-    public void setUpdateBy(Long updateBy) {
-        this.updateBy = updateBy;
-    }
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    @Override
-    public String toString() {
-        return "GzhFenweiTag{" +
-            "id=" + id +
-            ", gzhId=" + gzhId +
-            ", openId=" + openId +
-            ", fieldId=" + fieldId +
-            ", name=" + name +
-            ", content=" + content +
-            ", rank=" + rank +
-            ", score=" + score +
-            ", createBy=" + createBy +
-            ", createTime=" + createTime +
-            ", updateBy=" + updateBy +
-            ", updateTime=" + updateTime +
-        "}";
-    }
 }

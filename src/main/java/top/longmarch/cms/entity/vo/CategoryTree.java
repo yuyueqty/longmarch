@@ -1,9 +1,11 @@
 package top.longmarch.cms.entity.vo;
 
+import lombok.Data;
 import top.longmarch.core.utils.tree.Tree;
 
 import java.util.Date;
 
+@Data
 public class CategoryTree extends Tree<Long> {
 
     private String categoryName;
@@ -21,59 +23,4 @@ public class CategoryTree extends Tree<Long> {
     public CategoryTree() {
     }
 
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
-
-    public String getRedirectUrl() {
-        return redirectUrl;
-    }
-
-    public void setRedirectUrl(String redirectUrl) {
-        this.redirectUrl = redirectUrl;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
-    public Integer getSort() {
-        return sort;
-    }
-
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
 }

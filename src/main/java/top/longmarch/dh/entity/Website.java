@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 /**
  * <p>
@@ -18,6 +19,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @author YuYue
  * @since 2020-06-22
  */
+@Data
 @TableName("dh_website")
 @ApiModel(value="Website对象", description="导航网址")
 public class Website implements Serializable {
@@ -56,74 +58,4 @@ public class Website implements Serializable {
     @TableField(value = "create_time", fill = FieldFill.INSERT)
     private Date createTime;
 
-    public Long getWebsiteId() {
-        return websiteId;
-    }
-
-    public void setWebsiteId(Long websiteId) {
-        this.websiteId = websiteId;
-    }
-    public Long getClassifyId() {
-        return classifyId;
-    }
-
-    public void setClassifyId(Long classifyId) {
-        this.classifyId = classifyId;
-    }
-    public String getWebsiteName() {
-        return websiteName;
-    }
-
-    public void setWebsiteName(String websiteName) {
-        this.websiteName = websiteName;
-    }
-    public String getWebsiteUrl() {
-        return websiteUrl;
-    }
-
-    public void setWebsiteUrl(String websiteUrl) {
-        this.websiteUrl = websiteUrl;
-    }
-    public String getWebsiteDesc() {
-        return websiteDesc;
-    }
-
-    public void setWebsiteDesc(String websiteDesc) {
-        this.websiteDesc = websiteDesc;
-    }
-    public Integer getWebsiteSort() {
-        return websiteSort;
-    }
-
-    public void setWebsiteSort(Integer websiteSort) {
-        this.websiteSort = websiteSort;
-    }
-    public Long getCreateBy() {
-        return createBy;
-    }
-
-    public void setCreateBy(Long createBy) {
-        this.createBy = createBy;
-    }
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    @Override
-    public String toString() {
-        return "Website{" +
-            "websiteId=" + websiteId +
-            ", classifyId=" + classifyId +
-            ", websiteName=" + websiteName +
-            ", websiteUrl=" + websiteUrl +
-            ", websiteDesc=" + websiteDesc +
-            ", websiteSort=" + websiteSort +
-            ", createBy=" + createBy +
-            ", createTime=" + createTime +
-        "}";
-    }
 }

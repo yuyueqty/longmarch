@@ -27,9 +27,9 @@ spring:
     prefix: classpath:/templates
   datasource:
     druid:
-      url: jdbc:mysql://mysql:3306/longmarch?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
-      username: longmarch
-      password: pfbNKZmkcZ7CDhSf
+      url: jdbc:mysql://mysql:6356/longmarch?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
+      username: root
+      password: 2021@#&copy(%@
       driver-class-name: com.mysql.cj.jdbc.Driver
       # 下面为连接池的补充设置，应用到上面所有数据源中
       initial-size: 20
@@ -77,7 +77,7 @@ spring:
   redis:
    database: 0
    host: redis
-   port: 6537
+   port: 6856
 #   password: 'wktWKT!!!'
    timeout: 5000
    pool:
@@ -97,7 +97,7 @@ spring:
 mybatis-plus:
   mapper-locations: classpath*:/mapper/*/*Mapper.xml
   #实体扫描，多个package用逗号或者分号分隔
-  typeAliasesPackage: top.longmarch.*.entity
+  type-aliases-package: top.longmarch.*.entity
   #支持统配符 * 或者 ; 分割
   #  typeEnumsPackage: com.longmarch.common.enums
   global-config:

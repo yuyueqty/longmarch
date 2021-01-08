@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 /**
  * <p>
@@ -16,6 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @author YuYue
  * @since 2020-01-14
  */
+@Data
 @TableName("sys_parameter")
 @ApiModel(value="Parameter对象", description="平台参数表")
 public class Parameter implements Serializable {
@@ -38,42 +40,4 @@ public class Parameter implements Serializable {
     @TableField("remark")
     private String remark;
 
-    public Long getParamId() {
-        return paramId;
-    }
-
-    public void setParamId(Long paramId) {
-        this.paramId = paramId;
-    }
-    public String getParamName() {
-        return paramName;
-    }
-
-    public void setParamName(String paramName) {
-        this.paramName = paramName;
-    }
-    public String getParamValue() {
-        return paramValue;
-    }
-
-    public void setParamValue(String paramValue) {
-        this.paramValue = paramValue;
-    }
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    @Override
-    public String toString() {
-        return "Parameter{" +
-            "paramId=" + paramId +
-            ", paramName=" + paramName +
-            ", paramValue=" + paramValue +
-            ", remark=" + remark +
-        "}";
-    }
 }
