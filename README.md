@@ -4,7 +4,7 @@
 
 ------
 ### 项目演示
-在线演示：https://www.longmarch.top  
+在线演示：http://42.192.11.168:9090
 后端仓库：https://github.com/yuyueqty/longmarch  
 前端仓库：https://github.com/yuyueqty/longmarch-web  
 

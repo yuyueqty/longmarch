@@ -49,7 +49,7 @@ public class FwtagRule implements Serializable {
 
     @ApiModelProperty(value = "公众号ID")
     @TableField("gzh_id")
-    private Integer gzhId;
+    private Long gzhId;
 
     @ApiModelProperty(value = "创建者ID")
     @TableField(value = "create_by", fill = FieldFill.INSERT)

@@ -32,7 +32,7 @@ public class Tag implements Serializable {
     private Long id;
 
     @ApiModelProperty(value = "标签名称")
-    @TableField("tag_name")
+        @TableField("tag_name")
     private String tagName;
 
     @ApiModelProperty(value = "标签文章数量")

@@ -111,7 +111,7 @@
     </select>
 
     <select id="getFenweiTagList" resultType="Map">
-        SELECT `name` as value, field_id as fieldId, content as label FROM wx_gzh_fenwei_tag GROUP BY `name` ORDER BY field_id
+        SELECT `name` as value, field_id as fieldId, content as label FROM wx_gzh_fenwei_tag GROUP BY `name`,field_id,content ORDER BY field_id
     </select>
 
 </mapper>
