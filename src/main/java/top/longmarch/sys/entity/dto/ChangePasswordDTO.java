@@ -1,6 +1,7 @@
 package top.longmarch.sys.entity.dto;
 
 import lombok.Data;
+import top.longmarch.core.utils.PasswordUtil;
 import top.longmarch.sys.entity.User;
 
 @Data
@@ -14,7 +15,7 @@ public class ChangePasswordDTO {
         User user = new User();
         user.setId(id);
         user.setUsername(username);
-        user.setPassword(password);
+        user.setPassword(PasswordUtil.password(password));
         return user;
     }
 
