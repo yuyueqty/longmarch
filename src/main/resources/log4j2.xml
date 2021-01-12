@@ -3,8 +3,8 @@
     <!-- 日志文件目录和压缩文件 -->
     <Properties>
         <Property name="projectName">longmarch-service</Property>
-        <Property name="fileName">/root/longmarch/logs</Property>
-        <Property name="fileGz">/root/longmarch/logs/history</Property>
+        <Property name="fileName">./logs</Property>
+        <Property name="fileGz">./logs/history</Property>
     </Properties>
     <Appenders>
         <!--这个输出控制台的配置 -->

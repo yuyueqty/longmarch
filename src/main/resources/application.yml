@@ -32,6 +32,7 @@ spring:
       password: 2021@#&copy(%@
       driver-class-name: com.mysql.cj.jdbc.Driver
       # 下面为连接池的补充设置，应用到上面所有数据源中
+
       initial-size: 20
       min-idle: 5
       max-active: 100
@@ -66,6 +67,7 @@ spring:
         principal-cookie-name: admin
         principal-session-name: admin
       stat-view-servlet:
+        allow:
         enabled: true
         login-username: longmarch
         login-password: 111111

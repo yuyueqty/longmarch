@@ -9,6 +9,7 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Api(value = "解析用户标签", tags = "解析用户标签")
 @RestController
 @RequestMapping("/wx/gzh-user")
@@ -109,6 +111,8 @@ public class AnalyseGzhUserTagController {
         JSONObject json = JSONUtil.parseObj(post);
         if (json.getInt("code") == 200) {
             saveFwTag(json.getJSONArray("result"), user, gzhAccount.getFwField());
+        } else {
+            log.error("模型调用失败：Request：" + requestBody.toString()+", Response："+post);
         }
     }
 

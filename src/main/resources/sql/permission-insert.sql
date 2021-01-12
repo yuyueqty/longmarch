@@ -159,9 +159,17 @@ SELECT @onlineUserId := LAST_INSERT_ID();
 INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
 VALUES (@onlineUserId, CONCAT(@monitoringId,',',@onlineUserId), '踢出用户', '踢出用户', 'sys:kickout:onlineuser', 2, 1, 0, 1, 1, 1, NOW());
 
+-- SQL监控
+INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `path`, `component`, `redirect`, `name`, `title`, `icon`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
+VALUES (@monitoringId, @monitoringId, 'SQL监控', 'SQL监控', 'monitoring:sql:manage', 1, 1, 'sql', 'iframe/druid', '', 'SqlMonitor', 'sqlMonitor', 'sql', 0, 1, 220, 1, NOW());
+
+-- API接口
+INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `path`, `component`, `redirect`, `name`, `title`, `icon`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
+VALUES (@monitoringId, @monitoringId, 'API接口', 'API接口', 'monitoring:api:manage', 1, 1, 'api', 'iframe/swagger', '', 'SwaggerApi', 'swaggerApi', 'api', 0, 1, 230, 1, NOW());
+
 -- 操作日志
 INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `path`, `component`, `redirect`, `name`, `title`, `icon`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
-VALUES (@monitoringId, @monitoringId, '操作日志', '操作日志', 'sys:operatelog:manage', 1, 1, 'operatelog', 'log/loginLog', '', 'OperateLogManage', 'operateLogManage', 'log', 0, 1, 220, 1, NOW());
+VALUES (@monitoringId, @monitoringId, '操作日志', '操作日志', 'sys:operatelog:manage', 1, 1, 'operatelog', 'log/operateLog', '', 'OperateLogManage', 'operateLogManage', 'log', 0, 1, 240, 1, NOW());
 
 -- 操作日志菜单ID
 SELECT @operatelogId := LAST_INSERT_ID();
@@ -183,7 +191,7 @@ VALUES (@operatelogId, CONCAT(@systemId,',',@operatelogId), '导出日志', '导
 
 -- 登录日志
 INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `path`, `component`, `redirect`, `name`, `title`, `icon`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
-VALUES (@monitoringId, @monitoringId, '登录日志', '登录日志', 'sys:loginlog:manage', 1, 1, 'loginlog', 'log/loginLog', '', 'LoginLogManage', 'loginLogManage', 'login-log', 0, 1, 230, 1, NOW());
+VALUES (@monitoringId, @monitoringId, '登录日志', '登录日志', 'sys:loginlog:manage', 1, 1, 'loginlog', 'log/loginLog', '', 'LoginLogManage', 'loginLogManage', 'login-log', 0, 1, 250, 1, NOW());
 
 -- 登录日志菜单ID
 SELECT @loginlogId := LAST_INSERT_ID();
@@ -202,14 +210,6 @@ VALUES (@loginlogId, CONCAT(@systemId,',',@loginlogId), '删除日志', '删除�
 
 INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
 VALUES (@loginlogId, CONCAT(@systemId,',',@loginlogId), '导出日志', '导出日志', 'sys:loginLog:export', 2, 1, 0, 1, 5, 1, NOW());
-
--- SQL监控
-INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `path`, `component`, `redirect`, `name`, `title`, `icon`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
-VALUES (@monitoringId, @monitoringId, 'SQL监控', 'SQL监控', 'monitoring:sql:manage', 1, 1, 'onlineuser', 'druid/login', '', 'SqlMonitor', 'sqlMonitor', 'sql', 0, 1, 210, 1, NOW());
-
--- API接口
-INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `path`, `component`, `redirect`, `name`, `title`, `icon`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
-VALUES (@monitoringId, @monitoringId, 'API接口', 'API接口', 'monitoring:api:manage', 1, 1, 'api', 'druid/login', '', 'SwaggerApi', 'swaggerApi', 'api', 0, 1, 210, 1, NOW());
 
 -- 系统工具
 INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `path`, `component`, `redirect`, `name`, `title`, `icon`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
@@ -250,19 +250,37 @@ VALUES (@jobId, CONCAT(@toolId,',',@jobId), '恢复任务', '恢复任务', 'job
 INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
 VALUES (@jobId, CONCAT(@toolId,',',@jobId), '重置任务', '重置任务', 'job:schedule:reset', 2, 1, 0, 1, 8, 1, NOW());
 
+INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
+VALUES (@jobId, CONCAT(@toolId,',',@jobId), '查看日志', '查看日志', 'job:schedule:log', 2, 1, 0, 1, 9, 1, NOW());
+
+INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `path`, `component`, `redirect`, `name`, `title`, `icon`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
+VALUES (@toolId, @toolId, '日志页面', '日志页面', 'sys:schedule:log:page', 3, 1, 'schedule/log', 'job/log', '', 'JoblogManage', 'joblogManage', '', 1, 1, 10, 1, NOW());
+
 -- 代码生成
 INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `path`, `component`, `redirect`, `name`, `title`, `icon`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
-VALUES (@toolId, @toolId, '代码生成', '代码生成', 'sys:generator:manage', 1, 1, 'generator', 'generator/table', '', 'Generator', 'generator', 'generator', 0, 1, 320, 1, NOW());
+VALUES (@toolId, @toolId, '代码生成', '代码生成', 'sys:generator:manage', 1, 1, 'generator', 'generator/table', '', 'GeneratorTable', 'generator', 'generator', 0, 1, 320, 1, NOW());
 
 -- 代码生成菜单ID
 SELECT @codeId := LAST_INSERT_ID();
 
 -- 按钮 SQL
 INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
-VALUES (@codeId, CONCAT(@toolId,',',@codeId), '配置', '配置', 'sys:generator:update', 2, 1, 0, 1, 1, 1, NOW());
+VALUES (@codeId, CONCAT(@toolId,',',@codeId), '配置列表', '配置列表', 'sys:generator:columns', 2, 1, 0, 1, 1, 1, NOW());
 
 INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
-VALUES (@jobId, CONCAT(@toolId,',',@jobId), '下载', '下载', 'sys:generator:download', 2, 1, 0, 1, 2, 1, NOW());
+VALUES (@codeId, CONCAT(@toolId,',',@codeId), '下载源码', '下载源码', 'sys:generator:download', 2, 1, 0, 1, 2, 1, NOW());
+
+INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `path`, `component`, `redirect`, `name`, `title`, `icon`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
+VALUES (@toolId, @toolId, '配置页面', '配置页面', 'sys:generator:config:page', 3, 1, 'generator/config', 'generator/column', '', 'GeneratorColumn', 'generatorColumn', '', 1, 1, 3, 1, NOW());
+
+-- 配置页面菜单ID
+SELECT @configId := LAST_INSERT_ID();
+
+INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
+VALUES (@configId, CONCAT(@toolId,',',@configId), '保存配置', '保存配置', 'sys:generator:save', 2, 1, 0, 1, 3, 1, NOW());
+
+INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
+VALUES (@configId, CONCAT(@toolId,',',@configId), '批量保存', '批量保存', 'sys:generator:batch:save', 2, 1, 0, 1, 4, 1, NOW());
 
 -- 组件管理
 INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `path`, `component`, `redirect`, `name`, `title`, `icon`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
@@ -271,7 +289,7 @@ VALUES (0, 'NaN', '组件管理', '组件管理', 'components:manage', 1, 1, '/c
 -- 组件管理菜单ID
 SELECT @componentsId := LAST_INSERT_ID();
 
--- 任务管理
+-- 组件管理
 INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `path`, `component`, `redirect`, `name`, `title`, `icon`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
 VALUES (@componentsId, @componentsId, '图标', '图标', 'components:icons:manage', 1, 1, 'icons', 'icons/index', '', 'Icons', 'icons', 'icon', 0, 1, 410, 1, NOW());
 
@@ -307,6 +325,12 @@ VALUES (@articleId, CONCAT(@cmsId,',',@articleId), '修改文章', '修改文章
 
 INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
 VALUES (@articleId, CONCAT(@cmsId,',',@articleId), '删除文章', '删除文章', 'cms:article:delete', 2, 1, 0, 1, 4, 1, NOW());
+
+INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `path`, `component`, `redirect`, `name`, `title`, `icon`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
+VALUES (@cmsId, @cmsId, '创建页面', '创建页面', 'cms:article:create:page', 3, 1, '/cms/create', 'cms/create', '', 'CreateArticle', 'createArticle', '', 1, 1, 520, 1, NOW());
+
+INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `path`, `component`, `redirect`, `name`, `title`, `icon`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
+VALUES (@cmsId, @cmsId, '编辑页面', '编辑页面', 'cms:article:update:page', 3, 1, '/cms/edit', 'cms/edit', '', 'EditArticle', 'editArticle', '', 1, 1, 530, 1, NOW());
 
 -- 文章分类
 INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `path`, `component`, `redirect`, `name`, `title`, `icon`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
@@ -375,6 +399,9 @@ VALUES (@gzhId, CONCAT(@wxId,',',@gzhId), '修改公众号', '修改公众号', 
 INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
 VALUES (@gzhId, CONCAT(@wxId,',',@gzhId), '删除公众号', '删除公众号', 'wx:gzhAccount:delete', 2, 1, 0, 1, 4, 1, NOW());
 
+INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
+VALUES (@gzhId, CONCAT(@wxId,',',@gzhId), '设置公众号', '设置公众号', 'wx:gzhAccount:setting', 2, 1, 0, 1, 5, 1, NOW());
+
 -- 粉丝管理
 INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `path`, `component`, `redirect`, `name`, `title`, `icon`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
 VALUES (@wxId, @wxId, '粉丝管理', '粉丝管理', 'wx:gzhuser:manage', 1, 1, 'gzhuser', 'wx/wxuser', '', 'GzhUserManage', 'gzhUserManage', 'fensi', 0, 1, 620, 1, NOW());
@@ -397,6 +424,15 @@ VALUES (@gzhuserId, CONCAT(@wxId,',',@gzhuserId), '取消用户标签', '取消�
 
 INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
 VALUES (@gzhuserId, CONCAT(@wxId,',',@gzhuserId), '下载用户标签', '下载用户标签', 'wx:gzhuser:download', 2, 1, 0, 1, 4, 1, NOW());
+
+INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
+VALUES (@gzhuserId, CONCAT(@wxId,',',@gzhuserId), '更新微信用户', '更新微信用户', 'wx:gzhUser:update', 2, 1, 0, 1, 5, 1, NOW());
+
+INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
+VALUES (@gzhuserId, CONCAT(@wxId,',',@gzhuserId), '单次同步用户', '单次同步用户', 'wx:gzhuser:sync', 2, 1, 0, 1, 6, 1, NOW());
+
+INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)
+VALUES (@gzhuserId, CONCAT(@wxId,',',@gzhuserId), '单次解析标签', '单次解析标签', 'wx:gzhuser:analyse', 2, 1, 0, 1, 7, 1, NOW());
 
 -- 标签规则
 INSERT INTO sys_permission(`parent_id`, `parent_ids`, `permission_name`, `description`, `permission_string`, `type`, `status`, `path`, `component`, `redirect`, `name`, `title`, `icon`, `hidden`, `cache`, `sort`, `create_by`, `create_time`)

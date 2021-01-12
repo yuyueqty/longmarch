@@ -61,7 +61,6 @@ public class GzhFenweiTagController {
     public Result search(@RequestBody(required = false) Map<String, Object> params) {
         IPage<GzhFenweiTag> page = PageFactory.getInstance(params);
         LambdaQueryWrapper<GzhFenweiTag> wrapper = new LambdaQueryWrapper<>();
-
         GzhAccount gzhAccount = gzhAccountService.getDefalutGzhAccount();
         if (gzhAccount == null) {
             wrapper.eq(GzhFenweiTag::getGzhId, -1).eq(GzhFenweiTag::getFieldId, -1);

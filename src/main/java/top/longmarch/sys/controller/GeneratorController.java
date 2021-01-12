@@ -44,7 +44,7 @@ public class GeneratorController {
     }
 
     @ApiOperation(value = "表列名")
-    @RequiresPermissions("sys:generator:create")
+    @RequiresPermissions("sys:generator:columns")
     @GetMapping("/tableColumns")
     public Result tableColumns(@RequestParam String tableName) {
         List<Generator> tableColumnsInfo = generatorService.queryColumns(tableName);
@@ -52,7 +52,7 @@ public class GeneratorController {
     }
 
     @ApiOperation(value = "创建规则")
-    @RequiresPermissions("sys:generator:create")
+    @RequiresPermissions("sys:generator:save")
     @PostMapping("/saveGenerator")
     public Result create(@RequestBody Generator generator) {
         List<Generator> generators = new ArrayList<>();
@@ -62,7 +62,7 @@ public class GeneratorController {
     }
 
     @ApiOperation(value = "批量创建规则")
-    @RequiresPermissions("sys:generator:download")
+    @RequiresPermissions("sys:generator:batch:save")
     @PostMapping("/batchSaveGenerator")
     public Result batchSaveGenerator(@RequestBody List<Generator> generators) {
         generatorService.saveOrUpdateBatchGenerator(generators);

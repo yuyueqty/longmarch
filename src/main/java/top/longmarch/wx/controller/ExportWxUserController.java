@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Api(value = "导出微信用户", tags = "导出微信用户")
 @RestController
@@ -72,7 +73,8 @@ public class ExportWxUserController {
         List<Map<String, Object>> list = new ArrayList<>();
         try {
             List<UserExportV2> userTagExportList = gzhUserDao.selectUserAndTags(new SearchDTO(gzhAccount.getId(), gzhAccount.getCreateBy(), gzhAccount.getFwField()));
-            BuildOpenIdDataUtil.buildMapDataV2(entity, list, gzhAccount.getFwField() + "", userTagExportList);
+            List<String> fieldList = userTagExportList.get(0).getTags().stream().map(o -> o.getContent()).collect(Collectors.toList());
+            BuildOpenIdDataUtil.buildMapData(entity, list, fieldList, userTagExportList);
             Workbook workbook = ExcelExportUtil.exportExcel(exportParams,
                     entity, list);
             workbook.write(response.getOutputStream());

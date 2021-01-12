@@ -11,7 +11,7 @@
  Target Server Version : 50732
  File Encoding         : 65001
 
- Date: 09/01/2021 18:19:13
+ Date: 10/01/2021 21:44:32
 */
 
 SET NAMES utf8mb4;
@@ -114,12 +114,6 @@ CREATE TABLE `QRTZ_LOCKS`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of QRTZ_LOCKS
--- ----------------------------
-INSERT INTO `QRTZ_LOCKS` VALUES ('RenrenScheduler', 'STATE_ACCESS');
-INSERT INTO `QRTZ_LOCKS` VALUES ('RenrenScheduler', 'TRIGGER_ACCESS');
-
--- ----------------------------
 -- Table structure for QRTZ_PAUSED_TRIGGER_GRPS
 -- ----------------------------
 DROP TABLE IF EXISTS `QRTZ_PAUSED_TRIGGER_GRPS`;
@@ -144,7 +138,7 @@ CREATE TABLE `QRTZ_SCHEDULER_STATE`  (
 -- ----------------------------
 -- Records of QRTZ_SCHEDULER_STATE
 -- ----------------------------
-INSERT INTO `QRTZ_SCHEDULER_STATE` VALUES ('RenrenScheduler', 'DESKTOP-A72KG941610185342068', 1610187546434, 15000);
+INSERT INTO `QRTZ_SCHEDULER_STATE` VALUES ('RenrenScheduler', 'c184f539f91e1610282435406', 1610286265445, 15000);
 
 -- ----------------------------
 -- Table structure for QRTZ_SIMPLE_TRIGGERS
@@ -322,7 +316,7 @@ CREATE TABLE `schedule_job`  (
 -- ----------------------------
 -- Records of schedule_job
 -- ----------------------------
-INSERT INTO `schedule_job` VALUES (1, 'longMarchJobTask', 'batchPublishArticles', '', '1 * * * * ?', 0, 3, '定时发布文章', 1, '2020-02-10 18:20:47', NULL, NULL);
+INSERT INTO `schedule_job` VALUES (1, 'longMarchJobTask', 'batchPublishArticles', '', '1 * * * * ?', 0, 3, '定时发布文章', 1, '2020-02-10 18:20:47', 1, '2021-01-10 21:43:06');
 
 -- ----------------------------
 -- Table structure for schedule_job_log
@@ -373,7 +367,7 @@ CREATE TABLE `sys_dictionary`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `index_type_index`(`code`, `value`) USING BTREE,
   INDEX `index_type`(`code`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '字典信息' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 33 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '字典信息' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_dictionary
@@ -403,6 +397,13 @@ INSERT INTO `sys_dictionary` VALUES (22, 'hidden_dict', '0', '不隐藏', 2, 1, 
 INSERT INTO `sys_dictionary` VALUES (23, 'cache_dict', '1', '缓存', 1, 1, '菜单缓存', 1, '2021-01-09 18:15:03');
 INSERT INTO `sys_dictionary` VALUES (24, 'cache_dict', '0', '不缓存', 2, 1, '菜单缓存', 1, '2021-01-09 18:15:19');
 INSERT INTO `sys_dictionary` VALUES (25, 'perm_dict', '3', '页面', 3, 1, '权限类型', 1, '2021-01-09 18:16:56');
+INSERT INTO `sys_dictionary` VALUES (26, 'fw_field_dict', '1', '交友', 1, 1, '分维行业', 1, '2021-01-10 21:15:47');
+INSERT INTO `sys_dictionary` VALUES (27, 'account_type_dict', '1', '订阅号', 1, 1, '账号类型', 1, '2021-01-10 21:16:10');
+INSERT INTO `sys_dictionary` VALUES (28, 'account_type_dict', '2', '服务号', 2, 1, '账号类型', 1, '2021-01-10 21:16:33');
+INSERT INTO `sys_dictionary` VALUES (29, 'auth_status_dict', '1', '已认证', 1, 1, '认证状态', 1, '2021-01-10 21:17:21');
+INSERT INTO `sys_dictionary` VALUES (30, 'auth_status_dict', '0', '未认证', 2, 1, '认证状态', 1, '2021-01-10 21:17:38');
+INSERT INTO `sys_dictionary` VALUES (31, 'default_status_dict', '1', '默认', 1, 1, '是否默认', 1, '2021-01-10 21:33:21');
+INSERT INTO `sys_dictionary` VALUES (32, 'default_status_dict', '0', '非默认', 2, 1, '是否默认', 1, '2021-01-10 21:33:46');
 
 -- ----------------------------
 -- Table structure for sys_generator
@@ -457,7 +458,7 @@ CREATE TABLE `sys_login_log`  (
   `login_time` datetime(0) NULL DEFAULT NULL COMMENT '登陆时间',
   `user_agent` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '登陆设备信息',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 480 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 483 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_login_log
@@ -501,6 +502,9 @@ INSERT INTO `sys_login_log` VALUES (476, 1, 'admin', '127.0.0.1', '2021-01-09 15
 INSERT INTO `sys_login_log` VALUES (477, 1, 'admin', '127.0.0.1', '2021-01-09 15:34:23', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36');
 INSERT INTO `sys_login_log` VALUES (478, 1, 'admin', '127.0.0.1', '2021-01-09 15:48:59', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36');
 INSERT INTO `sys_login_log` VALUES (479, 1, 'admin', '127.0.0.1', '2021-01-09 16:01:14', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36');
+INSERT INTO `sys_login_log` VALUES (480, 1, 'admin', '172.17.0.1', '2021-01-10 20:36:35', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36');
+INSERT INTO `sys_login_log` VALUES (481, 1, 'admin', '172.17.0.1', '2021-01-10 20:41:58', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36');
+INSERT INTO `sys_login_log` VALUES (482, 1, 'admin', '172.17.0.1', '2021-01-10 21:37:22', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36');
 
 -- ----------------------------
 -- Table structure for sys_operate_log
@@ -515,7 +519,7 @@ CREATE TABLE `sys_operate_log`  (
   `operate_detail` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL COMMENT '操作详情',
   `operate_time` datetime(0) NULL DEFAULT NULL COMMENT '操作时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 833 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '操作日志' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 843 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci COMMENT = '操作日志' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_operate_log
@@ -571,6 +575,16 @@ INSERT INTO `sys_operate_log` VALUES (829, 1, 'admin', '字典信息模块', '�
 INSERT INTO `sys_operate_log` VALUES (830, 1, 'admin', '字典信息模块', '创建字典信息', '[{\"createBy\":1,\"code\":\"cache_dict\",\"createTime\":1610187303051,\"description\":\"菜单缓存\",\"id\":23,\"label\":\"缓存\",\"sort\":1,\"value\":\"1\",\"status\":1}]', '2021-01-09 18:15:03');
 INSERT INTO `sys_operate_log` VALUES (831, 1, 'admin', '字典信息模块', '创建字典信息', '[{\"createBy\":1,\"code\":\"cache_dict\",\"createTime\":1610187319385,\"description\":\"菜单缓存\",\"id\":24,\"label\":\"不缓存\",\"sort\":2,\"value\":\"0\",\"status\":1}]', '2021-01-09 18:15:19');
 INSERT INTO `sys_operate_log` VALUES (832, 1, 'admin', '字典信息模块', '创建字典信息', '[{\"createBy\":1,\"code\":\"perm_dict\",\"createTime\":1610187416005,\"description\":\"权限类型\",\"id\":25,\"label\":\"页面\",\"sort\":3,\"value\":\"3\",\"status\":1}]', '2021-01-09 18:16:56');
+INSERT INTO `sys_operate_log` VALUES (833, 1, 'admin', '系统公众号表模块', '创建系统公众号表', '[{\"createBy\":1,\"createTime\":1610284298706,\"accountType\":2,\"authStatus\":1,\"jwid\":\"分维\",\"weixinAppid\":\"wxaeeab59bae7d0deb\",\"id\":1,\"fwAppsecret\":\"5a85862f532c43d0b089c81b4c296a07\",\"fwField\":4,\"fwAppid\":\"619125947727085568\"}]', '2021-01-10 21:11:39');
+INSERT INTO `sys_operate_log` VALUES (834, 1, 'admin', '字典信息模块', '创建字典信息', '[{\"createBy\":1,\"code\":\"fw_field_dict\",\"createTime\":1610284546599,\"description\":\"分维行业\",\"id\":26,\"label\":\"交友\",\"sort\":1,\"value\":\"1\",\"status\":1}]', '2021-01-10 21:15:47');
+INSERT INTO `sys_operate_log` VALUES (835, 1, 'admin', '字典信息模块', '创建字典信息', '[{\"createBy\":1,\"code\":\"account_type_dict\",\"createTime\":1610284570408,\"description\":\"账号类型\",\"id\":27,\"label\":\"订阅号\",\"sort\":1,\"value\":\"1\",\"status\":1}]', '2021-01-10 21:16:10');
+INSERT INTO `sys_operate_log` VALUES (836, 1, 'admin', '字典信息模块', '创建字典信息', '[{\"createBy\":1,\"code\":\"account_type_dict\",\"createTime\":1610284593000,\"description\":\"账号类型\",\"id\":28,\"label\":\"服务号\",\"sort\":2,\"value\":\"2\",\"status\":1}]', '2021-01-10 21:16:33');
+INSERT INTO `sys_operate_log` VALUES (837, 1, 'admin', '字典信息模块', '创建字典信息', '[{\"createBy\":1,\"code\":\"auth_status_dict\",\"createTime\":1610284641495,\"description\":\"认证状态\",\"id\":29,\"label\":\"已认证\",\"sort\":1,\"value\":\"1\",\"status\":1}]', '2021-01-10 21:17:22');
+INSERT INTO `sys_operate_log` VALUES (838, 1, 'admin', '字典信息模块', '创建字典信息', '[{\"createBy\":1,\"code\":\"auth_status_dict\",\"createTime\":1610284657823,\"description\":\"认证状态\",\"id\":30,\"label\":\"未认证\",\"sort\":2,\"value\":\"0\",\"status\":1}]', '2021-01-10 21:17:38');
+INSERT INTO `sys_operate_log` VALUES (839, 1, 'admin', '字典信息模块', '创建字典信息', '[{\"createBy\":1,\"code\":\"default_status_dict\",\"createTime\":1610285600724,\"description\":\"是否默认\",\"id\":31,\"label\":\"默认\",\"sort\":1,\"value\":\"1\",\"status\":1}]', '2021-01-10 21:33:21');
+INSERT INTO `sys_operate_log` VALUES (840, 1, 'admin', '字典信息模块', '创建字典信息', '[{\"createBy\":1,\"code\":\"default_status_dict\",\"createTime\":1610285625891,\"description\":\"是否默认\",\"id\":32,\"label\":\"非默认\",\"sort\":2,\"value\":\"0\",\"status\":1}]', '2021-01-10 21:33:46');
+INSERT INTO `sys_operate_log` VALUES (841, 1, 'admin', '系统公众号表模块', '设置默认公众号', '[1]', '2021-01-10 21:37:35');
+INSERT INTO `sys_operate_log` VALUES (842, 1, 'admin', '定时任务', '修改任务', '[{\"cronExpression\":\"1 * * * * ?\",\"createBy\":1,\"createTime\":1581330047000,\"updateBy\":1,\"count\":3,\"methodName\":\"batchPublishArticles\",\"beanName\":\"longMarchJobTask\",\"remark\":\"定时发布文章\",\"updateTime\":1610286185991,\"id\":1,\"params\":\"\",\"status\":false}]', '2021-01-10 21:43:06');
 
 -- ----------------------------
 -- Table structure for sys_parameter
@@ -618,115 +632,116 @@ CREATE TABLE `sys_permission`  (
   `update_by` bigint(20) NULL DEFAULT NULL COMMENT '更新人ID',
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 105 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '权限信息' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 106 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '权限信息' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_permission
 -- ----------------------------
-INSERT INTO `sys_permission` VALUES (1, 0, 'NaN', '系统管理', '系统管理', 'sys:manage', 1, 1, '/system', 'Layout', '/system/user', 'System', 'system', 'setting', 0, 1, 100, 1, '2021-01-09 10:07:03', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (2, 1, '1', '用户管理', '用户管理', 'sys:user:manage', 1, 1, 'user', 'user/index', '', 'UserManage', 'userManage', 'user', 0, 1, 110, 1, '2021-01-09 10:07:03', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (3, 2, '1,2', '查看用户', '查看用户', 'sys:user:show', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-09 10:07:03', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (4, 2, '1,2', '添加用户', '添加用户', 'sys:user:create', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-09 10:07:03', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (5, 2, '1,2', '修改用户', '修改用户', 'sys:user:update', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 3, 1, '2021-01-09 10:07:03', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (6, 2, '1,2', '删除用户', '删除用户', 'sys:user:delete', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 4, 1, '2021-01-09 10:07:03', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (7, 2, '1,2', '修改密码', '修改密码', 'sys:user:change:password', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 5, 1, '2021-01-09 10:07:03', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (8, 2, '1,2', '导出用户', '导出用户', 'sys:user:export', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 6, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (9, 1, '1', '角色管理', '角色管理', 'sys:role:manage', 1, 1, 'role', 'role/index', '', 'RoleManage', 'roleManage', 'peoples', 0, 1, 120, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (10, 9, '1,9', '查看角色', '查看角色', 'sys:role:show', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 300, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (11, 9, '1,9', '添加角色', '添加角色', 'sys:role:create', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (12, 9, '1,9', '修改角色', '修改角色', 'sys:role:update', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 3, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (13, 9, '1,9', '删除角色', '删除角色', 'sys:role:delete', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 4, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (14, 9, '1,9', '导出角色', '导出角色', 'sys:role:export', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 5, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (15, 1, '1', '部门管理', '部门管理', 'sys:department:manage', 1, 1, 'department', 'department/index', '', 'DepartmentManage', 'departmentManage', 'tree', 0, 1, 130, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (16, 15, '1,15', '查看部门', '查看部门', 'sys:department:show', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (17, 15, '1,15', '添加部门', '添加部门', 'sys:department:create', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (18, 15, '1,15', '修改部门', '修改部门', 'sys:department:update', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 3, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (19, 15, '1,15', '删除部门', '删除部门', 'sys:department:delete', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 4, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (20, 15, '1,15', '导出部门', '导出部门', 'sys:department:export', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 5, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (21, 1, '1', '权限管理', '权限管理', 'sys:permission:manage', 1, 1, 'permission', 'permission/index', '', 'PermissionManage', 'permissionManage', 'lock', 0, 1, 140, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (22, 21, '1,21', '查看权限', '查看权限', 'sys:permission:show', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (23, 21, '1,21', '添加权限', '添加权限', 'sys:permission:create', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (24, 21, '1,21', '修改权限', '修改权限', 'sys:permission:update', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 3, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (25, 21, '1,21', '删除权限', '删除权限', 'sys:permission:delete', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 4, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (26, 21, '1,21', '导出权限', '导出权限', 'sys:permission:export', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 5, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (27, 1, '1', '参数管理', '参数管理', 'sys:parameter:manage', 1, 1, 'parameter', 'parameter/index', '', 'ParameterManage', 'parameterManage', 'parameter', 0, 1, 150, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (28, 27, '1,27', '查看参数', '查看参数', 'sys:parameter:show', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (29, 27, '1,27', '添加参数', '添加参数', 'sys:parameter:create', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (30, 27, '1,27', '修改参数', '修改参数', 'sys:parameter:update', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 3, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (31, 27, '1,27', '删除参数', '删除参数', 'sys:parameter:delete', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 4, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (32, 27, '1,27', '导出参数', '导出参数', 'sys:parameter:export', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 5, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (33, 1, '1', '字典管理', '字典管理', 'sys:dictionary:manage', 1, 1, 'dictionary', 'dictionary/index', '', 'DictionaryManage', 'dictionaryManage', 'dictionary', 0, 1, 160, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (34, 33, '1,33', '查看字典', '查看字典', 'sys:dictionary:show', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (35, 33, '1,33', '添加字典', '添加字典', 'sys:dictionary:create', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (36, 33, '1,33', '修改字典', '修改字典', 'sys:dictionary:update', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 3, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (37, 33, '1,33', '删除字典', '删除字典', 'sys:dictionary:delete', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 4, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (38, 33, '1,33', '导出字典', '导出字典', 'sys:dictionary:export', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 5, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (39, 0, 'NaN', '系统监控', '系统监控', 'sys:monitoring:manage', 1, 1, '/monitoring', 'Layout', '/monitoring/onlineuser', 'SysMonitor', 'sysMonitor', 'monitor', 0, 1, 200, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (40, 39, '39', '在线管理', '在线管理', 'sys:monitoring:onlineuser:manage', 1, 1, 'onlineuser', 'user/onlineUser', '', 'OnlineUserManage', 'onlineUserManage', 'onlineuser', 0, 1, 210, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (41, 40, '39,40', '踢出用户', '踢出用户', 'sys:kickout:onlineuser', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (42, 39, '39', '操作日志', '操作日志', 'sys:operatelog:manage', 1, 1, 'operatelog', 'log/loginLog', '', 'OperateLogManage', 'operateLogManage', 'log', 0, 1, 220, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (43, 42, '1,42', '查看日志', '查看日志', 'sys:operateLog:show', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (44, 42, '1,42', '添加日志', '添加日志', 'sys:operateLog:create', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (45, 42, '1,42', '修改日志', '修改日志', 'sys:operateLog:update', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 3, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (46, 42, '1,42', '删除日志', '删除日志', 'sys:operateLog:delete', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 4, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (47, 42, '1,42', '导出日志', '导出日志', 'sys:operateLog:export', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 5, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (48, 39, '39', '登录日志', '登录日志', 'sys:loginlog:manage', 1, 1, 'loginlog', 'log/loginLog', '', 'LoginLogManage', 'loginLogManage', 'login-log', 0, 1, 230, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (49, 48, '1,48', '查看日志', '查看日志', 'sys:loginLog:show', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (50, 48, '1,48', '添加日志', '添加日志', 'sys:loginLog:create', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (51, 48, '1,48', '修改日志', '修改日志', 'sys:loginLog:update', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 3, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (52, 48, '1,48', '删除日志', '删除日志', 'sys:loginLog:delete', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 4, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (53, 48, '1,48', '导出日志', '导出日志', 'sys:loginLog:export', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 5, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (54, 39, '39', 'SQL监控', 'SQL监控', 'monitoring:sql:manage', 1, 1, 'onlineuser', 'druid/login', '', 'SqlMonitor', 'sqlMonitor', 'sql', 0, 1, 210, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (55, 39, '39', 'API接口', 'API接口', 'monitoring:api:manage', 1, 1, 'api', 'druid/login', '', 'SwaggerApi', 'swaggerApi', 'api', 0, 1, 210, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (56, 0, 'NaN', '系统工具', '系统工具', 'tool:manage', 1, 1, '/tool', 'Layout', '', 'SystemTool', 'systemTool', 'tool', 0, 1, 300, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (57, 56, '56', '任务管理', '任务管理', 'tool:job:manage', 1, 1, 'schedule', 'job/schedule', '', 'ScheduleManage', 'scheduleManage', 'schedule', 0, 1, 310, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (58, 57, '56,57', '查看任务', '查看任务', 'job:schedule:show', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (59, 57, '56,57', '创建任务', '创建任务', 'job:schedule:create', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (60, 57, '56,57', '修改任务', '修改任务', 'job:schedule:update', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 3, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (61, 57, '56,57', '删除任务', '删除任务', 'job:schedule:delete', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 4, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (62, 57, '56,57', '立即任务', '立即任务', 'job:schedule:run', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 5, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (63, 57, '56,57', '暂停任务', '暂停任务', 'job:schedule:pause', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 6, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (64, 57, '56,57', '恢复任务', '恢复任务', 'job:schedule:resume', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 7, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (65, 57, '56,57', '重置任务', '重置任务', 'job:schedule:reset', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 8, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (66, 56, '56', '代码生成', '代码生成', 'sys:generator:manage', 1, 1, 'generator', 'generator/table', '', 'Generator', 'generator', 'generator', 0, 1, 320, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (67, 66, '56,66', '配置', '配置', 'sys:generator:update', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (68, 57, '56,57', '下载', '下载', 'sys:generator:download', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (69, 0, 'NaN', '组件管理', '组件管理', 'components:manage', 1, 1, '/components', 'Layout', '', 'Components', 'components', 'component', 0, 1, 400, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (70, 69, '69', '图标', '图标', 'components:icons:manage', 1, 1, 'icons', 'icons/index', '', 'Icons', 'icons', 'icon', 0, 1, 410, 1, '2021-01-09 10:07:04', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (71, 69, '69', '富文本编辑', '富文本编辑', 'components:tinymce:manage', 1, 1, 'tinymce', 'components-demo/tinymce', '', 'Tinymce', 'tinymce', 'fwb', 0, 1, 420, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (72, 69, '69', 'Markdown', 'Markdown', 'components:markdown:manage', 1, 1, 'markdown', 'components-demo/markdown', '', 'Markdown', 'markdown', 'markdown', 0, 1, 430, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (73, 0, 'NaN', '内容管理', '内容管理', 'cms:manage', 1, 1, '/cms', 'Layout', 'cms/article', 'CmsManage', 'cmsManage', 'cms', 0, 1, 500, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (74, 73, '73', '文章管理', '文章管理', 'cms:article:manage', 1, 1, 'article', 'cms/article', '', 'ArticleManage', 'articleManage', 'article', 0, 1, 510, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (75, 74, '73,74', '查看文章', '查看文章', 'cms:article:show', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (76, 74, '73,74', '创建文章', '创建文章', 'cms:article:create', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (77, 74, '73,74', '修改文章', '修改文章', 'cms:article:update', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 3, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (78, 74, '73,74', '删除文章', '删除文章', 'cms:article:delete', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 4, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (79, 73, '73', '文章分类', '文章分类', 'cms:category:manage', 1, 1, 'category', 'cms/category', '', 'CategoryManage', 'categoryManage', 'category', 0, 1, 520, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (80, 79, '73,79', '查看分类', '查看分类', 'cms:category:show', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (81, 79, '73,79', '创建分类', '创建分类', 'cms:category:create', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (82, 79, '73,79', '修改分类', '修改分类', 'cms:category:update', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 3, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (83, 79, '73,79', '删除分类', '删除分类', 'cms:category:delete', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 4, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (84, 73, '73', '文章标签', '文章标签', 'cms:tag:manage', 1, 1, 'tag', 'cms/tag', '', 'ArticleTagManage', 'articleTagManage', 'eye-open', 0, 1, 530, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (85, 84, '73,84', '查看标签', '查看标签', 'cms:tag:show', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (86, 84, '73,84', '创建标签', '创建标签', 'cms:tag:create', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (87, 84, '73,84', '修改标签', '修改标签', 'cms:tag:update', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 3, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (88, 84, '73,84', '删除标签', '删除标签', 'cms:tag:delete', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 4, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (89, 0, 'NaN', '微信管理', '微信管理', 'wx:manage', 1, 1, '/wx', 'Layout', '/wx/wxgzh', 'Wx_manage', 'wx_manage', 'wechat', 0, 1, 600, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (90, 89, '89', '公众号管理', '公众号管理', 'wx:gzhAccount:manage', 1, 1, 'gzhaccount', 'wx/wxgzh', '', 'GzhAccountManage', 'gzhAccountManage', 'gzh', 0, 1, 610, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (91, 90, '89,90', '查看公众号', '查看公众号', 'wx:gzhAccount:show', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (92, 90, '89,90', '创建公众号', '创建公众号', 'wx:gzhAccount:create', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (93, 90, '89,90', '修改公众号', '修改公众号', 'wx:gzhAccount:update', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 3, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (94, 90, '89,90', '删除公众号', '删除公众号', 'wx:gzhAccount:delete', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 4, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (95, 89, '89', '粉丝管理', '粉丝管理', 'wx:gzhuser:manage', 1, 1, 'gzhuser', 'wx/wxuser', '', 'GzhUserManage', 'gzhUserManage', 'fensi', 0, 1, 620, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (96, 95, '89,95', '同步微信用户', '同步微信用户', 'wx:gzhuser:sync:all', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (97, 95, '89,95', '解析分维标签', '解析分维标签', 'wx:gzhuser:analyse:all', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (98, 95, '89,95', '解析营销标签', '解析营销标签', 'wx:gzhuser:analysis', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 3, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (99, 95, '89,95', '取消用户标签', '取消用户标签', 'wx:gzhuser:remove', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 4, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (100, 95, '89,95', '下载用户标签', '下载用户标签', 'wx:gzhuser:download', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 4, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (101, 89, '89', '标签规则', '标签规则', 'wx:tagrule:manage', 1, 1, 'tagrule', 'wx/tagrule', '', 'GzhTagRuleManage', 'gzhTagRuleManage', 'guide', 0, 1, 630, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (102, 101, '89,101', '创建规则', '创建规则', 'wx:gzhTag:create', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (103, 101, '89,101', '更新规则', '更新规则', 'wx:gzhTag:update', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-09 10:07:05', NULL, NULL);
-INSERT INTO `sys_permission` VALUES (104, 101, '89,101', '删除规则', '删除规则', 'wx:gzhTag:delete', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 3, 1, '2021-01-09 10:07:05', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (1, 0, 'NaN', '系统管理', '系统管理', 'sys:manage', 1, 1, '/system', 'Layout', '/system/user', 'System', 'system', 'setting', 0, 1, 100, 1, '2021-01-10 13:26:10', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (2, 1, '1', '用户管理', '用户管理', 'sys:user:manage', 1, 1, 'user', 'user/index', '', 'UserManage', 'userManage', 'user', 0, 1, 110, 1, '2021-01-10 13:26:10', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (3, 2, '1,2', '查看用户', '查看用户', 'sys:user:show', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-10 13:26:10', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (4, 2, '1,2', '添加用户', '添加用户', 'sys:user:create', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-10 13:26:10', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (5, 2, '1,2', '修改用户', '修改用户', 'sys:user:update', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 3, 1, '2021-01-10 13:26:10', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (6, 2, '1,2', '删除用户', '删除用户', 'sys:user:delete', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 4, 1, '2021-01-10 13:26:10', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (7, 2, '1,2', '修改密码', '修改密码', 'sys:user:change:password', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 5, 1, '2021-01-10 13:26:10', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (8, 2, '1,2', '导出用户', '导出用户', 'sys:user:export', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 6, 1, '2021-01-10 13:26:10', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (9, 1, '1', '角色管理', '角色管理', 'sys:role:manage', 1, 1, 'role', 'role/index', '', 'RoleManage', 'roleManage', 'peoples', 0, 1, 120, 1, '2021-01-10 13:26:10', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (10, 9, '1,9', '查看角色', '查看角色', 'sys:role:show', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 300, 1, '2021-01-10 13:26:10', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (11, 9, '1,9', '添加角色', '添加角色', 'sys:role:create', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-10 13:26:10', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (12, 9, '1,9', '修改角色', '修改角色', 'sys:role:update', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 3, 1, '2021-01-10 13:26:10', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (13, 9, '1,9', '删除角色', '删除角色', 'sys:role:delete', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 4, 1, '2021-01-10 13:26:10', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (14, 9, '1,9', '导出角色', '导出角色', 'sys:role:export', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 5, 1, '2021-01-10 13:26:10', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (15, 1, '1', '部门管理', '部门管理', 'sys:department:manage', 1, 1, 'department', 'department/index', '', 'DepartmentManage', 'departmentManage', 'tree', 0, 1, 130, 1, '2021-01-10 13:26:10', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (16, 15, '1,15', '查看部门', '查看部门', 'sys:department:show', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-10 13:26:10', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (17, 15, '1,15', '添加部门', '添加部门', 'sys:department:create', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (18, 15, '1,15', '修改部门', '修改部门', 'sys:department:update', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 3, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (19, 15, '1,15', '删除部门', '删除部门', 'sys:department:delete', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 4, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (20, 15, '1,15', '导出部门', '导出部门', 'sys:department:export', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 5, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (21, 1, '1', '权限管理', '权限管理', 'sys:permission:manage', 1, 1, 'permission', 'permission/index', '', 'PermissionManage', 'permissionManage', 'lock', 0, 1, 140, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (22, 21, '1,21', '查看权限', '查看权限', 'sys:permission:show', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (23, 21, '1,21', '添加权限', '添加权限', 'sys:permission:create', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (24, 21, '1,21', '修改权限', '修改权限', 'sys:permission:update', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 3, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (25, 21, '1,21', '删除权限', '删除权限', 'sys:permission:delete', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 4, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (26, 21, '1,21', '导出权限', '导出权限', 'sys:permission:export', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 5, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (27, 1, '1', '参数管理', '参数管理', 'sys:parameter:manage', 1, 1, 'parameter', 'parameter/index', '', 'ParameterManage', 'parameterManage', 'parameter', 0, 1, 150, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (28, 27, '1,27', '查看参数', '查看参数', 'sys:parameter:show', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (29, 27, '1,27', '添加参数', '添加参数', 'sys:parameter:create', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (30, 27, '1,27', '修改参数', '修改参数', 'sys:parameter:update', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 3, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (31, 27, '1,27', '删除参数', '删除参数', 'sys:parameter:delete', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 4, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (32, 27, '1,27', '导出参数', '导出参数', 'sys:parameter:export', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 5, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (33, 1, '1', '字典管理', '字典管理', 'sys:dictionary:manage', 1, 1, 'dictionary', 'dictionary/index', '', 'DictionaryManage', 'dictionaryManage', 'dictionary', 0, 1, 160, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (34, 33, '1,33', '查看字典', '查看字典', 'sys:dictionary:show', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (35, 33, '1,33', '添加字典', '添加字典', 'sys:dictionary:create', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (36, 33, '1,33', '修改字典', '修改字典', 'sys:dictionary:update', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 3, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (37, 33, '1,33', '删除字典', '删除字典', 'sys:dictionary:delete', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 4, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (38, 33, '1,33', '导出字典', '导出字典', 'sys:dictionary:export', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 5, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (39, 0, 'NaN', '系统监控', '系统监控', 'sys:monitoring:manage', 1, 1, '/monitoring', 'Layout', '/monitoring/onlineuser', 'SysMonitor', 'sysMonitor', 'monitor', 0, 1, 200, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (40, 39, '39', '在线管理', '在线管理', 'sys:monitoring:onlineuser:manage', 1, 1, 'onlineuser', 'user/onlineUser', '', 'OnlineUserManage', 'onlineUserManage', 'onlineuser', 0, 1, 210, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (41, 40, '39,40', '踢出用户', '踢出用户', 'sys:kickout:onlineuser', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (42, 39, '39', '操作日志', '操作日志', 'sys:operatelog:manage', 1, 1, 'operatelog', 'log/loginLog', '', 'OperateLogManage', 'operateLogManage', 'log', 0, 1, 220, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (43, 42, '1,42', '查看日志', '查看日志', 'sys:operateLog:show', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (44, 42, '1,42', '添加日志', '添加日志', 'sys:operateLog:create', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (45, 42, '1,42', '修改日志', '修改日志', 'sys:operateLog:update', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 3, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (46, 42, '1,42', '删除日志', '删除日志', 'sys:operateLog:delete', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 4, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (47, 42, '1,42', '导出日志', '导出日志', 'sys:operateLog:export', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 5, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (48, 39, '39', '登录日志', '登录日志', 'sys:loginlog:manage', 1, 1, 'loginlog', 'log/loginLog', '', 'LoginLogManage', 'loginLogManage', 'login-log', 0, 1, 230, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (49, 48, '1,48', '查看日志', '查看日志', 'sys:loginLog:show', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (50, 48, '1,48', '添加日志', '添加日志', 'sys:loginLog:create', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (51, 48, '1,48', '修改日志', '修改日志', 'sys:loginLog:update', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 3, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (52, 48, '1,48', '删除日志', '删除日志', 'sys:loginLog:delete', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 4, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (53, 48, '1,48', '导出日志', '导出日志', 'sys:loginLog:export', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 5, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (54, 39, '39', 'SQL监控', 'SQL监控', 'monitoring:sql:manage', 1, 1, 'onlineuser', 'druid/login', '', 'SqlMonitor', 'sqlMonitor', 'sql', 0, 1, 210, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (55, 39, '39', 'API接口', 'API接口', 'monitoring:api:manage', 1, 1, 'api', 'druid/login', '', 'SwaggerApi', 'swaggerApi', 'api', 0, 1, 210, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (56, 0, 'NaN', '系统工具', '系统工具', 'tool:manage', 1, 1, '/tool', 'Layout', '', 'SystemTool', 'systemTool', 'tool', 0, 1, 300, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (57, 56, '56', '任务管理', '任务管理', 'tool:job:manage', 1, 1, 'schedule', 'job/schedule', '', 'ScheduleManage', 'scheduleManage', 'schedule', 0, 1, 310, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (58, 57, '56,57', '查看任务', '查看任务', 'job:schedule:show', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (59, 57, '56,57', '创建任务', '创建任务', 'job:schedule:create', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (60, 57, '56,57', '修改任务', '修改任务', 'job:schedule:update', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 3, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (61, 57, '56,57', '删除任务', '删除任务', 'job:schedule:delete', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 4, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (62, 57, '56,57', '立即任务', '立即任务', 'job:schedule:run', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 5, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (63, 57, '56,57', '暂停任务', '暂停任务', 'job:schedule:pause', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 6, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (64, 57, '56,57', '恢复任务', '恢复任务', 'job:schedule:resume', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 7, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (65, 57, '56,57', '重置任务', '重置任务', 'job:schedule:reset', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 8, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (66, 56, '56', '代码生成', '代码生成', 'sys:generator:manage', 1, 1, 'generator', 'generator/table', '', 'Generator', 'generator', 'generator', 0, 1, 320, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (67, 66, '56,66', '配置', '配置', 'sys:generator:update', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (68, 57, '56,57', '下载', '下载', 'sys:generator:download', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (69, 0, 'NaN', '组件管理', '组件管理', 'components:manage', 1, 1, '/components', 'Layout', '', 'Components', 'components', 'component', 0, 1, 400, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (70, 69, '69', '图标', '图标', 'components:icons:manage', 1, 1, 'icons', 'icons/index', '', 'Icons', 'icons', 'icon', 0, 1, 410, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (71, 69, '69', '富文本编辑', '富文本编辑', 'components:tinymce:manage', 1, 1, 'tinymce', 'components-demo/tinymce', '', 'Tinymce', 'tinymce', 'fwb', 0, 1, 420, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (72, 69, '69', 'Markdown', 'Markdown', 'components:markdown:manage', 1, 1, 'markdown', 'components-demo/markdown', '', 'Markdown', 'markdown', 'markdown', 0, 1, 430, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (73, 0, 'NaN', '内容管理', '内容管理', 'cms:manage', 1, 1, '/cms', 'Layout', 'cms/article', 'CmsManage', 'cmsManage', 'cms', 0, 1, 500, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (74, 73, '73', '文章管理', '文章管理', 'cms:article:manage', 1, 1, 'article', 'cms/article', '', 'ArticleManage', 'articleManage', 'article', 0, 1, 510, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (75, 74, '73,74', '查看文章', '查看文章', 'cms:article:show', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (76, 74, '73,74', '创建文章', '创建文章', 'cms:article:create', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (77, 74, '73,74', '修改文章', '修改文章', 'cms:article:update', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 3, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (78, 74, '73,74', '删除文章', '删除文章', 'cms:article:delete', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 4, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (79, 73, '73', '文章分类', '文章分类', 'cms:category:manage', 1, 1, 'category', 'cms/category', '', 'CategoryManage', 'categoryManage', 'category', 0, 1, 520, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (80, 79, '73,79', '查看分类', '查看分类', 'cms:category:show', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (81, 79, '73,79', '创建分类', '创建分类', 'cms:category:create', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (82, 79, '73,79', '修改分类', '修改分类', 'cms:category:update', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 3, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (83, 79, '73,79', '删除分类', '删除分类', 'cms:category:delete', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 4, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (84, 73, '73', '文章标签', '文章标签', 'cms:tag:manage', 1, 1, 'tag', 'cms/tag', '', 'ArticleTagManage', 'articleTagManage', 'eye-open', 0, 1, 530, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (85, 84, '73,84', '查看标签', '查看标签', 'cms:tag:show', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (86, 84, '73,84', '创建标签', '创建标签', 'cms:tag:create', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (87, 84, '73,84', '修改标签', '修改标签', 'cms:tag:update', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 3, 1, '2021-01-10 13:26:11', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (88, 84, '73,84', '删除标签', '删除标签', 'cms:tag:delete', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 4, 1, '2021-01-10 13:26:12', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (89, 0, 'NaN', '微信管理', '微信管理', 'wx:manage', 1, 1, '/wx', 'Layout', '/wx/wxgzh', 'Wx_manage', 'wx_manage', 'wechat', 0, 1, 600, 1, '2021-01-10 13:26:12', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (90, 89, '89', '公众号管理', '公众号管理', 'wx:gzhAccount:manage', 1, 1, 'gzhaccount', 'wx/wxgzh', '', 'GzhAccountManage', 'gzhAccountManage', 'gzh', 0, 1, 610, 1, '2021-01-10 13:26:12', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (91, 90, '89,90', '查看公众号', '查看公众号', 'wx:gzhAccount:show', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-10 13:26:12', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (92, 90, '89,90', '创建公众号', '创建公众号', 'wx:gzhAccount:create', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-10 13:26:12', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (93, 90, '89,90', '修改公众号', '修改公众号', 'wx:gzhAccount:update', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 3, 1, '2021-01-10 13:26:12', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (94, 90, '89,90', '删除公众号', '删除公众号', 'wx:gzhAccount:delete', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 4, 1, '2021-01-10 13:26:12', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (95, 90, '89,90', '设置公众号', '设置公众号', 'wx:gzhAccount:setting', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 5, 1, '2021-01-10 13:26:12', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (96, 89, '89', '粉丝管理', '粉丝管理', 'wx:gzhuser:manage', 1, 1, 'gzhuser', 'wx/wxuser', '', 'GzhUserManage', 'gzhUserManage', 'fensi', 0, 1, 620, 1, '2021-01-10 13:26:12', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (97, 96, '89,96', '同步微信用户', '同步微信用户', 'wx:gzhuser:sync:all', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-10 13:26:12', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (98, 96, '89,96', '解析分维标签', '解析分维标签', 'wx:gzhuser:analyse:all', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-10 13:26:12', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (99, 96, '89,96', '解析营销标签', '解析营销标签', 'wx:gzhuser:analysis', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 3, 1, '2021-01-10 13:26:12', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (100, 96, '89,96', '取消用户标签', '取消用户标签', 'wx:gzhuser:remove', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 4, 1, '2021-01-10 13:26:12', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (101, 96, '89,96', '下载用户标签', '下载用户标签', 'wx:gzhuser:download', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 4, 1, '2021-01-10 13:26:12', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (102, 89, '89', '标签规则', '标签规则', 'wx:tagrule:manage', 1, 1, 'tagrule', 'wx/tagrule', '', 'GzhTagRuleManage', 'gzhTagRuleManage', 'guide', 0, 1, 630, 1, '2021-01-10 13:26:12', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (103, 102, '89,102', '创建规则', '创建规则', 'wx:gzhTag:create', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 1, 1, '2021-01-10 13:26:12', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (104, 102, '89,102', '更新规则', '更新规则', 'wx:gzhTag:update', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 2, 1, '2021-01-10 13:26:12', NULL, NULL);
+INSERT INTO `sys_permission` VALUES (105, 102, '89,102', '删除规则', '删除规则', 'wx:gzhTag:delete', 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, 3, 1, '2021-01-10 13:26:12', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for sys_role
@@ -896,7 +911,7 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 'admin', 'd89267ba6e888426c8f798a04f2fb874', NULL, 'http://upload.longmarch.top/FuemzbZAVn3PMbcBzrY6IfrtSf_r', '18888888888', 1, NULL, 39, '2021-01-09 08:01:12', NULL, NULL, 1, '2020-02-10 18:20:46', NULL, NULL);
+INSERT INTO `sys_user` VALUES (1, 'admin', 'd89267ba6e888426c8f798a04f2fb874', NULL, 'http://upload.longmarch.top/FuemzbZAVn3PMbcBzrY6IfrtSf_r', '18888888888', 1, NULL, 42, '2021-01-10 13:37:22', NULL, NULL, 1, '2020-02-10 18:20:46', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for sys_user_role_rel
@@ -939,7 +954,7 @@ CREATE TABLE `wx_fwtag_rule`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `wx_gzh_account`;
 CREATE TABLE `wx_gzh_account`  (
-  `id` bigint(20) NOT NULL COMMENT '主键',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `jwid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '公众号',
   `wx_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '名称',
   `login_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '公众号登录账号',
@@ -978,14 +993,19 @@ CREATE TABLE `wx_gzh_account`  (
   `update_by` bigint(20) NULL DEFAULT NULL COMMENT '更新ID',
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统公众号表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统公众号表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of wx_gzh_account
+-- ----------------------------
+INSERT INTO `wx_gzh_account` VALUES (1, '分维', '', NULL, NULL, NULL, NULL, NULL, 'wxaeeab59bae7d0deb', NULL, '619125947727085568', '5a85862f532c43d0b089c81b4c296a07', 1, 1, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, '1', NULL, 1, '2021-01-10 21:11:39', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for wx_gzh_fenwei_tag
 -- ----------------------------
 DROP TABLE IF EXISTS `wx_gzh_fenwei_tag`;
 CREATE TABLE `wx_gzh_fenwei_tag`  (
-  `id` bigint(20) NOT NULL COMMENT '主键',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `gzh_id` bigint(20) NULL DEFAULT NULL COMMENT '公众号ID',
   `open_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '微信OpenID',
   `field_id` int(11) NULL DEFAULT NULL COMMENT '行业ID',
@@ -998,14 +1018,14 @@ CREATE TABLE `wx_gzh_fenwei_tag`  (
   `update_by` bigint(20) NULL DEFAULT NULL COMMENT '更新ID',
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '公众号粉丝分维解析标签' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '公众号粉丝分维解析标签' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for wx_gzh_tag
 -- ----------------------------
 DROP TABLE IF EXISTS `wx_gzh_tag`;
 CREATE TABLE `wx_gzh_tag`  (
-  `id` bigint(20) NOT NULL COMMENT '主键',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `gzh_id` bigint(20) NULL DEFAULT NULL COMMENT '公众号ID',
   `wx_tag_id` bigint(20) NULL DEFAULT NULL COMMENT '微信公众号标签ID',
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '新标签名称',
@@ -1015,7 +1035,7 @@ CREATE TABLE `wx_gzh_tag`  (
   `update_by` bigint(20) NULL DEFAULT NULL COMMENT '更新ID',
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '微信公众号标签' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '微信公众号标签' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for wx_gzh_tag_rule

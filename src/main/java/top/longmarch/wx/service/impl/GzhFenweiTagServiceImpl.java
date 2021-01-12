@@ -39,7 +39,7 @@ public class GzhFenweiTagServiceImpl extends ServiceImpl<GzhFenweiTagDao, GzhFen
                 .eq("create_by", UserUtil.getUserId())
                 .eq("gzh_id", gzhId)
                 .eq("open_id", openId)
-                .groupBy("name"));
+                .groupBy("name, score, content"));
         return gzhFenweiTagList;
     }
 
